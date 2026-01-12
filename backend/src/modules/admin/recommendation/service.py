@@ -1,12 +1,14 @@
-"""推荐方案管理服务 - 使用 Supabase API"""
+"""推荐方案管理服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+
+DOC_TYPE = "admin_recommendation"
 
 
 class RecommendationAdminService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "recommendations"
+        self.store = DocumentStore()
 
     def find_all(
         self,
@@ -15,40 +17,49 @@ class RecommendationAdminService:
         user_id: str | None = None,
         domain: str | None = None,
     ) -> tuple[list[dict], int]:
-        query = self.client.table(self.table).select("*", count="exact")
-
-        if user_id:
-            query = query.eq("user_id", user_id)
-        if domain:
-            query = query.eq("domain", domain)
-
-        query = query.order("created_at", desc=True)
-        query = query.range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE, status="active")
+        
+        # 过滤
+        recommendations = []
+        for doc in docs:
+            data = doc["data"]
+            if user_id and data.get("user_id") != user_id:
+                continue
+            if domain and data.get("domain") != domain:
+                continue
+            recommendations.append(self._to_response(doc))
+        
+        # 排序
+        recommendations.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        
+        # 分页
+        total = len(recommendations)
+        start = (page - 1) * limit
+        end = start + limit
+        
+        return recommendations[start:end], total
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     def find_by_user(self, user_id: str, domain: str | None = None) -> list[dict]:
-        query = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("user_id", user_id)
-        )
-        if domain:
-            query = query.eq("domain", domain)
-        query = query.order("ranking")
-        response = query.execute()
-        return response.data
+        docs = self.store.find(DOC_TYPE, status="active")
+        
+        recommendations = []
+        for doc in docs:
+            data = doc["data"]
+            if data.get("user_id") != user_id:
+                continue
+            if domain and data.get("domain") != domain:
+                continue
+            recommendations.append(self._to_response(doc))
+        
+        # 按 ranking 排序
+        recommendations.sort(key=lambda x: x.get("ranking", 0))
+        return recommendations
 
     def update(self, id: str, data: dict) -> dict:
         existing = self.find_by_id(id)
@@ -59,52 +70,55 @@ class RecommendationAdminService:
         if not update_data:
             return existing
 
-        response = (
-            self.client.table(self.table)
-            .update(update_data)
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates=update_data)
+        return self._to_response(doc)
 
     def delete(self, id: str) -> None:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Recommendation {id} not found")
-        self.client.table(self.table).delete().eq("id", id).execute()
+        self.store.delete(id)
 
     def delete_by_user(self, user_id: str) -> int:
         """删除用户的所有推荐"""
-        response = (
-            self.client.table(self.table)
-            .delete()
-            .eq("user_id", user_id)
-            .execute()
-        )
-        return len(response.data) if response.data else 0
+        docs = self.store.find(DOC_TYPE, status="active")
+        deleted = 0
+        for doc in docs:
+            if doc["data"].get("user_id") == user_id:
+                self.store.delete(doc["id"])
+                deleted += 1
+        return deleted
 
     def get_stats(self) -> dict:
         """获取推荐统计"""
-        # 总推荐数
-        total_response = (
-            self.client.table(self.table)
-            .select("id", count="exact")
-            .execute()
-        )
-        total = total_response.count or 0
+        docs = self.store.find(DOC_TYPE, status="active")
+        total = len(docs)
 
         # 按领域统计
-        domain_response = (
-            self.client.table(self.table)
-            .select("domain")
-            .execute()
-        )
         domain_counts: dict[str, int] = {}
-        for rec in domain_response.data or []:
-            domain = rec.get("domain", "unknown")
+        for doc in docs:
+            domain = doc["data"].get("domain", "unknown")
             domain_counts[domain] = domain_counts.get(domain, 0) + 1
 
         return {
             "total": total,
             "by_domain": domain_counts,
+        }
+
+    def _to_response(self, doc: dict) -> dict:
+        """转换为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "user_id": data.get("user_id"),
+            "domain": data.get("domain"),
+            "title": data.get("title"),
+            "content": data.get("content"),
+            "ranking": data.get("ranking"),
+            "score": data.get("score"),
+            "metadata": data.get("metadata", {}),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
         }

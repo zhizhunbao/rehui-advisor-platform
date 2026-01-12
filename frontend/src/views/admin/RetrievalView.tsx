@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { StatCard } from "@/modules/admin/components/StatCard";
 import { TagFilter } from "@/modules/admin/components/TagFilter";
 import { getApiBase, getAuthHeaders } from "@/modules/admin/utils/api";

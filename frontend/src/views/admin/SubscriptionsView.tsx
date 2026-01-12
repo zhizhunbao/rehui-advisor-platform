@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSubscriptions } from "@/modules/admin/hooks";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import type {
   SubscriptionPlan,
   CreateSubscriptionDto,

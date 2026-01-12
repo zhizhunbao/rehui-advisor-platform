@@ -23,47 +23,6 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(log_entry, ensure_ascii=False)
 
 
-class DatabaseHandler(logging.Handler):
-    """将日志写入数据库的 Handler"""
-    
-    def __init__(self, modules_filter: list[str] | None = None):
-        super().__init__()
-        self.modules_filter = modules_filter or ["scheduler", "executor"]
-    
-    def emit(self, record: logging.LogRecord) -> None:
-        # 只记录特定模块的日志到数据库
-        module = getattr(record, "module", "") or ""
-        message = record.getMessage()
-        
-        # 检查是否是调度相关的日志
-        is_scheduler_log = (
-            module in self.modules_filter or 
-            "[Scheduler]" in message or
-            "scheduler" in module.lower()
-        )
-        
-        if not is_scheduler_log:
-            return
-        
-        try:
-            from src.common.supabase import get_supabase_admin
-            client = get_supabase_admin()
-            
-            extra = {}
-            if hasattr(record, "extra_data"):
-                extra = record.extra_data
-            
-            client.table("system_logs").insert({
-                "level": record.levelname.lower(),
-                "module": module or "scheduler",
-                "message": message,
-                "extra": extra,
-            }).execute()
-        except Exception:
-            # 忽略数据库写入错误，避免死循环
-            pass
-
-
 def setup_logger() -> logging.Logger:
     settings = get_settings()
     log_dir = Path(settings.log_dir)
@@ -83,18 +42,13 @@ def setup_logger() -> logging.Logger:
     file_handler.setFormatter(JsonFormatter())
     _logger.addHandler(file_handler)
 
-    # Database handler (只记录调度相关日志)
-    db_handler = DatabaseHandler()
-    db_handler.setLevel(logging.INFO)
-    _logger.addHandler(db_handler)
-
     return _logger
 
 
 logger = setup_logger()
 
 
-def log_with_extra(level: str, message: str, module: str = "scheduler", **kwargs: Any) -> None:
+def log_with_extra(level: str, message: str, module: str = "app", **kwargs: Any) -> None:
     record = logger.makeRecord(
         logger.name,
         getattr(logging, level.upper()),

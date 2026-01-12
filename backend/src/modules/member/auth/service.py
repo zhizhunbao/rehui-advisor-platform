@@ -1,52 +1,45 @@
-"""用户认证服务 - 使用 Supabase API"""
+"""用户认证服务 - 使用 Document Store"""
 import secrets
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
 
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
 from src.common.config import get_settings
 
 settings = get_settings()
 
 
+DOC_TYPE = "member_user"
+
+
 class AuthService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "users"
+        self.store = DocumentStore()
 
     def create_anonymous_session(self, ip_address: str | None = None) -> dict:
         """创建匿名会话"""
         session_token = secrets.token_urlsafe(32)
-        response = self.client.table(self.table).insert({
+        doc = self.store.create(DOC_TYPE, {
             "user_type": "ANONYMOUS",
             "is_anonymous": True,
             "session_token": session_token,
             "ip_address": ip_address,
             "search_limit": 5,
             "search_count": 0,
-        }).execute()
-
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create session")
-        return response.data[0]
+        })
+        return self._to_response(doc)
 
     def register(self, email: str, password: str, name: str | None = None) -> dict:
         """用户注册"""
-        existing = (
-            self.client.table(self.table)
-            .select("id")
-            .eq("email", email)
-            .maybe_single()
-            .execute()
-        )
-        if existing.data:
+        existing = self._find_by_email(email)
+        if existing:
             raise AppError(AppErrorCode.DUPLICATE, "Email already registered")
 
         password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        response = self.client.table(self.table).insert({
+        doc = self.store.create(DOC_TYPE, {
             "email": email,
             "password_hash": password_hash,
             "name": name,
@@ -54,37 +47,31 @@ class AuthService:
             "is_anonymous": False,
             "search_limit": 20,
             "search_count": 0,
-        }).execute()
-
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to register")
-        return response.data[0]
+        })
+        return self._to_response(doc)
 
     def login(self, email: str, password: str) -> dict:
         """用户登录"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("email", email)
-            .maybe_single()
-            .execute()
-        )
-        user = response.data
+        doc = self._find_by_email(email)
+        if not doc:
+            raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid credentials")
 
-        if not user or not user.get("password_hash"):
+        user = doc["data"]
+        if not user.get("password_hash"):
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid credentials")
 
         if not bcrypt.checkpw(password.encode(), user["password_hash"].encode()):
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid credentials")
 
-        return user
+        return self._to_response(doc)
 
     def update_password(self, user_id: str, old_password: str, new_password: str) -> None:
         """更新密码"""
-        user = self.get_user_by_id(user_id)
-        if not user:
+        doc = self.store.get(user_id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, "User not found")
 
+        user = doc["data"]
         if not user.get("password_hash"):
             raise AppError(AppErrorCode.FORBIDDEN, "Anonymous users cannot change password")
 
@@ -92,31 +79,30 @@ class AuthService:
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid old password")
 
         new_hash = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
-        self.client.table(self.table).update({
-            "password_hash": new_hash
-        }).eq("id", user_id).execute()
+        self.store.update(user_id, data_updates={"password_hash": new_hash})
 
     def get_user_by_id(self, user_id: str) -> dict | None:
         """根据 ID 获取用户"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", user_id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(user_id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     def get_user_by_session_token(self, session_token: str) -> dict | None:
         """根据 session token 获取用户"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("session_token", session_token)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            if doc["data"].get("session_token") == session_token:
+                return self._to_response(doc)
+        return None
+
+    def _find_by_email(self, email: str) -> dict | None:
+        """根据邮箱查找用户文档"""
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            if doc["data"].get("email") == email:
+                return doc
+        return None
 
     def get_quota_status(self, user: dict) -> dict:
         """获取配额状态"""
@@ -133,17 +119,18 @@ class AuthService:
 
     def increment_search_count(self, user_id: str) -> None:
         """增加搜索计数"""
-        user = self.get_user_by_id(user_id)
-        if not user:
+        doc = self.store.get(user_id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, "User not found")
 
+        user = doc["data"]
         if user.get("search_count", 0) >= user.get("search_limit", 5):
             raise AppError(AppErrorCode.FORBIDDEN, "Search quota exceeded")
 
-        self.client.table(self.table).update({
+        self.store.update(user_id, data_updates={
             "search_count": user.get("search_count", 0) + 1,
             "last_search_at": datetime.now(timezone.utc).isoformat(),
-        }).eq("id", user_id).execute()
+        })
 
     @staticmethod
     def create_access_token(user_id: str, user_type: str) -> str:
@@ -188,3 +175,24 @@ class AuthService:
         if payload.get("type") != "refresh":
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid refresh token")
         return payload
+
+    def _to_response(self, doc: dict) -> dict:
+        """转换为响应格式（不包含密码）"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "email": data.get("email"),
+            "name": data.get("name"),
+            "user_type": data.get("user_type"),
+            "is_anonymous": data.get("is_anonymous"),
+            "session_token": data.get("session_token"),
+            "ip_address": data.get("ip_address"),
+            "search_limit": data.get("search_limit"),
+            "search_count": data.get("search_count"),
+            "last_search_at": data.get("last_search_at"),
+            "quota_reset_at": data.get("quota_reset_at"),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

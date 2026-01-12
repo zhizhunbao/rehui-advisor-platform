@@ -1,68 +1,60 @@
-"""系统配置管理服务 - 使用 Supabase API"""
-import json
-
+"""系统配置管理服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+
+DOC_TYPE = "admin_config"
 
 
 class ConfigService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "system_configs"
+        self.store = DocumentStore()
 
     def find_all(
         self,
         category: str | None = None,
         include_sensitive: bool = False,
     ) -> list[dict]:
-        query = self.client.table(self.table).select("*")
-
-        if category:
-            query = query.eq("category", category)
-
-        if not include_sensitive:
-            query = query.eq("is_sensitive", False)
-
-        query = query.order("category").order("key")
-        response = query.execute()
-
-        # 解析 JSON 值
+        docs = self.store.find(DOC_TYPE, status="active")
+        
         configs = []
-        for config in response.data or []:
-            config["parsed_value"] = self._parse_value(config.get("value"))
-            configs.append(config)
+        for doc in docs:
+            data = doc["data"]
+            
+            # 过滤分类
+            if category and data.get("category") != category:
+                continue
+            
+            # 过滤敏感配置
+            if not include_sensitive and data.get("is_sensitive"):
+                continue
+            
+            configs.append(self._to_response(doc))
+        
+        # 排序
+        configs.sort(key=lambda x: (x.get("category", ""), x.get("key", "")))
         return configs
 
     def find_by_key(self, key: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("key", key)
-            .maybe_single()
-            .execute()
-        )
-        if response.data:
-            response.data["parsed_value"] = self._parse_value(response.data.get("value"))
-        return response.data
+        # 使用 Supabase 的 JSONB 查询语法
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            if doc["data"].get("key") == key:
+                return self._to_response(doc)
+        return None
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        if response.data:
-            response.data["parsed_value"] = self._parse_value(response.data.get("value"))
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
-    def get_value(self, key: str, default: any = None) -> any:
-        """获取配置值（解析后的）"""
+    def get_value(self, key: str, default=None):
+        """获取配置值"""
         config = self.find_by_key(key)
         if not config:
             return default
-        return config.get("parsed_value", default)
+        return config.get("value", default)
 
     def create(self, data: dict) -> dict:
         # 检查 key 是否重复
@@ -70,17 +62,15 @@ class ConfigService:
         if existing:
             raise AppError(AppErrorCode.DUPLICATE, f"Config key '{data.get('key')}' already exists")
 
-        # 序列化值
-        if "value" in data and not isinstance(data["value"], str):
-            data["value"] = json.dumps(data["value"])
-
-        response = self.client.table(self.table).insert(data).execute()
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create config")
-
-        result = response.data[0]
-        result["parsed_value"] = self._parse_value(result.get("value"))
-        return result
+        doc = self.store.create(DOC_TYPE, {
+            "key": data["key"],
+            "value": data["value"],
+            "description": data.get("description"),
+            "category": data.get("category", "general"),
+            "is_sensitive": data.get("is_sensitive", False),
+        })
+        
+        return self._to_response(doc)
 
     def update(self, id: str, data: dict) -> dict:
         existing = self.find_by_id(id)
@@ -93,68 +83,50 @@ class ConfigService:
             if key_exists:
                 raise AppError(AppErrorCode.DUPLICATE, f"Config key '{data['key']}' already exists")
 
-        # 序列化值
-        if "value" in data and not isinstance(data["value"], str):
-            data["value"] = json.dumps(data["value"])
-
         update_data = {k: v for k, v in data.items() if v is not None}
         if not update_data:
             return existing
 
-        response = (
-            self.client.table(self.table)
-            .update(update_data)
-            .eq("id", id)
-            .execute()
-        )
+        doc = self.store.update(id, data_updates=update_data)
+        return self._to_response(doc)
 
-        result = response.data[0]
-        result["parsed_value"] = self._parse_value(result.get("value"))
-        return result
-
-    def update_by_key(self, key: str, value: any) -> dict:
+    def update_by_key(self, key: str, value) -> dict:
         """通过 key 更新配置值"""
         existing = self.find_by_key(key)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Config key '{key}' not found")
 
-        serialized_value = json.dumps(value) if not isinstance(value, str) else value
-
-        response = (
-            self.client.table(self.table)
-            .update({"value": serialized_value})
-            .eq("key", key)
-            .execute()
-        )
-
-        result = response.data[0]
-        result["parsed_value"] = self._parse_value(result.get("value"))
-        return result
+        doc = self.store.update(existing["id"], data_updates={"value": value})
+        return self._to_response(doc)
 
     def delete(self, id: str) -> None:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Config {id} not found")
-        self.client.table(self.table).delete().eq("id", id).execute()
+        self.store.delete(id)
 
     def get_categories(self) -> list[str]:
         """获取所有配置分类"""
-        response = (
-            self.client.table(self.table)
-            .select("category")
-            .execute()
-        )
+        docs = self.store.find(DOC_TYPE, status="active")
         categories = set()
-        for config in response.data or []:
-            if config.get("category"):
-                categories.add(config["category"])
+        for doc in docs:
+            category = doc["data"].get("category")
+            if category:
+                categories.add(category)
         return sorted(list(categories))
 
-    def _parse_value(self, value: str | None) -> any:
-        """解析 JSON 值"""
-        if value is None:
+    def _to_response(self, doc: dict) -> dict:
+        """转换为响应格式"""
+        if not doc:
             return None
-        try:
-            return json.loads(value)
-        except (json.JSONDecodeError, TypeError):
-            return value
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "key": data.get("key"),
+            "value": data.get("value"),
+            "description": data.get("description"),
+            "category": data.get("category"),
+            "is_sensitive": data.get("is_sensitive", False),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

@@ -1,8 +1,12 @@
-"""Scheduler 服务 - 使用 Supabase API"""
-from datetime import datetime, timezone
+"""Scheduler 服务 - 使用 Document Store"""
+from datetime import datetime, timezone, timedelta
 
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+
+DOC_TYPE_JOB = "admin_scheduled_job"
+DOC_TYPE_EXECUTION = "admin_job_execution"
 
 
 # 预设任务类型
@@ -79,9 +83,7 @@ JOB_TYPES = [
 
 class SchedulerService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.jobs_table = "scheduled_jobs"
-        self.executions_table = "job_executions"
+        self.store = DocumentStore()
 
     # ========== 任务类型 ==========
     def get_job_types(self) -> list[dict]:
@@ -95,28 +97,33 @@ class SchedulerService:
         job_type: str | None = None,
         is_active: bool | None = None,
     ) -> tuple[list[dict], int]:
-        query = self.client.table(self.jobs_table).select("*", count="exact")
-
-        if job_type:
-            query = query.eq("job_type", job_type)
-        if is_active is not None:
-            query = query.eq("is_active", is_active)
-
-        query = query.order("created_at", desc=True)
-        query = query.range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE_JOB, status="active")
+        
+        # 过滤
+        jobs = []
+        for doc in docs:
+            data = doc["data"]
+            if job_type and data.get("job_type") != job_type:
+                continue
+            if is_active is not None and data.get("is_active") != is_active:
+                continue
+            jobs.append(self._to_response(doc))
+        
+        # 排序
+        jobs.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        
+        # 分页
+        total = len(jobs)
+        start = (page - 1) * limit
+        end = start + limit
+        
+        return jobs[start:end], total
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.jobs_table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE_JOB or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     # ========== 创建 ==========
     def create(self, data: dict) -> dict:
@@ -128,19 +135,18 @@ class SchedulerService:
                 f"Invalid job type: {data.get('job_type')}. Valid types: {valid_types}",
             )
 
-        insert_data = {
+        doc = self.store.create(DOC_TYPE_JOB, {
             "name": data["name"],
             "description": data.get("description", ""),
             "job_type": data["job_type"],
             "cron_expression": data["cron_expression"],
             "parameters": data.get("parameters", {}),
             "is_active": data.get("is_active", True),
-        }
-
-        response = self.client.table(self.jobs_table).insert(insert_data).execute()
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create job")
-        return response.data[0]
+            "last_run_at": None,
+            "last_status": None,
+        })
+        
+        return self._to_response(doc)
 
     # ========== 更新 ==========
     def update(self, id: str, data: dict) -> dict:
@@ -152,18 +158,13 @@ class SchedulerService:
         if not update_data:
             return existing
 
-        response = (
-            self.client.table(self.jobs_table)
-            .update(update_data)
-            .eq("id", id)
-            .execute()
-        )
+        doc = self.store.update(id, data_updates=update_data)
         
         # 重新加载调度任务
         from src.modules.admin.scheduler.executor import reload_job
         reload_job(id)
         
-        return response.data[0]
+        return self._to_response(doc)
 
     def toggle(self, id: str) -> dict:
         existing = self.find_by_id(id)
@@ -171,25 +172,20 @@ class SchedulerService:
             raise AppError(AppErrorCode.NOT_FOUND, f"Job {id} not found")
 
         new_status = not existing.get("is_active", True)
-        response = (
-            self.client.table(self.jobs_table)
-            .update({"is_active": new_status})
-            .eq("id", id)
-            .execute()
-        )
+        doc = self.store.update(id, data_updates={"is_active": new_status})
         
         # 重新加载调度任务
         from src.modules.admin.scheduler.executor import reload_job
         reload_job(id)
         
-        return response.data[0]
+        return self._to_response(doc)
 
     # ========== 删除 ==========
     def delete(self, id: str) -> None:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Job {id} not found")
-        self.client.table(self.jobs_table).delete().eq("id", id).execute()
+        self.store.delete(id)
 
     # ========== 手动触发 ==========
     def trigger(self, id: str) -> dict:
@@ -260,6 +256,7 @@ class SchedulerService:
         else:
             return {"message": f"Unknown job type: {job_type}"}
 
+
     def _execute_refresh_data_sources(self, job: dict, parameters: dict) -> dict:
         from src.common.logger import log_with_extra
         from src.modules.admin.data_source.service import DataSourceService
@@ -279,7 +276,7 @@ class SchedulerService:
                       job_id=job["id"], refreshed=refreshed, error_count=len(errors))
         
         if errors:
-            for err in errors[:5]:  # 只记录前5个错误
+            for err in errors[:5]:
                 log_with_extra("warn", f"[Scheduler] Refresh error: {err.get('url')} - {err.get('error')}",
                               job_id=job["id"], url=err.get("url"))
         
@@ -288,6 +285,7 @@ class SchedulerService:
     def _execute_auto_discover(self, job: dict, parameters: dict) -> dict:
         from src.common.logger import log_with_extra
         from src.modules.admin.data_source.service import DataSourceService
+        from src.common.supabase import get_supabase_admin
         
         service = DataSourceService()
         domain = parameters.get("domain")
@@ -311,27 +309,23 @@ class SchedulerService:
         discovered_count = result.get("total", 0)
         strategies_used = result.get("strategies_used", [])
         
-        # 记录每个策略的发现数量
         strategy_summary = ", ".join([f"{s['strategy']}:{s['count']}" for s in strategies_used])
         
         log_with_extra("info", f"[Scheduler] Discovered {discovered_count} URLs via strategies: {strategy_summary}",
                       job_id=job["id"], domain=domain, discovered=discovered_count, strategies=strategies_used)
         
-        # 统计新发现 vs 已存在
         new_count = sum(1 for r in result.get("results", []) if not r.get("already_exists"))
         existing_count = discovered_count - new_count
         
         log_with_extra("info", f"[Scheduler] Discovery breakdown: {new_count} new, {existing_count} already exist",
                       job_id=job["id"], domain=domain, new_count=new_count, existing_count=existing_count)
         
-        # 如果配置了自动导入
         if auto_import and result.get("results"):
-            # 只导入新发现的
             new_items = [r for r in result["results"] if not r.get("already_exists")]
             
             if new_items:
-                # 获取 domain 的 category_id 和 domain_id
-                domain_info = self.client.table("domains").select("id, category_id").eq("code", domain).maybe_single().execute()
+                client = get_supabase_admin()
+                domain_info = client.table("domains").select("id, category_id").eq("code", domain).maybe_single().execute()
                 category_id = domain_info.data.get("category_id") if domain_info.data else None
                 domain_id = domain_info.data.get("id") if domain_info.data else None
                 
@@ -385,37 +379,29 @@ class SchedulerService:
 
     def _execute_cleanup_old_data(self, job: dict, parameters: dict) -> dict:
         from src.common.logger import log_with_extra
+        from src.common.supabase import get_supabase_admin
         
         days = parameters.get("days", 30)
         
         log_with_extra("info", f"[Scheduler] Starting cleanup old data (older than {days} days)",
                       job_id=job["id"], days=days)
         
-        # 清理旧的执行记录
         try:
-            # 获取要删除的记录数
-            cutoff_date = datetime.now(timezone.utc)
-            from datetime import timedelta
-            cutoff_date = cutoff_date - timedelta(days=days)
+            cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
             
-            # 先统计数量
-            count_response = (
-                self.client.table(self.executions_table)
-                .select("id", count="exact")
-                .lt("created_at", cutoff_date.isoformat())
-                .execute()
-            )
-            records_to_delete = count_response.count or 0
-            
-            # 删除记录
-            if records_to_delete > 0:
-                self.client.table(self.executions_table).delete().lt(
-                    "created_at", cutoff_date.isoformat()
-                ).execute()
+            # 清理旧的执行记录 (从 documents 表)
+            executions = self.store.find(DOC_TYPE_EXECUTION, status="active")
+            deleted_executions = 0
+            for exec_doc in executions:
+                created_at = exec_doc.get("created_at", "")
+                if created_at and created_at < cutoff_date.isoformat():
+                    self.store.delete(exec_doc["id"], hard=True)
+                    deleted_executions += 1
             
             # 清理旧的系统日志
+            client = get_supabase_admin()
             logs_count_response = (
-                self.client.table("system_logs")
+                client.table("system_logs")
                 .select("id", count="exact")
                 .lt("created_at", cutoff_date.isoformat())
                 .execute()
@@ -423,16 +409,16 @@ class SchedulerService:
             logs_to_delete = logs_count_response.count or 0
             
             if logs_to_delete > 0:
-                self.client.table("system_logs").delete().lt(
+                client.table("system_logs").delete().lt(
                     "created_at", cutoff_date.isoformat()
                 ).execute()
             
-            log_with_extra("info", f"[Scheduler] Cleanup completed: {records_to_delete} execution records, {logs_to_delete} logs deleted",
-                          job_id=job["id"], days=days, executions_deleted=records_to_delete, logs_deleted=logs_to_delete)
+            log_with_extra("info", f"[Scheduler] Cleanup completed: {deleted_executions} execution records, {logs_to_delete} logs deleted",
+                          job_id=job["id"], days=days, executions_deleted=deleted_executions, logs_deleted=logs_to_delete)
             
             return {
                 "message": f"Cleaned up records older than {days} days",
-                "executions_deleted": records_to_delete,
+                "executions_deleted": deleted_executions,
                 "logs_deleted": logs_to_delete,
             }
         except Exception as e:
@@ -442,13 +428,15 @@ class SchedulerService:
 
     # ========== 执行记录 ==========
     def _create_execution(self, job_id: str) -> dict:
-        insert_data = {
+        doc = self.store.create(DOC_TYPE_EXECUTION, {
             "job_id": job_id,
             "started_at": datetime.now(timezone.utc).isoformat(),
             "status": "running",
-        }
-        response = self.client.table(self.executions_table).insert(insert_data).execute()
-        return response.data[0]
+            "finished_at": None,
+            "result": None,
+            "error_message": None,
+        })
+        return doc
 
     def _update_execution(
         self,
@@ -466,14 +454,13 @@ class SchedulerService:
         if error_message is not None:
             update_data["error_message"] = error_message
 
-        self.client.table(self.executions_table).update(update_data).eq("id", execution_id).execute()
+        self.store.update(execution_id, data_updates=update_data)
 
     def _update_job_last_run(self, job_id: str, status: str) -> None:
-        update_data = {
+        self.store.update(job_id, data_updates={
             "last_run_at": datetime.now(timezone.utc).isoformat(),
             "last_status": status,
-        }
-        self.client.table(self.jobs_table).update(update_data).eq("id", job_id).execute()
+        })
 
     def get_history(
         self,
@@ -485,16 +472,23 @@ class SchedulerService:
         if not job:
             raise AppError(AppErrorCode.NOT_FOUND, f"Job {job_id} not found")
 
-        query = (
-            self.client.table(self.executions_table)
-            .select("*", count="exact")
-            .eq("job_id", job_id)
-            .order("started_at", desc=True)
-            .range((page - 1) * limit, page * limit - 1)
-        )
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE_EXECUTION, status="active")
+        
+        # 过滤指定 job 的执行记录
+        executions = []
+        for doc in docs:
+            if doc["data"].get("job_id") == job_id:
+                executions.append(self._execution_to_response(doc))
+        
+        # 排序
+        executions.sort(key=lambda x: x.get("started_at", ""), reverse=True)
+        
+        # 分页
+        total = len(executions)
+        start = (page - 1) * limit
+        end = start + limit
+        
+        return executions[start:end], total
 
     def get_logs(
         self,
@@ -503,7 +497,10 @@ class SchedulerService:
         level: str | None = None,
     ) -> tuple[list[dict], int]:
         """获取系统日志（调度相关）"""
-        query = self.client.table("system_logs").select("*", count="exact")
+        from src.common.supabase import get_supabase_admin
+        
+        client = get_supabase_admin()
+        query = client.table("system_logs").select("*", count="exact")
         
         if level:
             query = query.eq("level", level)
@@ -513,3 +510,38 @@ class SchedulerService:
         
         response = query.execute()
         return response.data, response.count or 0
+
+    def _to_response(self, doc: dict) -> dict:
+        """转换 job 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "name": data.get("name"),
+            "description": data.get("description"),
+            "job_type": data.get("job_type"),
+            "cron_expression": data.get("cron_expression"),
+            "parameters": data.get("parameters", {}),
+            "is_active": data.get("is_active", True),
+            "last_run_at": data.get("last_run_at"),
+            "last_status": data.get("last_status"),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }
+
+    def _execution_to_response(self, doc: dict) -> dict:
+        """转换 execution 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "job_id": data.get("job_id"),
+            "started_at": data.get("started_at"),
+            "finished_at": data.get("finished_at"),
+            "status": data.get("status"),
+            "result": data.get("result"),
+            "error_message": data.get("error_message"),
+            "created_at": doc.get("created_at"),
+        }

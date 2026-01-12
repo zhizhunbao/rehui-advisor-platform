@@ -1,4 +1,4 @@
-from .router import router as prompt_router
+from .router import router
 from .service import PromptService
 
-__all__ = ["prompt_router", "PromptService"]
+__all__ = ["router", "PromptService"]

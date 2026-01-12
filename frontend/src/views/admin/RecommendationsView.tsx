@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { useInfiniteScroll } from "@/common/hooks";
 import { LoadMoreIndicator } from "@/modules/admin/components/LoadMoreIndicator";
 import { getApiBase, getAuthHeaders } from "@/modules/admin/utils/api";

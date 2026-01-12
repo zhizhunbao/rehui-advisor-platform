@@ -1,13 +1,11 @@
-import asyncio
 from logging.config import fileConfig
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from alembic import context
-from sqlalchemy import pool, create_engine
+from sqlalchemy import pool, create_engine, MetaData
 from sqlalchemy.engine import Connection
 
 from src.common.config import get_settings
-from src.models import Base
 
 config = context.config
 settings = get_settings()
@@ -15,7 +13,8 @@ settings = get_settings()
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = Base.metadata
+# 使用空的 metadata，因为我们使用 Document Store 模式
+target_metadata = MetaData()
 
 
 def clean_db_url(url: str) -> str:

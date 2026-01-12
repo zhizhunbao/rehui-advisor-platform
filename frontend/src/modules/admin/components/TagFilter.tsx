@@ -1,5 +1,5 @@
-import type { Language } from "@/locales";
-import { adminLocales } from "@/locales";
+import type { Language } from "@/common/i18n";
+import { adminLocales } from "@/common/i18n";
 
 export interface TagOption {
   value: string;

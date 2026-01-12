@@ -1,9 +1,13 @@
-"""Skills 服务 - 使用 Supabase API"""
+"""Skills 服务 - 使用 Document Store"""
 import re
 import requests
 
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+# Document types
+DOC_TYPE_SKILL = "admin_skill"
+DOC_TYPE_SKILL_LABEL = "admin_skill_label"
 
 # GitHub API
 GITHUB_API = "https://api.github.com"
@@ -24,65 +28,58 @@ OFFICIAL_CATEGORIES = {
 
 class SkillService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "skills"
-        self.category_table = "skill_categories"
+        self.store = DocumentStore()
 
     # ========== 分类管理 ==========
     def get_category_labels(self, type: str = "category") -> list[dict]:
         """获取分类/来源标签列表"""
-        response = (
-            self.client.table(self.category_table)
-            .select("*")
-            .eq("type", type)
-            .eq("is_active", True)
-            .order("sort_order")
-            .execute()
-        )
-        return response.data or []
+        docs = self.store.find(DOC_TYPE_SKILL_LABEL, status="active")
+        labels = [
+            self._label_to_response(doc)
+            for doc in docs
+            if doc["data"].get("type") == type and doc["data"].get("is_active", True)
+        ]
+        labels.sort(key=lambda x: x.get("sort_order", 0))
+        return labels
 
     def get_all_category_labels(self) -> dict:
         """获取所有标签（分类+来源）"""
-        response = (
-            self.client.table(self.category_table)
-            .select("*")
-            .eq("is_active", True)
-            .order("sort_order")
-            .execute()
-        )
+        docs = self.store.find(DOC_TYPE_SKILL_LABEL, status="active")
         result = {"categories": [], "sources": []}
-        for item in response.data or []:
-            if item["type"] == "category":
+        for doc in docs:
+            data = doc["data"]
+            if not data.get("is_active", True):
+                continue
+            item = self._label_to_response(doc)
+            if data.get("type") == "category":
                 result["categories"].append(item)
             else:
                 result["sources"].append(item)
+        result["categories"].sort(key=lambda x: x.get("sort_order", 0))
+        result["sources"].sort(key=lambda x: x.get("sort_order", 0))
         return result
 
     def create_category_label(self, data: dict) -> dict:
         """创建分类/来源标签"""
-        existing = (
-            self.client.table(self.category_table)
-            .select("id")
-            .eq("type", data.get("type"))
-            .eq("code", data.get("code"))
-            .maybe_single()
-            .execute()
-        )
-        if existing.data:
-            raise AppError(AppErrorCode.DUPLICATE, f"Label {data.get('code')} already exists")
-        response = self.client.table(self.category_table).insert(data).execute()
-        return response.data[0]
+        # 检查是否重复
+        docs = self.store.find(DOC_TYPE_SKILL_LABEL, status="active")
+        for doc in docs:
+            if doc["data"].get("type") == data.get("type") and doc["data"].get("code") == data.get("code"):
+                raise AppError(AppErrorCode.DUPLICATE, f"Label {data.get('code')} already exists")
+        
+        doc = self.store.create(DOC_TYPE_SKILL_LABEL, data)
+        return self._label_to_response(doc)
 
     def update_category_label(self, id: str, data: dict) -> dict:
         """更新分类/来源标签"""
-        response = self.client.table(self.category_table).update(data).eq("id", id).execute()
-        if not response.data:
+        doc = self.store.update(id, data_updates=data)
+        if not doc:
             raise AppError(AppErrorCode.NOT_FOUND, f"Label {id} not found")
-        return response.data[0]
+        return self._label_to_response(doc)
 
     def delete_category_label(self, id: str) -> None:
         """删除分类/来源标签"""
-        self.client.table(self.category_table).delete().eq("id", id).execute()
+        self.store.delete(id)
 
     # ========== Skills 管理 ==========
     def find_all(
@@ -94,52 +91,58 @@ class SkillService:
         search: str | None = None,
     ) -> tuple[list[dict], int]:
         """获取 Skills 列表，支持分页、筛选、搜索"""
-        query = self.client.table(self.table).select("*", count="exact")
-
-        # 筛选条件
-        if category:
-            query = query.eq("category", category)
-        if source:
-            query = query.eq("source", source)
-        if search:
-            query = query.or_(f"name.ilike.%{search}%,description.ilike.%{search}%")
-
-        # 排序和分页：启用的在前，再按更新时间降序
-        query = query.order("is_active", desc=True).order("updated_at", desc=True).range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE_SKILL, status="active", limit=1000)
+        
+        # 过滤
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if category and data.get("category") != category:
+                continue
+            if source and data.get("source") != source:
+                continue
+            if search:
+                search_lower = search.lower()
+                name = (data.get("name") or "").lower()
+                desc = (data.get("description") or "").lower()
+                if search_lower not in name and search_lower not in desc:
+                    continue
+            filtered.append(doc)
+        
+        # 排序：启用的在前，再按更新时间降序
+        filtered.sort(key=lambda x: (
+            not x["data"].get("is_active", True),
+            x.get("updated_at") or ""
+        ), reverse=True)
+        
+        # 分页
+        total = len(filtered)
+        start = (page - 1) * limit
+        end = start + limit
+        paged = filtered[start:end]
+        
+        return [self._skill_to_response(doc) for doc in paged], total
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE_SKILL or doc["status"] == "deleted":
+            return None
+        return self._skill_to_response(doc)
 
     def find_by_name(self, name: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("name", name)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE_SKILL, status="active")
+        for doc in docs:
+            if doc["data"].get("name") == name:
+                return self._skill_to_response(doc)
+        return None
 
     def get_categories(self) -> list[dict]:
         """获取所有分类及数量"""
-        response = self.client.table(self.table).select("category").execute()
-        
-        # 统计每个分类的数量
+        docs = self.store.find(DOC_TYPE_SKILL, status="active")
         category_counts: dict[str, int] = {}
-        for item in response.data:
-            cat = item.get("category", "unknown")
+        for doc in docs:
+            cat = doc["data"].get("category", "unknown")
             category_counts[cat] = category_counts.get(cat, 0) + 1
-        
         return [
             {"category": cat, "count": count}
             for cat, count in sorted(category_counts.items(), key=lambda x: -x[1])
@@ -147,13 +150,11 @@ class SkillService:
 
     def get_sources(self) -> list[dict]:
         """获取所有来源及数量"""
-        response = self.client.table(self.table).select("source").execute()
-        
+        docs = self.store.find(DOC_TYPE_SKILL, status="active")
         source_counts: dict[str, int] = {}
-        for item in response.data:
-            src = item.get("source", "unknown")
+        for doc in docs:
+            src = doc["data"].get("source", "unknown")
             source_counts[src] = source_counts.get(src, 0) + 1
-        
         return [
             {"source": src, "count": count}
             for src, count in sorted(source_counts.items(), key=lambda x: -x[1])
@@ -163,35 +164,24 @@ class SkillService:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Skill {id} not found")
-        response = self.client.table(self.table).update(data).eq("id", id).execute()
-        return response.data[0]
+        doc = self.store.update(id, data_updates=data)
+        return self._skill_to_response(doc)
 
     def toggle_active(self, id: str) -> dict:
         """切换启用/禁用状态"""
-        existing = self.find_by_id(id)
-        if not existing:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE_SKILL:
             raise AppError(AppErrorCode.NOT_FOUND, f"Skill {id} not found")
-
-        new_status = not existing.get("is_active", True)
-        response = (
-            self.client.table(self.table)
-            .update({"is_active": new_status})
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        
+        new_status = not doc["data"].get("is_active", True)
+        updated = self.store.update(id, data_updates={"is_active": new_status})
+        return self._skill_to_response(updated)
 
     def get_stats(self) -> dict:
         """获取统计信息"""
-        response = (
-            self.client.table(self.table)
-            .select("category, source, is_active", count="exact")
-            .execute()
-        )
-        
-        total = response.count or 0
-        active = sum(1 for item in response.data if item.get("is_active", True))
-        
+        docs = self.store.find(DOC_TYPE_SKILL, status="active")
+        total = len(docs)
+        active = sum(1 for doc in docs if doc["data"].get("is_active", True))
         return {
             "total": total,
             "active": active,
@@ -206,7 +196,6 @@ class SkillService:
         synced = 0
         errors = []
 
-        # 获取官方 skills 目录
         url = f"{GITHUB_API}/repos/{OFFICIAL_REPO}/contents/{OFFICIAL_SKILLS_PATH}"
         response = requests.get(url, headers={"Accept": "application/vnd.github.v3+json"}, timeout=30)
 
@@ -218,7 +207,6 @@ class SkillService:
         for folder in folders:
             skill_name = folder["name"]
             try:
-                # 获取 SKILL.md 内容
                 content = self._fetch_skill_content(OFFICIAL_REPO, folder["path"])
                 if not content:
                     continue
@@ -227,22 +215,21 @@ class SkillService:
                 if not parsed["name"]:
                     parsed["name"] = skill_name
 
-                # 更新或创建
                 existing = self.find_by_name(skill_name)
                 data = {
+                    "name": skill_name,
                     "description": parsed["description"],
                     "content": parsed["template"],
                     "category": OFFICIAL_CATEGORIES.get(skill_name, "tool"),
                     "source": "official",
                     "repo": OFFICIAL_REPO,
+                    "is_active": True,
                 }
 
                 if existing:
-                    self.client.table(self.table).update(data).eq("name", skill_name).execute()
+                    self.store.update(existing["id"], data_updates=data)
                 else:
-                    data["name"] = skill_name
-                    data["is_active"] = True
-                    self.client.table(self.table).insert(data).execute()
+                    self.store.create(DOC_TYPE_SKILL, data)
 
                 synced += 1
             except Exception as e:
@@ -264,7 +251,6 @@ class SkillService:
         name = ""
         description = ""
 
-        # 表格格式
         table_pattern = r'\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|'
         matches = re.findall(table_pattern, content)
         if len(matches) >= 2:
@@ -276,7 +262,6 @@ class SkillService:
                 description = col2
                 break
 
-        # Frontmatter 格式
         if not name:
             fm_match = re.search(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
             if fm_match:
@@ -288,8 +273,44 @@ class SkillService:
                 if desc_match:
                     description = desc_match.group(1).strip()
 
-        # 清理内容
         body = re.sub(r'\|[^\n]+\|(\n\|[^\n]+\|)*', '', content)
         body = re.sub(r'^---\s*\n.*?\n---\s*\n', '', body, flags=re.DOTALL)
 
         return {"name": name, "description": description, "template": body.strip()}
+
+    def _skill_to_response(self, doc: dict) -> dict:
+        """转换 skill 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "name": data.get("name"),
+            "description": data.get("description"),
+            "content": data.get("content"),
+            "category": data.get("category"),
+            "source": data.get("source"),
+            "repo": data.get("repo"),
+            "is_active": data.get("is_active", True),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }
+
+    def _label_to_response(self, doc: dict) -> dict:
+        """转换 label 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "type": data.get("type"),
+            "code": data.get("code"),
+            "name": data.get("name"),
+            "name_en": data.get("name_en"),
+            "color": data.get("color"),
+            "icon": data.get("icon"),
+            "sort_order": data.get("sort_order", 0),
+            "is_active": data.get("is_active", True),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

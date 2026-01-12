@@ -1,16 +1,17 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
+"""酒店搜索服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.models.domain import Hotel
 from .dto import HotelResponse
 
 
-class HotelService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+DOC_TYPE = "member_hotel"
 
-    async def search(
+
+class HotelService:
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def search(
         self,
         city: str,
         min_price: float | None = None,
@@ -19,38 +20,44 @@ class HotelService:
         page: int = 1,
         page_size: int = 20,
     ) -> list[HotelResponse]:
-        query = select(Hotel).where(Hotel.city == city)
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        # 过滤
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if data.get("city") != city:
+                continue
+            if min_price is not None and data.get("price_per_night", 0) < min_price:
+                continue
+            if max_price is not None and data.get("price_per_night", float("inf")) > max_price:
+                continue
+            if min_rating is not None and data.get("review_score", 0) < min_rating:
+                continue
+            filtered.append(self._to_response(doc))
+        
+        # 分页
+        start = (page - 1) * page_size
+        end = start + page_size
+        return filtered[start:end]
 
-        if min_price is not None:
-            query = query.where(Hotel.price_per_night >= min_price)
-        if max_price is not None:
-            query = query.where(Hotel.price_per_night <= max_price)
-        if min_rating is not None:
-            query = query.where(Hotel.review_score >= min_rating)
-
-        query = query.offset((page - 1) * page_size).limit(page_size)
-        result = await self.db.execute(query)
-        hotels = list(result.scalars().all())
-
-        return [self._to_response(h) for h in hotels]
-
-    async def find_by_id(self, id: str) -> HotelResponse:
-        result = await self.db.execute(select(Hotel).where(Hotel.id == id))
-        hotel = result.scalar_one_or_none()
-        if not hotel:
+    def find_by_id(self, id: str) -> HotelResponse:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, f"Hotel {id} not found")
-        return self._to_response(hotel)
+        return self._to_response(doc)
 
-    def _to_response(self, hotel: Hotel) -> HotelResponse:
+    def _to_response(self, doc: dict) -> HotelResponse:
+        data = doc["data"]
         return HotelResponse(
-            id=hotel.id,
-            name=hotel.name,
-            city=hotel.city,
-            state=hotel.state,
-            country=hotel.country,
-            rating=hotel.rating,
-            review_score=hotel.review_score,
-            price_per_night=hotel.price_per_night,
-            currency=hotel.currency,
-            amenities=hotel.amenities or [],
+            id=doc["id"],
+            name=data.get("name"),
+            city=data.get("city"),
+            state=data.get("state"),
+            country=data.get("country"),
+            rating=data.get("rating"),
+            review_score=data.get("review_score"),
+            price_per_night=data.get("price_per_night"),
+            currency=data.get("currency"),
+            amenities=data.get("amenities") or [],
         )

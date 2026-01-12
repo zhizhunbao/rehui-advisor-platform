@@ -1,4 +1,4 @@
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 
 interface LoadMoreIndicatorProps {
   loadMoreRef: (node: HTMLDivElement | null) => void;

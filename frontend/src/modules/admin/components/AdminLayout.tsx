@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { useAdminAuth } from "../context/AdminAuthContext";
 import { useAdminSettings } from "../context/AdminSettingsContext";
-import { adminLocales } from "../locales";
+import { adminLocales } from "@/common/i18n";
 import ThemeSelector from "./ThemeSelector";
 
 interface MenuItem {

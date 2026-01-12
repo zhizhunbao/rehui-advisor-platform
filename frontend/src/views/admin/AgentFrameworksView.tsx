@@ -1,9 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { getApiBase, getAuthHeaders } from "@/modules/admin/utils/api";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/libs/shadcn/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/libs/shadcn/ui/card";
 import { Badge } from "@/libs/shadcn/ui/badge";
 import {
   Dialog,

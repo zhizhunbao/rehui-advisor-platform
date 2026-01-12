@@ -1,7 +1,5 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.models.recommendation import Recommendation
+"""推荐服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from .dto import (
     RecommendationItem,
     RecommendationRequest,
@@ -9,37 +7,52 @@ from .dto import (
 )
 
 
-class RecommendationService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+DOC_TYPE = "member_recommendation"
 
-    async def get_recommendations(
+
+class RecommendationService:
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def get_recommendations(
         self, request: RecommendationRequest
     ) -> RecommendationResponse:
-        query = (
-            select(Recommendation)
-            .where(Recommendation.user_id == request.user_id)
-            .where(Recommendation.domain == request.domain)
-            .order_by(Recommendation.ranking)
-            .limit(request.limit)
+        docs = self.store.find(
+            DOC_TYPE, 
+            status="active", 
+            owner_id=request.user_id,
+            limit=1000
         )
-
-        result = await self.db.execute(query)
-        items = list(result.scalars().all())
+        
+        # 过滤 domain
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if data.get("domain") == request.domain:
+                filtered.append(doc)
+        
+        # 按 ranking 排序
+        filtered.sort(key=lambda d: d["data"].get("ranking", 0))
+        
+        # 限制数量
+        filtered = filtered[:request.limit]
+        
+        items = [self._to_item(doc) for doc in filtered]
 
         return RecommendationResponse(
-            items=[self._to_item(r) for r in items],
+            items=items,
             total=len(items),
         )
 
-    def _to_item(self, rec: Recommendation) -> RecommendationItem:
+    def _to_item(self, doc: dict) -> RecommendationItem:
+        data = doc["data"]
         return RecommendationItem(
-            id=rec.id,
-            domain=rec.domain,
-            item_id=rec.item_id,
-            match_score=rec.match_score,
-            ranking=rec.ranking,
-            pros=rec.pros or [],
-            cons=rec.cons or [],
-            reasoning=rec.reasoning,
+            id=doc["id"],
+            domain=data.get("domain"),
+            item_id=data.get("item_id"),
+            match_score=data.get("match_score"),
+            ranking=data.get("ranking"),
+            pros=data.get("pros") or [],
+            cons=data.get("cons") or [],
+            reasoning=data.get("reasoning"),
         )

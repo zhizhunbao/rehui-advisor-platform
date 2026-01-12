@@ -1,11 +1,16 @@
 import { useState, useCallback, useEffect } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { getApiBase, getAuthHeaders } from "@/modules/admin/utils/api";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
 import { Badge } from "@/libs/shadcn/ui/badge";
 import { Checkbox } from "@/libs/shadcn/ui/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/libs/shadcn/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/libs/shadcn/ui/tabs";
 import {
   Dialog,
   DialogContent,

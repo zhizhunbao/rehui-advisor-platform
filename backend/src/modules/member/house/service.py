@@ -1,16 +1,17 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
+"""房产搜索服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.models.domain import House
 from .dto import HouseResponse
 
 
-class HouseService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+DOC_TYPE = "member_house"
 
-    async def search(
+
+class HouseService:
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def search(
         self,
         city: str | None = None,
         listing_type: str | None = None,
@@ -20,44 +21,48 @@ class HouseService:
         page: int = 1,
         page_size: int = 20,
     ) -> list[HouseResponse]:
-        query = select(House)
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        # 过滤
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if city and data.get("city") != city:
+                continue
+            if listing_type and data.get("listing_type") != listing_type:
+                continue
+            if min_price is not None and data.get("price", 0) < min_price:
+                continue
+            if max_price is not None and data.get("price", float("inf")) > max_price:
+                continue
+            if min_bedrooms is not None and data.get("bedrooms", 0) < min_bedrooms:
+                continue
+            filtered.append(self._to_response(doc))
+        
+        # 分页
+        start = (page - 1) * page_size
+        end = start + page_size
+        return filtered[start:end]
 
-        if city:
-            query = query.where(House.city == city)
-        if listing_type:
-            query = query.where(House.listing_type == listing_type)
-        if min_price is not None:
-            query = query.where(House.price >= min_price)
-        if max_price is not None:
-            query = query.where(House.price <= max_price)
-        if min_bedrooms is not None:
-            query = query.where(House.bedrooms >= min_bedrooms)
-
-        query = query.offset((page - 1) * page_size).limit(page_size)
-        result = await self.db.execute(query)
-        houses = list(result.scalars().all())
-
-        return [self._to_response(h) for h in houses]
-
-    async def find_by_id(self, id: str) -> HouseResponse:
-        result = await self.db.execute(select(House).where(House.id == id))
-        house = result.scalar_one_or_none()
-        if not house:
+    def find_by_id(self, id: str) -> HouseResponse:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, f"House {id} not found")
-        return self._to_response(house)
+        return self._to_response(doc)
 
-    def _to_response(self, house: House) -> HouseResponse:
+    def _to_response(self, doc: dict) -> HouseResponse:
+        data = doc["data"]
         return HouseResponse(
-            id=house.id,
-            listing_type=house.listing_type,
-            property_type=house.property_type,
-            city=house.city,
-            state=house.state,
-            price=house.price,
-            currency=house.currency,
-            bedrooms=house.bedrooms,
-            bathrooms=house.bathrooms,
-            square_feet=house.square_feet,
-            year_built=house.year_built,
-            features=house.features or [],
+            id=doc["id"],
+            listing_type=data.get("listing_type"),
+            property_type=data.get("property_type"),
+            city=data.get("city"),
+            state=data.get("state"),
+            price=data.get("price"),
+            currency=data.get("currency"),
+            bedrooms=data.get("bedrooms"),
+            bathrooms=data.get("bathrooms"),
+            square_feet=data.get("square_feet"),
+            year_built=data.get("year_built"),
+            features=data.get("features") or [],
         )

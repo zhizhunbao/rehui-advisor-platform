@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useConfigs } from "@/modules/admin/hooks";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import type {
   SystemConfig,
   CreateConfigDto,

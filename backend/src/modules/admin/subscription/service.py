@@ -1,12 +1,13 @@
-"""订阅方案管理服务 - 使用 Supabase API"""
+"""订阅方案管理服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+DOC_TYPE = "admin_subscription"
 
 
 class SubscriptionService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "subscription_plans"
+        self.store = DocumentStore()
 
     def find_all(
         self,
@@ -14,65 +15,59 @@ class SubscriptionService:
         limit: int = 20,
         is_active: bool | None = None,
     ) -> tuple[list[dict], int]:
-        query = self.client.table(self.table).select("*", count="exact")
-
-        if is_active is not None:
-            query = query.eq("is_active", is_active)
-
-        query = query.order("sort_order")
-        query = query.range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if is_active is not None and data.get("is_active") != is_active:
+                continue
+            filtered.append(doc)
+        
+        filtered.sort(key=lambda x: x["data"].get("sort_order", 0))
+        total = len(filtered)
+        start = (page - 1) * limit
+        paged = filtered[start:start + limit]
+        
+        return [self._to_response(doc) for doc in paged], total
 
     def find_active(self) -> list[dict]:
-        """获取所有激活的订阅方案（用于前端展示）"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("is_active", True)
-            .order("sort_order")
-            .execute()
-        )
-        return response.data
+        """获取所有激活的订阅方案"""
+        docs = self.store.find(DOC_TYPE, status="active")
+        plans = [
+            self._to_response(doc)
+            for doc in docs
+            if doc["data"].get("is_active", True)
+        ]
+        plans.sort(key=lambda x: x.get("sort_order", 0))
+        return plans
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     def find_by_name(self, name: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("name", name)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            if doc["data"].get("name") == name:
+                return self._to_response(doc)
+        return None
 
     def create(self, data: dict) -> dict:
-        # 检查名称是否重复
         existing = self.find_by_name(data.get("name", ""))
         if existing:
             raise AppError(AppErrorCode.DUPLICATE, "Subscription plan name already exists")
 
-        response = self.client.table(self.table).insert(data).execute()
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create subscription plan")
-        return response.data[0]
+        doc = self.store.create(DOC_TYPE, data)
+        return self._to_response(doc)
 
     def update(self, id: str, data: dict) -> dict:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Subscription plan {id} not found")
 
-        # 如果更新名称，检查是否重复
         if data.get("name") and data["name"] != existing["name"]:
             name_exists = self.find_by_name(data["name"])
             if name_exists:
@@ -82,33 +77,16 @@ class SubscriptionService:
         if not update_data:
             return existing
 
-        response = (
-            self.client.table(self.table)
-            .update(update_data)
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates=update_data)
+        return self._to_response(doc)
 
     def delete(self, id: str) -> None:
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"Subscription plan {id} not found")
 
-        # 检查是否有用户使用此方案
-        users_response = (
-            self.client.table("users")
-            .select("id", count="exact")
-            .eq("subscription_plan", existing.get("name"))
-            .execute()
-        )
-        if users_response.count and users_response.count > 0:
-            raise AppError(
-                AppErrorCode.VALIDATION_ERROR,
-                f"Cannot delete: {users_response.count} users are using this plan"
-            )
-
-        self.client.table(self.table).delete().eq("id", id).execute()
+        # TODO: 检查是否有用户使用此方案
+        self.store.delete(id)
 
     def toggle_status(self, id: str) -> dict:
         existing = self.find_by_id(id)
@@ -116,10 +94,25 @@ class SubscriptionService:
             raise AppError(AppErrorCode.NOT_FOUND, f"Subscription plan {id} not found")
 
         new_status = not existing.get("is_active", True)
-        response = (
-            self.client.table(self.table)
-            .update({"is_active": new_status})
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates={"is_active": new_status})
+        return self._to_response(doc)
+
+    def _to_response(self, doc: dict) -> dict:
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "name": data.get("name"),
+            "display_name": data.get("display_name"),
+            "description": data.get("description"),
+            "price_monthly": data.get("price_monthly"),
+            "price_yearly": data.get("price_yearly"),
+            "features": data.get("features", []),
+            "limits": data.get("limits", {}),
+            "sort_order": data.get("sort_order", 0),
+            "is_active": data.get("is_active", True),
+            "is_popular": data.get("is_popular", False),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

@@ -1,16 +1,17 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
+"""投资搜索服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.models.domain import Investment
 from .dto import InvestmentResponse
 
 
-class InvestmentService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+DOC_TYPE = "member_investment"
 
-    async def search(
+
+class InvestmentService:
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def search(
         self,
         investment_type: str | None = None,
         risk_level: str | None = None,
@@ -19,42 +20,46 @@ class InvestmentService:
         page: int = 1,
         page_size: int = 20,
     ) -> list[InvestmentResponse]:
-        query = select(Investment)
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        # 过滤
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if investment_type and data.get("type") != investment_type:
+                continue
+            if risk_level and data.get("risk_level") != risk_level:
+                continue
+            if min_price is not None and data.get("current_price", 0) < min_price:
+                continue
+            if max_price is not None and data.get("current_price", float("inf")) > max_price:
+                continue
+            filtered.append(self._to_response(doc))
+        
+        # 分页
+        start = (page - 1) * page_size
+        end = start + page_size
+        return filtered[start:end]
 
-        if investment_type:
-            query = query.where(Investment.type == investment_type)
-        if risk_level:
-            query = query.where(Investment.risk_level == risk_level)
-        if min_price is not None:
-            query = query.where(Investment.current_price >= min_price)
-        if max_price is not None:
-            query = query.where(Investment.current_price <= max_price)
-
-        query = query.offset((page - 1) * page_size).limit(page_size)
-        result = await self.db.execute(query)
-        items = list(result.scalars().all())
-
-        return [self._to_response(i) for i in items]
-
-    async def find_by_id(self, id: str) -> InvestmentResponse:
-        result = await self.db.execute(select(Investment).where(Investment.id == id))
-        item = result.scalar_one_or_none()
-        if not item:
+    def find_by_id(self, id: str) -> InvestmentResponse:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, f"Investment {id} not found")
-        return self._to_response(item)
+        return self._to_response(doc)
 
-    def _to_response(self, inv: Investment) -> InvestmentResponse:
+    def _to_response(self, doc: dict) -> InvestmentResponse:
+        data = doc["data"]
         return InvestmentResponse(
-            id=inv.id,
-            product_name=inv.product_name,
-            type=inv.type,
-            ticker=inv.ticker,
-            current_price=inv.current_price,
-            currency=inv.currency,
-            risk_level=inv.risk_level,
-            minimum_investment=inv.minimum_investment,
-            provider=inv.provider,
-            description=inv.description,
-            sector=inv.sector,
-            dividend_yield=inv.dividend_yield,
+            id=doc["id"],
+            product_name=data.get("product_name"),
+            type=data.get("type"),
+            ticker=data.get("ticker"),
+            current_price=data.get("current_price"),
+            currency=data.get("currency"),
+            risk_level=data.get("risk_level"),
+            minimum_investment=data.get("minimum_investment"),
+            provider=data.get("provider"),
+            description=data.get("description"),
+            sector=data.get("sector"),
+            dividend_yield=data.get("dividend_yield"),
         )

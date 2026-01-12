@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { crawlerService } from "@/modules/admin/services/admin.service";
 import type { CrawlSource, CrawlTask } from "@/modules/admin/types/admin.types";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Badge } from "@/libs/shadcn/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/libs/shadcn/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/libs/shadcn/ui/card";
 
 interface CrawlersViewProps {
   lang: Language;

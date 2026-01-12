@@ -1,8 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { analyticsService } from "@/modules/admin/services/admin.service";
 import type { AnalyticsSummary } from "@/modules/admin/types/admin.types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/libs/shadcn/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/libs/shadcn/ui/card";
 
 interface DashboardViewProps {
   lang: Language;

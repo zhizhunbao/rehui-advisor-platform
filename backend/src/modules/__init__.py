@@ -2,19 +2,19 @@
 
 # ========== Admin 模块 - 管理端功能 ==========
 from src.modules.admin import (
-    admin_router,
     admin_auth_router,
-    crawler_router,
-    user_router,
-    subscription_router,
-    recommendation_router as admin_recommendation_router,
-    conversation_router,
+    analytics_router,
     config_router,
+    conversation_router,
+    crawler_router,
+    domain_router,
+    prompt_router,
+    recommendation_router as admin_recommendation_router,
+    subscription_router,
+    user_router,
 )
 from src.modules.admin.data_source import data_source_router
 from src.modules.admin.llm import llm_router
-from src.modules.admin.log import log_router
-from src.modules.admin.prompt import prompt_router
 from src.modules.admin.retrieval import retrieval_router
 from src.modules.admin.scheduler import scheduler_router
 from src.modules.admin.skill import skill_router
@@ -33,34 +33,29 @@ from src.modules.member.insurance import router as insurance_router
 from src.modules.member.investment import router as investment_router
 from src.modules.member.job import router as job_router
 
-# ========== Admin 模块 - 管理端功能 ==========
-from src.modules.admin.domain import router as domain_router
-
 __all__ = [
     # Admin
-    "admin_router",
     "admin_auth_router",
-    "crawler_router",
-    "user_router",
-    "subscription_router",
-    "admin_recommendation_router",
-    "conversation_router",
+    "analytics_router",
     "config_router",
+    "conversation_router",
+    "crawler_router",
     "data_source_router",
+    "domain_router",
     "llm_router",
-    "log_router",
     "prompt_router",
     "retrieval_router",
     "scheduler_router",
     "skill_router",
+    "admin_recommendation_router",
+    "subscription_router",
+    "user_router",
     # Member
     "advisor_router",
     "auth_router",
     "recommendation_router",
     "search_router",
-    # Shared
     "car_router",
-    "domain_router",
     "education_router",
     "flight_router",
     "hotel_router",

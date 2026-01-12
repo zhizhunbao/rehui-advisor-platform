@@ -1,16 +1,17 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
+"""教育搜索服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.models.domain import Education
 from .dto import EducationResponse
 
 
-class EducationService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+DOC_TYPE = "member_education"
 
-    async def search(
+
+class EducationService:
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def search(
         self,
         degree: str | None = None,
         major: str | None = None,
@@ -19,45 +20,49 @@ class EducationService:
         page: int = 1,
         page_size: int = 20,
     ) -> list[EducationResponse]:
-        query = select(Education)
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        # 过滤
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            if degree and data.get("degree") != degree:
+                continue
+            if major and data.get("major") != major:
+                continue
+            if city and data.get("city") != city:
+                continue
+            if max_tuition is not None and data.get("tuition", float("inf")) > max_tuition:
+                continue
+            filtered.append(self._to_response(doc))
+        
+        # 分页
+        start = (page - 1) * page_size
+        end = start + page_size
+        return filtered[start:end]
 
-        if degree:
-            query = query.where(Education.degree == degree)
-        if major:
-            query = query.where(Education.major == major)
-        if city:
-            query = query.where(Education.city == city)
-        if max_tuition is not None:
-            query = query.where(Education.tuition <= max_tuition)
-
-        query = query.offset((page - 1) * page_size).limit(page_size)
-        result = await self.db.execute(query)
-        items = list(result.scalars().all())
-
-        return [self._to_response(e) for e in items]
-
-    async def find_by_id(self, id: str) -> EducationResponse:
-        result = await self.db.execute(select(Education).where(Education.id == id))
-        item = result.scalar_one_or_none()
-        if not item:
+    def find_by_id(self, id: str) -> EducationResponse:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, f"Education {id} not found")
-        return self._to_response(item)
+        return self._to_response(doc)
 
-    def _to_response(self, edu: Education) -> EducationResponse:
+    def _to_response(self, doc: dict) -> EducationResponse:
+        data = doc["data"]
         return EducationResponse(
-            id=edu.id,
-            institution=edu.institution,
-            program=edu.program,
-            degree=edu.degree,
-            major=edu.major,
-            city=edu.city,
-            state=edu.state,
-            country=edu.country,
-            tuition=edu.tuition,
-            currency=edu.currency,
-            duration=edu.duration,
-            overall_ranking=edu.overall_ranking,
-            program_ranking=edu.program_ranking,
-            admission_rate=edu.admission_rate,
-            employment_rate=edu.employment_rate,
+            id=doc["id"],
+            institution=data.get("institution"),
+            program=data.get("program"),
+            degree=data.get("degree"),
+            major=data.get("major"),
+            city=data.get("city"),
+            state=data.get("state"),
+            country=data.get("country"),
+            tuition=data.get("tuition"),
+            currency=data.get("currency"),
+            duration=data.get("duration"),
+            overall_ranking=data.get("overall_ranking"),
+            program_ranking=data.get("program_ranking"),
+            admission_rate=data.get("admission_rate"),
+            employment_rate=data.get("employment_rate"),
         )

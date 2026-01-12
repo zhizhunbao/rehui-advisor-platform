@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { useDomains, useQuestions } from "@/modules/admin/hooks";
 import type { CreateQuestionDto } from "@/modules/admin/types/admin.types";
 import { Button } from "@/libs/shadcn/ui/button";

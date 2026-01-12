@@ -1,9 +1,8 @@
+"""保险服务 - 使用 Document Store"""
 import random
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.models.insurance import InsuranceQuote
+from src.common.document import DocumentStore
 from .dto import (
     ComparisonMetric,
     ComparisonResponse,
@@ -17,6 +16,10 @@ from .dto import (
     RiskAssessmentResponse,
     RiskFactor,
 )
+
+
+DOC_TYPE_QUOTE = "member_insurance_quote"
+
 
 INSURANCE_PROVIDERS: dict[InsuranceProviderCode, ProviderInfo] = {
     InsuranceProviderCode.GEICO: ProviderInfo(
@@ -44,13 +47,13 @@ INSURANCE_PROVIDERS: dict[InsuranceProviderCode, ProviderInfo] = {
 
 
 class InsuranceService:
-    def __init__(self, db: AsyncSession) -> None:
-        self.db = db
+    def __init__(self) -> None:
+        self.store = DocumentStore()
 
-    async def get_quotes(self, request: QuoteRequest) -> list[QuoteResponse]:
+    def get_quotes(self, request: QuoteRequest) -> list[QuoteResponse]:
         providers = self._get_providers_by_type(request.insurance_type)
         quotes = [self._generate_quote(p.code, request) for p in providers]
-        await self._save_quote_record(request, quotes)
+        self._save_quote_record(request, quotes)
         return quotes
 
     def _get_providers_by_type(self, insurance_type: InsuranceType) -> list[ProviderInfo]:
@@ -105,23 +108,21 @@ class InsuranceService:
             valid_until=datetime.now(timezone.utc) + timedelta(days=30),
         )
 
-    async def _save_quote_record(
+    def _save_quote_record(
         self, request: QuoteRequest, quotes: list[QuoteResponse]
     ) -> None:
-        quote_record = InsuranceQuote(
-            user_id=request.user_id,
-            session_token=request.session_token,
-            insurance_type=request.insurance_type.value,
-            request_data=request.model_dump(),
-            zip_code=request.zip_code,
-            quotes=[q.model_dump() for q in quotes],
-            status="ACTIVE",
-            expires_at=datetime.now(timezone.utc) + timedelta(days=30),
-        )
-        self.db.add(quote_record)
-        await self.db.commit()
+        self.store.create(DOC_TYPE_QUOTE, {
+            "user_id": request.user_id,
+            "session_token": request.session_token,
+            "insurance_type": request.insurance_type.value,
+            "request_data": request.model_dump(),
+            "zip_code": request.zip_code,
+            "quotes": [q.model_dump() for q in quotes],
+            "status": "ACTIVE",
+            "expires_at": (datetime.now(timezone.utc) + timedelta(days=30)).isoformat(),
+        }, owner_id=request.user_id)
 
-    async def compare_quotes(self, quotes: list[QuoteResponse]) -> ComparisonResponse:
+    def compare_quotes(self, quotes: list[QuoteResponse]) -> ComparisonResponse:
         sorted_by_premium = sorted(quotes, key=lambda q: q.premium)
         cheapest = sorted_by_premium[0].id if sorted_by_premium else ""
 
@@ -155,7 +156,7 @@ class InsuranceService:
             ],
         )
 
-    async def assess_risk(self, request: QuoteRequest) -> RiskAssessmentResponse:
+    def assess_risk(self, request: QuoteRequest) -> RiskAssessmentResponse:
         return RiskAssessmentResponse(
             risk_level="MEDIUM",
             factors=[
@@ -170,7 +171,7 @@ class InsuranceService:
             recommendations=["考虑增加责任险保额", "安装安全设备可获得折扣"],
         )
 
-    async def get_providers(
+    def get_providers(
         self, insurance_type: InsuranceType | None = None
     ) -> list[ProviderInfo]:
         if insurance_type:

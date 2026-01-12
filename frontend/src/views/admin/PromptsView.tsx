@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { useInfiniteScroll } from "@/common/hooks";
 import { StatCard } from "@/modules/admin/components/StatCard";
 import { LoadMoreIndicator } from "@/modules/admin/components/LoadMoreIndicator";

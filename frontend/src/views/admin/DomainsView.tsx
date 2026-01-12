@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { useDomains, useDomainCategories } from "@/modules/admin/hooks";
 import type {
   Domain,

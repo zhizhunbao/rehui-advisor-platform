@@ -1,6 +1,10 @@
-"""Retrieval Engine Service - 知识检索引擎管理"""
+"""Retrieval Engine Service - 知识检索引擎管理 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+
+DOC_TYPE_ENGINE = "admin_retrieval_engine"
+DOC_TYPE_DOMAIN_CONFIG = "admin_retrieval_domain_config"
 
 
 # 支持的引擎类型
@@ -74,9 +78,7 @@ ENGINE_TYPES = {
 
 class RetrievalEngineService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "retrieval_engines"
-        self.domain_table = "retrieval_domain_configs"
+        self.store = DocumentStore()
 
     # ========== 引擎管理 ==========
     def find_all_engines(
@@ -86,59 +88,57 @@ class RetrievalEngineService:
         type: str | None = None,
         is_active: bool | None = None,
     ) -> tuple[list[dict], int]:
-        query = self.client.table(self.table).select("*", count="exact")
-
-        if type:
-            query = query.eq("type", type)
-        if is_active is not None:
-            query = query.eq("is_active", is_active)
-
-        query = query.order("created_at", desc=True)
-        query = query.range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        
+        # 过滤
+        engines = []
+        for doc in docs:
+            data = doc["data"]
+            if type and data.get("type") != type:
+                continue
+            if is_active is not None and data.get("is_active") != is_active:
+                continue
+            engines.append(self._engine_to_response(doc))
+        
+        # 排序
+        engines.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        
+        # 分页
+        total = len(engines)
+        start = (page - 1) * limit
+        end = start + limit
+        
+        return engines[start:end], total
 
     def find_engine_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE_ENGINE or doc["status"] == "deleted":
+            return None
+        return self._engine_to_response(doc)
 
     def find_engine_by_name(self, name: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("name", name)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        for doc in docs:
+            if doc["data"].get("name") == name:
+                return self._engine_to_response(doc)
+        return None
 
     def get_default_engine(self) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("is_default", True)
-            .eq("is_active", True)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        for doc in docs:
+            data = doc["data"]
+            if data.get("is_default") and data.get("is_active"):
+                return self._engine_to_response(doc)
+        return None
 
     def get_active_engines(self) -> list[dict]:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("is_active", True)
-            .order("display_name")
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        engines = []
+        for doc in docs:
+            if doc["data"].get("is_active"):
+                engines.append(self._engine_to_response(doc))
+        engines.sort(key=lambda x: x.get("display_name", ""))
+        return engines
 
     def get_engine_types(self) -> list[dict]:
         return [
@@ -164,7 +164,7 @@ class RetrievalEngineService:
                 AppErrorCode.DUPLICATE, f"Engine name already exists: {data['name']}"
             )
 
-        insert_data = {
+        doc = self.store.create(DOC_TYPE_ENGINE, {
             "name": data["name"],
             "display_name": data["display_name"],
             "type": engine_type,
@@ -172,12 +172,9 @@ class RetrievalEngineService:
             "config": data.get("config", {}),
             "is_active": data.get("is_active", True),
             "is_default": False,
-        }
-
-        response = self.client.table(self.table).insert(insert_data).execute()
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create engine")
-        return response.data[0]
+        })
+        
+        return self._engine_to_response(doc)
 
     def update_engine(self, id: str, data: dict) -> dict:
         existing = self.find_engine_by_id(id)
@@ -185,10 +182,8 @@ class RetrievalEngineService:
             raise AppError(AppErrorCode.NOT_FOUND, f"Engine {id} not found")
 
         update_data = {k: v for k, v in data.items() if v is not None}
-        response = (
-            self.client.table(self.table).update(update_data).eq("id", id).execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates=update_data)
+        return self._engine_to_response(doc)
 
     def delete_engine(self, id: str) -> None:
         existing = self.find_engine_by_id(id)
@@ -200,7 +195,7 @@ class RetrievalEngineService:
                 AppErrorCode.VALIDATION_ERROR, "Cannot delete default engine"
             )
 
-        self.client.table(self.table).delete().eq("id", id).execute()
+        self.store.delete(id)
 
     def set_default_engine(self, engine_id: str) -> dict:
         engine = self.find_engine_by_id(engine_id)
@@ -213,39 +208,38 @@ class RetrievalEngineService:
             )
 
         # 清除旧默认
-        self.client.table(self.table).update({"is_default": False}).eq(
-            "is_default", True
-        ).execute()
+        docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        for doc in docs:
+            if doc["data"].get("is_default"):
+                self.store.update(doc["id"], data_updates={"is_default": False})
 
         # 设置新默认
-        response = (
-            self.client.table(self.table)
-            .update({"is_default": True})
-            .eq("id", engine_id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(engine_id, data_updates={"is_default": True})
+        return self._engine_to_response(doc)
+
 
     # ========== 领域配置 ==========
     def get_domain_configs(self) -> list[dict]:
-        response = (
-            self.client.table(self.domain_table)
-            .select("*, retrieval_engines(*)")
-            .order("domain")
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE_DOMAIN_CONFIG, status="active")
+        configs = []
+        for doc in docs:
+            config = self._domain_config_to_response(doc)
+            # 获取关联的引擎信息
+            engine_id = doc["data"].get("engine_id")
+            if engine_id:
+                engine = self.find_engine_by_id(engine_id)
+                config["engine"] = engine
+            configs.append(config)
+        configs.sort(key=lambda x: x.get("domain", ""))
+        return configs
 
     def get_domain_engine(self, domain: str) -> dict | None:
-        response = (
-            self.client.table(self.domain_table)
-            .select("*, retrieval_engines(*)")
-            .eq("domain", domain)
-            .maybe_single()
-            .execute()
-        )
-        if response.data:
-            return response.data.get("retrieval_engines")
+        docs = self.store.find(DOC_TYPE_DOMAIN_CONFIG, status="active")
+        for doc in docs:
+            if doc["data"].get("domain") == domain:
+                engine_id = doc["data"].get("engine_id")
+                if engine_id:
+                    return self.find_engine_by_id(engine_id)
         return self.get_default_engine()
 
     def set_domain_engine(self, domain: str, engine_id: str) -> dict:
@@ -253,36 +247,51 @@ class RetrievalEngineService:
         if not engine:
             raise AppError(AppErrorCode.NOT_FOUND, f"Engine {engine_id} not found")
 
-        # Upsert 领域配置
-        response = (
-            self.client.table(self.domain_table)
-            .upsert({"domain": domain, "engine_id": engine_id}, on_conflict="domain")
-            .execute()
-        )
-        return response.data[0]
+        # 查找现有配置
+        docs = self.store.find(DOC_TYPE_DOMAIN_CONFIG, status="active")
+        existing_doc = None
+        for doc in docs:
+            if doc["data"].get("domain") == domain:
+                existing_doc = doc
+                break
+
+        if existing_doc:
+            # 更新
+            doc = self.store.update(existing_doc["id"], data_updates={"engine_id": engine_id})
+        else:
+            # 创建
+            doc = self.store.create(DOC_TYPE_DOMAIN_CONFIG, {
+                "domain": domain,
+                "engine_id": engine_id,
+            })
+        
+        return self._domain_config_to_response(doc)
 
     def delete_domain_config(self, domain: str) -> None:
-        self.client.table(self.domain_table).delete().eq("domain", domain).execute()
+        docs = self.store.find(DOC_TYPE_DOMAIN_CONFIG, status="active")
+        for doc in docs:
+            if doc["data"].get("domain") == domain:
+                self.store.delete(doc["id"])
+                return
 
     # ========== 统计 ==========
     def get_stats(self) -> dict:
-        response = self.client.table(self.table).select("type, is_active").execute()
+        engine_docs = self.store.find(DOC_TYPE_ENGINE, status="active")
+        domain_docs = self.store.find(DOC_TYPE_DOMAIN_CONFIG, status="active")
 
-        total = len(response.data)
-        active = sum(1 for e in response.data if e.get("is_active"))
+        total = len(engine_docs)
+        active = sum(1 for e in engine_docs if e["data"].get("is_active"))
         by_type: dict[str, int] = {}
 
-        for item in response.data:
-            t = item.get("type", "unknown")
+        for doc in engine_docs:
+            t = doc["data"].get("type", "unknown")
             by_type[t] = by_type.get(t, 0) + 1
-
-        domain_response = self.client.table(self.domain_table).select("domain").execute()
 
         return {
             "total": total,
             "active": active,
             "by_type": [{"type": k, "count": v} for k, v in by_type.items()],
-            "domain_configs": len(domain_response.data),
+            "domain_configs": len(domain_docs),
         }
 
     # ========== 引擎调用（占位，后续实现具体逻辑） ==========
@@ -324,3 +333,34 @@ class RetrievalEngineService:
             except Exception as e:
                 results.append({"engine_id": engine_id, "success": False, "error": str(e)})
         return results
+
+    def _engine_to_response(self, doc: dict) -> dict:
+        """转换 engine 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "name": data.get("name"),
+            "display_name": data.get("display_name"),
+            "type": data.get("type"),
+            "description": data.get("description"),
+            "config": data.get("config", {}),
+            "is_active": data.get("is_active", True),
+            "is_default": data.get("is_default", False),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }
+
+    def _domain_config_to_response(self, doc: dict) -> dict:
+        """转换 domain config 为响应格式"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "domain": data.get("domain"),
+            "engine_id": data.get("engine_id"),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

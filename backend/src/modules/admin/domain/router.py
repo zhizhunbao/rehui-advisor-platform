@@ -1,37 +1,132 @@
-"""领域配置路由 - 使用 Supabase API"""
-from fastapi import APIRouter
+"""领域配置路由"""
+from fastapi import APIRouter, Depends
 
+from src.common.auth import get_current_admin
 from src.common.response import success_response
-from src.common.supabase import get_supabase_admin
+from .dto import (
+    CreateDomainCategoryRequest,
+    CreateDomainRequest,
+    CreateQuestionRequest,
+    UpdateDomainCategoryRequest,
+    UpdateDomainRequest,
+)
+from .service import DomainCategoryService, DomainService, QuestionService
 
 router = APIRouter(prefix="/domains", tags=["domains"])
+
+
+# ========== Domain Category Routes ==========
+@router.get("/categories")
+def get_domain_categories():
+    service = DomainCategoryService()
+    categories = service.find_all()
+    return success_response(categories)
+
+
+@router.get("/categories/active")
+def get_active_domain_categories():
+    service = DomainCategoryService()
+    categories = service.find_active()
+    return success_response(categories)
+
+
+@router.get("/categories/{id}")
+def get_domain_category(id: str):
+    service = DomainCategoryService()
+    category = service.find_by_id(id)
+    return success_response(category)
+
+
+@router.post("/categories", dependencies=[Depends(get_current_admin)])
+def create_domain_category(data: CreateDomainCategoryRequest):
+    service = DomainCategoryService()
+    category = service.create(data.model_dump())
+    return success_response(category)
+
+
+@router.put("/categories/{id}", dependencies=[Depends(get_current_admin)])
+def update_domain_category(id: str, data: UpdateDomainCategoryRequest):
+    service = DomainCategoryService()
+    category = service.update(id, data.model_dump(exclude_none=True))
+    return success_response(category)
+
+
+@router.delete("/categories/{id}", dependencies=[Depends(get_current_admin)])
+def delete_domain_category(id: str):
+    service = DomainCategoryService()
+    service.delete(id)
+    return success_response(None)
+
+
+# ========== Domain Routes ==========
+@router.get("/")
+def get_domains(category_id: str | None = None):
+    service = DomainService()
+    domains, total = service.find_all(category_id)
+    return success_response(domains, meta={"total": total})
 
 
 @router.get("/active")
 def get_active_domains():
     """获取所有激活的领域配置（用户端使用）"""
-    client = get_supabase_admin()
-    response = (
-        client.table("domains")
-        .select("*")
-        .eq("is_active", True)
-        .order("sort_order")
-        .execute()
-    )
-    
-    return success_response([
-        {
-            "id": d["id"],
-            "code": d.get("code"),
-            "name": d.get("name"),
-            "nameEn": d.get("name_en"),
-            "description": d.get("description"),
-            "descriptionEn": d.get("description_en"),
-            "icon": d.get("icon"),
-            "color": d.get("color"),
-            "prompt": d.get("prompt"),
-            "promptEn": d.get("prompt_en"),
-            "sortOrder": d.get("sort_order"),
-        }
-        for d in response.data
-    ])
+    service = DomainService()
+    domains = service.find_active()
+    return success_response(domains)
+
+
+@router.get("/{id}")
+def get_domain(id: str):
+    service = DomainService()
+    domain = service.find_by_id(id)
+    return success_response(domain)
+
+
+@router.post("/", dependencies=[Depends(get_current_admin)])
+def create_domain(data: CreateDomainRequest):
+    service = DomainService()
+    domain = service.create(data.model_dump())
+    return success_response(domain)
+
+
+@router.put("/{id}", dependencies=[Depends(get_current_admin)])
+def update_domain(id: str, data: UpdateDomainRequest):
+    service = DomainService()
+    domain = service.update(id, data.model_dump(exclude_none=True))
+    return success_response(domain)
+
+
+@router.delete("/{id}", dependencies=[Depends(get_current_admin)])
+def delete_domain(id: str):
+    service = DomainService()
+    service.delete(id)
+    return success_response(None)
+
+
+# ========== Question Routes ==========
+@router.get("/questions")
+def get_questions(domain_id: str | None = None):
+    service = QuestionService()
+    questions = service.find_all(domain_id)
+    return success_response(questions)
+
+
+@router.post("/questions", dependencies=[Depends(get_current_admin)])
+def create_question(data: CreateQuestionRequest):
+    service = QuestionService()
+    question_data = {
+        "domain_id": data.domain_id,
+        "text": data.text,
+        "text_en": data.text_en,
+        "type": data.type,
+        "options": [o.model_dump() for o in data.options] if data.options else None,
+        "sort_order": data.sort_order,
+    }
+    question = service.create(question_data)
+    return success_response(question)
+
+
+@router.delete("/questions/{id}", dependencies=[Depends(get_current_admin)])
+def delete_question(id: str):
+    service = QuestionService()
+    service.delete(id)
+    return success_response(None)

@@ -15,21 +15,21 @@ from src.common.config import get_settings
 # 从统一导出模块导入所有路由
 from src.modules import (
     # Admin 模块
-    admin_router,
     admin_auth_router,
-    crawler_router,
-    user_router,
-    subscription_router,
-    admin_recommendation_router,
-    conversation_router,
+    analytics_router,
     config_router,
+    conversation_router,
+    crawler_router,
     data_source_router,
+    domain_router,
     llm_router,
-    log_router,
     prompt_router,
     retrieval_router,
     scheduler_router,
     skill_router,
+    admin_recommendation_router,
+    subscription_router,
+    user_router,
     # Member 模块
     advisor_router,
     auth_router,
@@ -37,7 +37,6 @@ from src.modules import (
     search_router,
     # Shared 模块
     car_router,
-    domain_router,
     education_router,
     flight_router,
     hotel_router,
@@ -58,9 +57,13 @@ async def lifespan(app: FastAPI):
     # 开发环境：清空执行历史日志
     if settings.env == "development":
         try:
-            client = get_supabase_admin()
-            client.table("job_executions").delete().neq("id", "00000000-0000-0000-0000-000000000000").execute()
-            log_with_extra("info", "[Dev] Cleared job_executions table on startup")
+            from src.common.document import DocumentStore
+            store = DocumentStore()
+            # 删除所有 job_execution 类型的文档
+            docs = store.find("admin_job_execution", status=None, limit=1000)
+            for doc in docs:
+                store.delete(doc["id"], hard=True)
+            log_with_extra("info", f"[Dev] Cleared {len(docs)} job_execution documents on startup")
         except Exception as e:
             log_with_extra("warn", f"[Dev] Failed to clear job_executions: {str(e)}")
     
@@ -138,7 +141,7 @@ async def health() -> dict[str, Any]:
     # 检查 Supabase 连接
     try:
         client = get_supabase_admin()
-        client.table("admin_users").select("id").limit(1).execute()
+        client.table("documents").select("id").limit(1).execute()
         db_status = {"status": "connected", "type": "supabase"}
     except Exception as e:
         db_status = {"status": "disconnected", "error": str(e)}
@@ -197,23 +200,22 @@ app.include_router(recommendation_router, prefix=settings.api_prefix)
 
 # Admin 模块
 app.include_router(admin_auth_router, prefix=settings.api_prefix)
-app.include_router(admin_router, prefix=settings.api_prefix)
-app.include_router(crawler_router, prefix=settings.api_prefix)
-app.include_router(user_router, prefix=settings.api_prefix)
-app.include_router(subscription_router, prefix=settings.api_prefix)
-app.include_router(admin_recommendation_router, prefix=settings.api_prefix)
-app.include_router(conversation_router, prefix=settings.api_prefix)
+app.include_router(analytics_router, prefix=settings.api_prefix)
 app.include_router(config_router, prefix=settings.api_prefix)
-app.include_router(skill_router, prefix=settings.api_prefix)
-app.include_router(prompt_router, prefix=settings.api_prefix)
+app.include_router(conversation_router, prefix=settings.api_prefix)
+app.include_router(crawler_router, prefix=settings.api_prefix)
 app.include_router(data_source_router, prefix=settings.api_prefix)
-app.include_router(log_router, prefix=settings.api_prefix)
+app.include_router(domain_router, prefix=settings.api_prefix)
 app.include_router(llm_router, prefix=settings.api_prefix)
+app.include_router(prompt_router, prefix=settings.api_prefix)
 app.include_router(retrieval_router, prefix=settings.api_prefix)
 app.include_router(scheduler_router, prefix=settings.api_prefix)
+app.include_router(skill_router, prefix=settings.api_prefix)
+app.include_router(admin_recommendation_router, prefix=settings.api_prefix)
+app.include_router(subscription_router, prefix=settings.api_prefix)
+app.include_router(user_router, prefix=settings.api_prefix)
 
 # Shared 模块
-app.include_router(domain_router, prefix=settings.api_prefix)
 app.include_router(flight_router, prefix=settings.api_prefix)
 app.include_router(hotel_router, prefix=settings.api_prefix)
 app.include_router(job_router, prefix=settings.api_prefix)

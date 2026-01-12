@@ -1,12 +1,13 @@
-"""用户管理服务 - 使用 Supabase API"""
+"""用户管理服务 - 使用 Document Store"""
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
+
+DOC_TYPE = "admin_user"
 
 
 class UserAdminService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "users"
+        self.store = DocumentStore()
 
     def find_all(
         self,
@@ -16,46 +17,46 @@ class UserAdminService:
         status: str | None = None,
         subscription_plan: str | None = None,
     ) -> tuple[list[dict], int]:
-        query = self.client.table(self.table).select("*", count="exact")
-
-        # 搜索过滤
-        if search:
-            query = query.or_(f"email.ilike.%{search}%,name.ilike.%{search}%")
-
-        # 状态过滤
-        if status:
-            query = query.eq("status", status)
-
-        # 订阅方案过滤
-        if subscription_plan:
-            query = query.eq("subscription_plan", subscription_plan)
-
-        # 排序和分页
-        query = query.order("created_at", desc=True)
-        query = query.range((page - 1) * limit, page * limit - 1)
-
-        response = query.execute()
-        return response.data, response.count or 0
+        docs = self.store.find(DOC_TYPE, status="active", limit=1000)
+        
+        filtered = []
+        for doc in docs:
+            data = doc["data"]
+            
+            if search:
+                search_lower = search.lower()
+                email = (data.get("email") or "").lower()
+                name = (data.get("name") or "").lower()
+                if search_lower not in email and search_lower not in name:
+                    continue
+            
+            if status and data.get("status") != status:
+                continue
+            
+            if subscription_plan and data.get("subscription_plan") != subscription_plan:
+                continue
+            
+            filtered.append(doc)
+        
+        filtered.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        total = len(filtered)
+        start = (page - 1) * limit
+        paged = filtered[start:start + limit]
+        
+        return [self._to_response(doc) for doc in paged], total
 
     def find_by_id(self, id: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     def find_by_email(self, email: str) -> dict | None:
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("email", email)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            if doc["data"].get("email") == email:
+                return self._to_response(doc)
+        return None
 
     def update(self, id: str, data: dict) -> dict:
         existing = self.find_by_id(id)
@@ -66,16 +67,11 @@ class UserAdminService:
         if not update_data:
             return existing
 
-        response = (
-            self.client.table(self.table)
-            .update(update_data)
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates=update_data)
+        return self._to_response(doc)
 
     def toggle_status(self, id: str) -> dict:
-        """切换用户状态（active/inactive）"""
+        """切换用户状态"""
         existing = self.find_by_id(id)
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"User {id} not found")
@@ -83,13 +79,8 @@ class UserAdminService:
         current_status = existing.get("status", "active")
         new_status = "inactive" if current_status == "active" else "active"
 
-        response = (
-            self.client.table(self.table)
-            .update({"status": new_status})
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates={"status": new_status})
+        return self._to_response(doc)
 
     def update_subscription(self, id: str, plan: str) -> dict:
         """更新用户订阅方案"""
@@ -97,42 +88,19 @@ class UserAdminService:
         if not existing:
             raise AppError(AppErrorCode.NOT_FOUND, f"User {id} not found")
 
-        response = (
-            self.client.table(self.table)
-            .update({"subscription_plan": plan})
-            .eq("id", id)
-            .execute()
-        )
-        return response.data[0]
+        doc = self.store.update(id, data_updates={"subscription_plan": plan})
+        return self._to_response(doc)
 
     def get_user_stats(self) -> dict:
         """获取用户统计信息"""
-        # 总用户数
-        total_response = (
-            self.client.table(self.table)
-            .select("id", count="exact")
-            .execute()
-        )
-        total = total_response.count or 0
-
-        # 活跃用户数
-        active_response = (
-            self.client.table(self.table)
-            .select("id", count="exact")
-            .eq("status", "active")
-            .execute()
-        )
-        active = active_response.count or 0
-
-        # 按订阅方案统计
-        plans_response = (
-            self.client.table(self.table)
-            .select("subscription_plan")
-            .execute()
-        )
+        docs = self.store.find(DOC_TYPE, status="active")
+        
+        total = len(docs)
+        active = sum(1 for doc in docs if doc["data"].get("status") == "active")
+        
         plan_counts: dict[str, int] = {}
-        for user in plans_response.data or []:
-            plan = user.get("subscription_plan") or "free"
+        for doc in docs:
+            plan = doc["data"].get("subscription_plan") or "free"
             plan_counts[plan] = plan_counts.get(plan, 0) + 1
 
         return {
@@ -140,4 +108,22 @@ class UserAdminService:
             "active": active,
             "inactive": total - active,
             "by_plan": plan_counts,
+        }
+
+    def _to_response(self, doc: dict) -> dict:
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "email": data.get("email"),
+            "name": data.get("name"),
+            "avatar": data.get("avatar"),
+            "status": data.get("status", "active"),
+            "subscription_plan": data.get("subscription_plan", "free"),
+            "quota_used": data.get("quota_used", 0),
+            "quota_limit": data.get("quota_limit"),
+            "last_login_at": data.get("last_login_at"),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
         }

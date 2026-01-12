@@ -1,31 +1,35 @@
-"""管理员认证服务 - 使用 Supabase API"""
+"""管理员认证服务 - 使用 Document Store"""
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
 
+from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
-from src.common.supabase import get_supabase_admin
 from src.common.config import get_settings
 
 settings = get_settings()
 
 
+DOC_TYPE = "admin_user"
+
+
 class AdminAuthService:
     def __init__(self) -> None:
-        self.client = get_supabase_admin()
-        self.table = "admin_users"
+        self.store = DocumentStore()
 
     def login(self, username: str, password: str) -> dict:
         """管理员登录"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .or_(f"username.eq.{username},email.eq.{username}")
-            .maybe_single()
-            .execute()
-        )
-        admin = response.data
+        docs = self.store.find(DOC_TYPE, status="active")
+        admin = None
+        admin_doc = None
+        
+        for doc in docs:
+            data = doc["data"]
+            if data.get("username") == username or data.get("email") == username:
+                admin = data
+                admin_doc = doc
+                break
 
         if not admin:
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid credentials")
@@ -37,22 +41,18 @@ class AdminAuthService:
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid credentials")
 
         # 更新最后登录时间
-        self.client.table(self.table).update({
+        self.store.update(admin_doc["id"], data_updates={
             "last_login_at": datetime.now(timezone.utc).isoformat()
-        }).eq("id", admin["id"]).execute()
+        })
 
-        return admin
+        return self._to_response(admin_doc)
 
     def get_by_id(self, admin_id: str) -> dict | None:
         """根据 ID 获取管理员"""
-        response = (
-            self.client.table(self.table)
-            .select("*")
-            .eq("id", admin_id)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        doc = self.store.get(admin_id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
 
     def create_admin(
         self,
@@ -64,47 +64,40 @@ class AdminAuthService:
     ) -> dict:
         """创建管理员"""
         # 检查用户名或邮箱是否已存在
-        existing = (
-            self.client.table(self.table)
-            .select("id")
-            .or_(f"username.eq.{username},email.eq.{email}")
-            .maybe_single()
-            .execute()
-        )
-        if existing.data:
-            raise AppError(AppErrorCode.DUPLICATE, "Username or email already exists")
+        docs = self.store.find(DOC_TYPE, status="active")
+        for doc in docs:
+            data = doc["data"]
+            if data.get("username") == username or data.get("email") == email:
+                raise AppError(AppErrorCode.DUPLICATE, "Username or email already exists")
 
         password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         
-        response = self.client.table(self.table).insert({
+        doc = self.store.create(DOC_TYPE, {
             "username": username,
             "email": email,
             "password_hash": password_hash,
             "name": name,
             "role": role,
             "is_active": True,
-        }).execute()
+            "last_login_at": None,
+        })
 
-        if not response.data:
-            raise AppError(AppErrorCode.INTERNAL_ERROR, "Failed to create admin")
-        
-        return response.data[0]
+        return self._to_response(doc)
 
     def update_password(
         self, admin_id: str, old_password: str, new_password: str
     ) -> None:
         """更新管理员密码"""
-        admin = self.get_by_id(admin_id)
-        if not admin:
+        doc = self.store.get(admin_id)
+        if not doc or doc["type"] != DOC_TYPE or doc["status"] == "deleted":
             raise AppError(AppErrorCode.NOT_FOUND, "Admin not found")
 
+        admin = doc["data"]
         if not bcrypt.checkpw(old_password.encode(), admin["password_hash"].encode()):
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid old password")
 
         new_hash = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt()).decode()
-        self.client.table(self.table).update({
-            "password_hash": new_hash
-        }).eq("id", admin_id).execute()
+        self.store.update(admin_id, data_updates={"password_hash": new_hash})
 
     @staticmethod
     def create_access_token(admin: dict) -> str:
@@ -144,3 +137,20 @@ class AdminAuthService:
             raise AppError(AppErrorCode.UNAUTHORIZED, "Token expired")
         except jwt.InvalidTokenError:
             raise AppError(AppErrorCode.UNAUTHORIZED, "Invalid token")
+
+    def _to_response(self, doc: dict) -> dict:
+        """转换为响应格式（不包含密码）"""
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "username": data.get("username"),
+            "email": data.get("email"),
+            "name": data.get("name"),
+            "role": data.get("role"),
+            "is_active": data.get("is_active", True),
+            "last_login_at": data.get("last_login_at"),
+            "created_at": doc.get("created_at"),
+            "updated_at": doc.get("updated_at"),
+        }

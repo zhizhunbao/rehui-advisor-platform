@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Language } from "@/locales";
+import type { Language } from "@/common/i18n";
 import type { DataSource } from "./DataSourceCard";
-import { adminLocales } from "@/locales";
+import { adminLocales } from "@/common/i18n";
 
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
 const getHeaders = () => ({

@@ -1,10 +1,15 @@
 import { useState, useCallback, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/modules/admin/context/AdminAuthContext";
-import { adminLocales, type Language } from "@/locales";
+import { adminLocales, type Language } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/libs/shadcn/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/libs/shadcn/ui/card";
 
 interface LoginViewProps {
   lang?: Language;

@@ -18,35 +18,27 @@ def get_user_from_request(request: Request) -> dict | None:
     """从请求中获取用户（支持 JWT 和 Session Token）"""
     auth_header = request.headers.get("authorization", "")
     session_token = request.headers.get("x-session-token", "")
-    client = get_supabase_admin()
     AuthService = _get_auth_service()
+    from src.common.document import DocumentStore
+    store = DocumentStore()
 
     # 优先使用 JWT
     if auth_header.startswith("Bearer "):
         try:
             token = auth_header.replace("Bearer ", "")
             payload = AuthService.verify_token(token)
-            response = (
-                client.table("users")
-                .select("*")
-                .eq("id", payload["sub"])
-                .maybe_single()
-                .execute()
-            )
-            return response.data
+            doc = store.get(payload["sub"])
+            if doc and doc["type"] == "member_user" and doc["status"] != "deleted":
+                return {"id": doc["id"], **doc["data"]}
         except AppError:
             pass
 
     # 其次使用 Session Token
     if session_token:
-        response = (
-            client.table("users")
-            .select("*")
-            .eq("session_token", session_token)
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        docs = store.find("member_user", status="active")
+        for doc in docs:
+            if doc["data"].get("session_token") == session_token:
+                return {"id": doc["id"], **doc["data"]}
 
     return None
 
@@ -86,20 +78,14 @@ def get_current_user(request: Request) -> dict:
     AuthService = _get_auth_service()
     payload = AuthService.verify_token(token)
 
-    client = get_supabase_admin()
-    response = (
-        client.table("users")
-        .select("*")
-        .eq("id", payload["sub"])
-        .maybe_single()
-        .execute()
-    )
-    user = response.data
+    from src.common.document import DocumentStore
+    store = DocumentStore()
+    doc = store.get(payload["sub"])
 
-    if not user:
+    if not doc or doc["type"] != "member_user" or doc["status"] == "deleted":
         raise AppError(AppErrorCode.UNAUTHORIZED, "User not found")
 
-    return user
+    return {"id": doc["id"], **doc["data"]}
 
 
 def get_current_user_optional(request: Request) -> dict | None:
@@ -113,15 +99,14 @@ def get_current_user_optional(request: Request) -> dict | None:
         token = auth_header.replace("Bearer ", "")
         AuthService = _get_auth_service()
         payload = AuthService.verify_token(token)
-        client = get_supabase_admin()
-        response = (
-            client.table("users")
-            .select("*")
-            .eq("id", payload["sub"])
-            .maybe_single()
-            .execute()
-        )
-        return response.data
+        
+        from src.common.document import DocumentStore
+        store = DocumentStore()
+        doc = store.get(payload["sub"])
+        
+        if doc and doc["type"] == "member_user" and doc["status"] != "deleted":
+            return {"id": doc["id"], **doc["data"]}
+        return None
     except AppError:
         return None
 
@@ -141,23 +126,27 @@ def get_current_admin(request: Request) -> dict:
     if payload.get("type") != "admin":
         raise AppError(AppErrorCode.FORBIDDEN, "Admin access required")
 
-    client = get_supabase_admin()
-    response = (
-        client.table("admin_users")
-        .select("*")
-        .eq("id", payload["sub"])
-        .maybe_single()
-        .execute()
-    )
-    admin = response.data
+    from src.common.document import DocumentStore
+    store = DocumentStore()
+    doc = store.get(payload["sub"])
 
-    if not admin:
+    if not doc or doc["type"] != "admin_user" or doc["status"] == "deleted":
         raise AppError(AppErrorCode.UNAUTHORIZED, "Admin not found")
 
+    admin = doc["data"]
     if not admin.get("is_active"):
         raise AppError(AppErrorCode.FORBIDDEN, "Admin account is disabled")
 
-    return admin
+    # 返回扁平化的管理员信息
+    return {
+        "id": doc["id"],
+        "username": admin.get("username"),
+        "email": admin.get("email"),
+        "name": admin.get("name"),
+        "role": admin.get("role"),
+        "is_active": admin.get("is_active", True),
+        "last_login_at": admin.get("last_login_at"),
+    }
 
 
 def require_super_admin(request: Request) -> dict:
