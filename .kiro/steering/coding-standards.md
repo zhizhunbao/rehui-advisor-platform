@@ -62,6 +62,7 @@
 - ✅ 从 `common/types` 导入类型
 - ✅ 返回类型由 TypeScript 自动推断
 - ✅ Options 参数用内联类型或放 `common/types.ts`
+- ✅ 提供表单默认值生成方法（如 `getModelForm`）
 - ❌ 禁止 `interface` 定义
 - ❌ 禁止 `const` 常量定义
 - ❌ 禁止工具函数定义
@@ -73,9 +74,11 @@
 - ✅ 从 `common/types` 导入类型
 - ✅ 可以写 `className` 样式
 - ✅ 只通过 Props 接收数据（纯展示组件）
+- ✅ 可直接使用 i18n（从 `@/common/i18n` 导入）
 - ❌ 禁止 `interface` 定义（Props 类型除外）
 - ❌ 禁止 `const` 常量定义
-- ❌ 禁止工具函数定义
+- ❌ 禁止工具函数定义（应放 `common/helper.ts`）
+- ❌ 禁止生成默认值（由 View 通过 Props 传入）
 - ❌ 禁止导入 `views/`
 - ❌ 禁止导入 `hooks/`（数据通过 Props 传入）
 - ❌ 禁止导入 `services/`
@@ -84,6 +87,7 @@
 
 - ✅ 只负责页面布局和组合组件
 - ✅ 从 `common/types` 导入类型
+- ✅ 调用 hook 方法生成表单初始数据，通过 Props 传给组件
 - ❌ 禁止 `interface` 定义（Props 类型除外）
 - ❌ 禁止 `const` 常量定义
 - ❌ 禁止工具函数定义
