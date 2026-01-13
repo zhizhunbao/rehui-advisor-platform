@@ -3,7 +3,7 @@ import type {
   SystemConfig,
   CreateConfigDto,
   UpdateConfigDto,
-} from "../types/admin.types";
+} from "@/common/types";
 
 export const configService = {
   getAll(category?: string) {

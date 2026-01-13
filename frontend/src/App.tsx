@@ -8,10 +8,14 @@ import type {
   GroundingSource,
   AppView,
 } from "./modules/member/types";
-import { Layout, QuotaExhaustedModal } from "./modules/member/components";
-import { streamChat, authService } from "./modules/member/services";
-import { useAuthStore } from "./modules/member/store";
-import { HomeView, ConversationView, AuthView } from "./views";
+import MemberLayout from "./modules/member/components/MemberLayout";
+import MemberQuotaExhaustedModal from "./modules/member/components/MemberQuotaExhaustedModal";
+import { streamChat } from "./modules/member/services/advisor.service";
+import { authService } from "./modules/member/services/auth.service";
+import { useAuthStore } from "./common/stores";
+import HomeView from "./modules/member/views/HomeView";
+import ConversationView from "./modules/member/views/ConversationView";
+import AuthView from "./modules/member/views/AuthView";
 import { ErrorBoundary } from "./common/ErrorBoundary";
 import { ToastProvider } from "./common/toast";
 import { logger } from "./common/logger";
@@ -424,7 +428,7 @@ function App() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <Layout
+        <MemberLayout
           view={view}
           user={user}
           quotaStatus={quotaStatus}
@@ -447,8 +451,8 @@ function App() {
           onDeleteConversation={handleDeleteConversation}
         >
           {renderContent()}
-        </Layout>
-        <QuotaExhaustedModal
+        </MemberLayout>
+        <MemberQuotaExhaustedModal
           lang={lang}
           quotaStatus={quotaStatus}
           isOpen={showQuotaModal}

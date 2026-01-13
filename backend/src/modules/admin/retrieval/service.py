@@ -1,6 +1,7 @@
 """Retrieval Engine Service - 知识检索引擎管理 - 使用 Document Store"""
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 
 DOC_TYPE_ENGINE = "admin_retrieval_engine"
@@ -104,11 +105,9 @@ class RetrievalEngineService:
         engines.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(engines)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(engines, page, limit)
         
-        return engines[start:end], total
+        return paged, total
 
     def find_engine_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)

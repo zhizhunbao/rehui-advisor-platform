@@ -1,31 +1,29 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { AdminAuthProvider } from "./modules/admin/context/AdminAuthContext";
+import { AdminAuthProvider } from "./modules/admin/hooks/useAdminAuth";
 import {
   AdminSettingsProvider,
   useAdminSettings,
-} from "./modules/admin/context/AdminSettingsContext";
+} from "./modules/admin/hooks/useAdminSettings";
 import AdminRoute from "./modules/admin/components/AdminRoute";
 import AdminLayout from "./modules/admin/components/AdminLayout";
-import {
-  DashboardView,
-  DomainsView,
-  PromptsView,
-  QuestionsView,
-  CrawlersView,
-  AnalyticsView,
-  LoginView,
-  UsersView,
-  ConversationsView,
-  SubscriptionsView,
-  RecommendationsView,
-  ConfigView,
-  SkillsView,
-  DataSourcesView,
-  LLMView,
-  RetrievalView,
-  SchedulerView,
-  AgentFrameworksView,
-} from "./views/admin";
+import DashboardView from "./modules/admin/views/DashboardView";
+import DomainsView from "./modules/admin/views/DomainsView";
+import PromptsView from "./modules/admin/views/PromptsView";
+import QuestionsView from "./modules/admin/views/QuestionsView";
+import CrawlersView from "./modules/admin/views/CrawlersView";
+import AnalyticsView from "./modules/admin/views/AnalyticsView";
+import LoginView from "./modules/admin/views/LoginView";
+import UsersView from "./modules/admin/views/UsersView";
+import ConversationsView from "./modules/admin/views/ConversationsView";
+import SubscriptionsView from "./modules/admin/views/SubscriptionsView";
+import RecommendationsView from "./modules/admin/views/RecommendationsView";
+import ConfigView from "./modules/admin/views/ConfigView";
+import SkillsView from "./modules/admin/views/SkillsView";
+import DataSourcesView from "./modules/admin/views/DataSourcesView";
+import LLMView from "./modules/admin/views/LLMView";
+import RetrievalView from "./modules/admin/views/RetrievalView";
+import SchedulerView from "./modules/admin/views/SchedulerView";
+import AgentFrameworksView from "./modules/admin/views/AgentFrameworksView";
 import { ErrorBoundary } from "./common/ErrorBoundary";
 import { ToastProvider } from "./common/toast";
 

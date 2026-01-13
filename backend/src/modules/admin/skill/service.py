@@ -4,14 +4,14 @@ import requests
 
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.enum import GITHUB_API, RAW_GITHUB
+from src.common.helper import paginate
 
 # Document types
 DOC_TYPE_SKILL = "admin_skill"
 DOC_TYPE_SKILL_LABEL = "admin_skill_label"
 
-# GitHub API
-GITHUB_API = "https://api.github.com"
-RAW_GITHUB = "https://raw.githubusercontent.com"
+# Official repo config
 OFFICIAL_REPO = "anthropics/skills"
 OFFICIAL_SKILLS_PATH = "skills"
 
@@ -116,10 +116,7 @@ class SkillService:
         ), reverse=True)
         
         # 分页
-        total = len(filtered)
-        start = (page - 1) * limit
-        end = start + limit
-        paged = filtered[start:end]
+        paged, total = paginate(filtered, page, limit)
         
         return [self._skill_to_response(doc) for doc in paged], total
 

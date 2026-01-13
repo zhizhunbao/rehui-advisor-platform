@@ -4,7 +4,7 @@ import type {
   SystemConfig,
   CreateConfigDto,
   UpdateConfigDto,
-} from "../types/admin.types";
+} from "@/common/types";
 
 export function useConfigs() {
   const [configs, setConfigs] = useState<SystemConfig[]>([]);

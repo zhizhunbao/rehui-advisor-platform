@@ -1,79 +1,120 @@
+// Admin 用户管理 Hook
 import { useState, useCallback } from "react";
-import { userService, type UserListParams } from "../services/user.service";
-import type { AdminUser, PaginatedResponse } from "../types/admin.types";
+import type { AdminUser, UserListParams, Language } from "@/common/types";
+import { adminLocales } from "@/common/i18n";
+import { useInfiniteScroll } from "@/common/hooks";
+import { userService } from "../services/user.service";
 
-export function useUsers() {
-  const [data, setData] = useState<PaginatedResponse<AdminUser> | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+export function useUsers(lang: Language, autoFetch = true) {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const fetchUsers = useCallback(async (params?: UserListParams) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await userService.getAll(params);
-      setData(result);
-      return result;
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error("Failed to fetch users"));
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
+  const fetchUsers = useCallback(
+    async (page: number) => {
+      const params: UserListParams = {
+        page,
+        limit: 20,
+        search: search || undefined,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+      };
+      const res = await userService.getAll(params);
+      return { data: res.data || [], total: res.total || 0 };
+    },
+    [search, statusFilter]
+  );
+
+  const {
+    data: users,
+    isLoading,
+    hasMore,
+    total,
+    loadMoreRef,
+    refresh,
+  } = useInfiniteScroll<AdminUser>({ fetchFn: fetchUsers, enabled: autoFetch });
+
+  const handleToggleStatus = useCallback(
+    async (id: string) => {
+      await userService.toggleStatus(id);
+      refresh();
+    },
+    [refresh]
+  );
+
+  const handleSearch = useCallback(() => {
+    refresh();
+  }, [refresh]);
+
+  const handleReset = useCallback(() => {
+    setSearch("");
+    setStatusFilter("all");
   }, []);
 
-  const toggleUserStatus = useCallback(async (id: string) => {
-    try {
-      const updated = await userService.toggleStatus(id);
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              data: prev.data.map((u) => (u.id === id ? updated : u)),
-            }
-          : null
-      );
-      return updated;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to toggle status")
-      );
-      return null;
-    }
-  }, []);
+  const getUserTypeLabel = useCallback(
+    (type: string) => {
+      const t = adminLocales[lang];
+      switch (type) {
+        case "ANONYMOUS":
+          return t.anonymous;
+        case "REGISTERED":
+          return t.registered;
+        case "PREMIUM":
+          return t.premium;
+        default:
+          return type;
+      }
+    },
+    [lang]
+  );
 
-  const updateUser = useCallback(
-    async (id: string, updates: Partial<AdminUser>) => {
-      try {
-        const updated = await userService.update(id, updates);
-        setData((prev) =>
-          prev
-            ? {
-                ...prev,
-                data: prev.data.map((u) => (u.id === id ? updated : u)),
-              }
-            : null
-        );
-        return updated;
-      } catch (err) {
-        setError(
-          err instanceof Error ? err : new Error("Failed to update user")
-        );
-        return null;
+  const getStatusLabel = useCallback(
+    (status: string) => {
+      const t = adminLocales[lang];
+      switch (status) {
+        case "ACTIVE":
+          return t.active;
+        case "INACTIVE":
+          return t.inactive;
+        case "BANNED":
+          return t.banned;
+        default:
+          return status;
+      }
+    },
+    [lang]
+  );
+
+  const getStatusVariant = useCallback(
+    (status: string): "default" | "secondary" | "destructive" | "outline" => {
+      switch (status) {
+        case "ACTIVE":
+          return "default";
+        case "INACTIVE":
+          return "secondary";
+        case "BANNED":
+          return "destructive";
+        default:
+          return "outline";
       }
     },
     []
   );
 
   return {
-    users: data?.data || [],
-    total: data?.total || 0,
-    page: data?.page || 1,
-    limit: data?.limit || 20,
+    users,
     isLoading,
-    error,
-    fetchUsers,
-    toggleUserStatus,
-    updateUser,
+    hasMore,
+    total,
+    loadMoreRef,
+    search,
+    setSearch,
+    statusFilter,
+    setStatusFilter,
+    handleToggleStatus,
+    handleSearch,
+    handleReset,
+    getUserTypeLabel,
+    getStatusLabel,
+    getStatusVariant,
+    refresh,
   };
 }

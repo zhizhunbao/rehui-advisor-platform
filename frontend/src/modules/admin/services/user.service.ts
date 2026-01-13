@@ -1,16 +1,11 @@
+// Admin 用户管理 API
 import { http } from "@/common/http";
 import type {
   AdminUser,
   UpdateUserDto,
   PaginatedResponse,
-} from "../types/admin.types";
-
-export interface UserListParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  status?: string;
-}
+  UserListParams,
+} from "@/common/types";
 
 export const userService = {
   getAll(params?: UserListParams) {

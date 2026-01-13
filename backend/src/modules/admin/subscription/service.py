@@ -1,6 +1,7 @@
 """订阅方案管理服务 - 使用 Document Store"""
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 DOC_TYPE = "admin_subscription"
 
@@ -25,9 +26,7 @@ class SubscriptionService:
             filtered.append(doc)
         
         filtered.sort(key=lambda x: x["data"].get("sort_order", 0))
-        total = len(filtered)
-        start = (page - 1) * limit
-        paged = filtered[start:start + limit]
+        paged, total = paginate(filtered, page, limit)
         
         return [self._to_response(doc) for doc in paged], total
 

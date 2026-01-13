@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 
 DOC_TYPE_SOURCE = "admin_crawl_source"
@@ -37,11 +38,9 @@ class CrawlerService:
         sources.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(sources)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(sources, page, limit)
         
-        return sources[start:end], total
+        return paged, total
 
     def find_source_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)
@@ -108,11 +107,9 @@ class CrawlerService:
         tasks.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(tasks)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(tasks, page, limit)
         
-        return tasks[start:end], total
+        return paged, total
 
     def find_all_tasks(
         self,
@@ -134,11 +131,9 @@ class CrawlerService:
         tasks.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(tasks)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(tasks, page, limit)
         
-        return tasks[start:end], total
+        return paged, total
 
     def trigger_crawl(self, source_id: str) -> dict:
         """触发抓取任务"""

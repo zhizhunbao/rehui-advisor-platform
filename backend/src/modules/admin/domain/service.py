@@ -3,9 +3,61 @@ from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
 
 
-DOC_TYPE_DOMAIN = "admin_domain"
-DOC_TYPE_CATEGORY = "admin_domain_category"
-DOC_TYPE_QUESTION = "admin_question"
+DOC_TYPE_PRODUCT_LINE = "product_line"
+DOC_TYPE_DOMAIN = "domain"
+DOC_TYPE_CATEGORY = "domain_category"
+DOC_TYPE_QUESTION = "domain_question"
+
+
+class ProductLineService:
+    """产品线服务"""
+    def __init__(self) -> None:
+        self.store = DocumentStore()
+
+    def find_all(self) -> list[dict]:
+        docs = self.store.find(DOC_TYPE_PRODUCT_LINE, status="active")
+        items = [self._to_response(doc) for doc in docs]
+        items.sort(key=lambda x: x.get("sort_order", 0))
+        return items
+
+    def find_active(self) -> list[dict]:
+        docs = self.store.find(DOC_TYPE_PRODUCT_LINE, status="active")
+        items = [
+            self._to_response(doc) for doc in docs 
+            if doc["data"].get("is_active", True)
+        ]
+        items.sort(key=lambda x: x.get("sort_order", 0))
+        return items
+
+    def find_by_id(self, id: str) -> dict | None:
+        doc = self.store.get(id)
+        if not doc or doc["type"] != DOC_TYPE_PRODUCT_LINE or doc["status"] == "deleted":
+            return None
+        return self._to_response(doc)
+
+    def find_by_code(self, code: str) -> dict | None:
+        docs = self.store.find(DOC_TYPE_PRODUCT_LINE, status="active")
+        for doc in docs:
+            if doc["data"].get("code") == code:
+                return self._to_response(doc)
+        return None
+
+    def _to_response(self, doc: dict) -> dict:
+        if not doc:
+            return None
+        data = doc["data"]
+        return {
+            "id": doc["id"],
+            "code": data.get("code"),
+            "name": data.get("name"),
+            "name_en": data.get("name_en"),
+            "description": data.get("description"),
+            "description_en": data.get("description_en"),
+            "icon": data.get("icon"),
+            "color": data.get("color"),
+            "sort_order": data.get("sort_order", 0),
+            "is_active": data.get("is_active", True),
+        }
 
 
 class DomainCategoryService:
@@ -13,18 +65,25 @@ class DomainCategoryService:
     def __init__(self) -> None:
         self.store = DocumentStore()
 
-    def find_all(self) -> list[dict]:
+    def find_all(self, product_line_id: str | None = None) -> list[dict]:
         docs = self.store.find(DOC_TYPE_CATEGORY, status="active")
-        categories = [self._to_response(doc) for doc in docs]
+        categories = []
+        for doc in docs:
+            if product_line_id and doc["data"].get("product_line_id") != product_line_id:
+                continue
+            categories.append(self._to_response(doc))
         categories.sort(key=lambda x: x.get("sort_order", 0))
         return categories
 
-    def find_active(self) -> list[dict]:
+    def find_active(self, product_line_id: str | None = None) -> list[dict]:
         docs = self.store.find(DOC_TYPE_CATEGORY, status="active")
-        categories = [
-            self._to_response(doc) for doc in docs 
-            if doc["data"].get("is_active", True)
-        ]
+        categories = []
+        for doc in docs:
+            if not doc["data"].get("is_active", True):
+                continue
+            if product_line_id and doc["data"].get("product_line_id") != product_line_id:
+                continue
+            categories.append(self._to_response(doc))
         categories.sort(key=lambda x: x.get("sort_order", 0))
         return categories
 
@@ -76,6 +135,7 @@ class DomainCategoryService:
             "description_en": data.get("description_en"),
             "icon": data.get("icon"),
             "color": data.get("color"),
+            "product_line_id": data.get("product_line_id"),
             "sort_order": data.get("sort_order", 0),
             "is_active": data.get("is_active", True),
             "created_at": doc.get("created_at"),
@@ -106,6 +166,38 @@ class DomainService:
     def find_active(self) -> list[dict]:
         domains, _ = self.find_all(is_active=True)
         return domains
+
+    def find_grouped_by_category(self, lang: str = "zh", product_line_id: str | None = None) -> list[dict]:
+        """按分类分组返回 domains"""
+        category_service = DomainCategoryService()
+        categories = category_service.find_active(product_line_id)
+        
+        domains, _ = self.find_all(is_active=True)
+        
+        # 按 category_id 分组
+        domain_map: dict[str, list[dict]] = {}
+        for domain in domains:
+            cat_id = domain.get("category_id") or "uncategorized"
+            if cat_id not in domain_map:
+                domain_map[cat_id] = []
+            domain_map[cat_id].append(domain)
+        
+        # 构建结果
+        result = []
+        for cat in categories:
+            cat_domains = domain_map.get(cat["id"], [])
+            if not cat_domains:
+                continue
+            result.append({
+                "id": cat["id"],
+                "code": cat.get("code"),
+                "name": cat.get("name") if lang == "zh" else cat.get("name_en"),
+                "icon": cat.get("icon"),
+                "color": cat.get("color"),
+                "domains": cat_domains,
+            })
+        
+        return result
 
     def find_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)
@@ -160,6 +252,7 @@ class DomainService:
             "prompt": data.get("prompt"),
             "prompt_en": data.get("prompt_en"),
             "category_id": data.get("category_id"),
+            "route": data.get("route"),
             "sort_order": data.get("sort_order", 0),
             "is_active": data.get("is_active", True),
             "created_at": doc.get("created_at"),

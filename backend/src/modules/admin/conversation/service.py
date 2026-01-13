@@ -1,6 +1,7 @@
 """对话记录管理服务 - 使用 Document Store"""
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 
 DOC_TYPE_SESSION = "admin_chat_session"
@@ -35,11 +36,9 @@ class ConversationAdminService:
         sessions.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(sessions)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(sessions, page, limit)
         
-        return sessions[start:end], total
+        return paged, total
 
     def find_session_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)
@@ -80,11 +79,9 @@ class ConversationAdminService:
         messages.sort(key=lambda x: x.get("created_at", ""))
         
         # 分页
-        total = len(messages)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(messages, page, limit)
         
-        return messages[start:end], total
+        return paged, total
 
     def find_all_messages(
         self,
@@ -106,11 +103,9 @@ class ConversationAdminService:
         messages.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(messages)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(messages, page, limit)
         
-        return messages[start:end], total
+        return paged, total
 
     def delete_message(self, id: str) -> None:
         doc = self.store.get(id)

@@ -21,6 +21,11 @@ dependencies = [
     "google-genai>=1.0.0",
     "passlib>=1.7.4",
     "apscheduler>=3.11.2",
+    # Learning 模块依赖
+    "mammoth>=1.8.0",      # docx 转 markdown
+    "pymupdf>=1.24.0",     # pdf 处理
+    "html2text>=2024.2.0", # 网页转 markdown
+    "python-multipart>=0.0.21",
 ]
 
 [project.optional-dependencies]

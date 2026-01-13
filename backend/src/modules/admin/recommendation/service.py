@@ -1,6 +1,7 @@
 """推荐方案管理服务 - 使用 Document Store"""
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 
 DOC_TYPE = "admin_recommendation"
@@ -33,11 +34,9 @@ class RecommendationAdminService:
         recommendations.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(recommendations)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(recommendations, page, limit)
         
-        return recommendations[start:end], total
+        return paged, total
 
     def find_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)

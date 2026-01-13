@@ -1,24 +1,10 @@
+// Member 认证 Hook
 import { useCallback, useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "@/common/stores";
+import type { LoginDto, RegisterDto, User, QuotaStatus } from "@/common/types";
 import { authService } from "../services/auth.service";
-import type { LoginDto, RegisterDto, User, QuotaStatus } from "../types";
 
-interface UseAuthReturn {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  quotaStatus: QuotaStatus | null;
-  login: (data: LoginDto) => Promise<void>;
-  register: (data: RegisterDto) => Promise<void>;
-  logout: () => void;
-  initAnonymousSession: () => Promise<void>;
-  refreshQuota: () => Promise<void>;
-  refreshToken: () => Promise<boolean>;
-  updatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
-  fetchCurrentUser: () => Promise<void>;
-}
-
-export function useAuth(): UseAuthReturn {
+export function useAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const {
     user,

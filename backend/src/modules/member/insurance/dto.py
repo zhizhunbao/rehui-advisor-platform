@@ -1,26 +1,9 @@
 from datetime import datetime
-from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel
 
-
-class InsuranceType(str, Enum):
-    AUTO = "AUTO"
-    HOME = "HOME"
-    HEALTH = "HEALTH"
-    LIFE = "LIFE"
-    RENTERS = "RENTERS"
-
-
-class InsuranceProviderCode(str, Enum):
-    GEICO = "GEICO"
-    STATE_FARM = "STATE_FARM"
-    PROGRESSIVE = "PROGRESSIVE"
-    ALLSTATE = "ALLSTATE"
-    FARMERS = "FARMERS"
-    USAA = "USAA"
-    LIBERTY_MUTUAL = "LIBERTY_MUTUAL"
+from src.common.enum import InsuranceType, InsuranceProviderCode
 
 
 class CoverageDetail(BaseModel):

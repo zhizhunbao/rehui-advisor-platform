@@ -1,13 +1,11 @@
 import { useState, useCallback } from "react";
-import {
-  recommendationService,
-  type RecommendationListParams,
-} from "../services/recommendation.service";
 import type {
   AdminRecommendation,
   UpdateRecommendationDto,
   PaginatedResponse,
-} from "../types/admin.types";
+  RecommendationListParams,
+} from "@/common/types";
+import { recommendationService } from "../services/recommendation.service";
 
 export function useRecommendations() {
   const [data, setData] =

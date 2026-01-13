@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { questionService } from "../services/admin.service";
-import type { Question, CreateQuestionDto } from "../types/admin.types";
+import { questionService } from "../services/question.service";
+import type { Question, CreateQuestionDto } from "@/common/types";
 
 interface UseQuestionsOptions {
   domainId?: string;

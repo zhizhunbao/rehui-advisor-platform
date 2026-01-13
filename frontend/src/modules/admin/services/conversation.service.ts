@@ -1,16 +1,10 @@
+// Admin 会话管理 API
 import { http } from "@/common/http";
 import type {
   AdminConversation,
   PaginatedResponse,
-} from "../types/admin.types";
-
-export interface ConversationListParams {
-  page?: number;
-  limit?: number;
-  userId?: string;
-  startDate?: string;
-  endDate?: string;
-}
+  ConversationListParams,
+} from "@/common/types";
 
 export const conversationService = {
   getAll(params?: ConversationListParams) {

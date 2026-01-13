@@ -3,6 +3,7 @@ from datetime import datetime, timezone, timedelta
 
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.helper import paginate
 
 
 DOC_TYPE_JOB = "admin_scheduled_job"
@@ -113,11 +114,9 @@ class SchedulerService:
         jobs.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         
         # 分页
-        total = len(jobs)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(jobs, page, limit)
         
-        return jobs[start:end], total
+        return paged, total
 
     def find_by_id(self, id: str) -> dict | None:
         doc = self.store.get(id)
@@ -484,11 +483,9 @@ class SchedulerService:
         executions.sort(key=lambda x: x.get("started_at", ""), reverse=True)
         
         # 分页
-        total = len(executions)
-        start = (page - 1) * limit
-        end = start + limit
+        paged, total = paginate(executions, page, limit)
         
-        return executions[start:end], total
+        return paged, total
 
     def get_logs(
         self,

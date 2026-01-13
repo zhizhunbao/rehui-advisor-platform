@@ -35,6 +35,7 @@ from src.modules import (
     auth_router,
     recommendation_router,
     search_router,
+    learning_router,
     # Shared 模块
     car_router,
     education_router,
@@ -197,6 +198,7 @@ app.include_router(auth_router, prefix=settings.api_prefix)
 app.include_router(advisor_router, prefix=settings.api_prefix)
 app.include_router(search_router, prefix=settings.api_prefix)
 app.include_router(recommendation_router, prefix=settings.api_prefix)
+app.include_router(learning_router, prefix=settings.api_prefix)
 
 # Admin 模块
 app.include_router(admin_auth_router, prefix=settings.api_prefix)

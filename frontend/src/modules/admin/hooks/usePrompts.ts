@@ -1,84 +1,140 @@
+// Admin 提示词管理 Hook
 import { useState, useEffect, useCallback } from "react";
-import { promptService } from "../services/admin.service";
 import type {
-  PromptTemplate,
-  CreatePromptDto,
-  UpdatePromptDto,
-} from "../types/admin.types";
+  AdminPrompt,
+  AdminPromptStats,
+  SkillLabel,
+  Language,
+} from "@/common/types";
+import { useInfiniteScroll } from "@/common/hooks";
+import { promptService } from "../services/prompt.service";
 
-interface UsePromptsOptions {
-  autoFetch?: boolean;
-}
+export function usePrompts(lang: Language, autoFetch = true) {
+  const [stats, setStats] = useState<AdminPromptStats | null>(null);
+  const [categoryLabels, setCategoryLabels] = useState<SkillLabel[]>([]);
+  const [sourceLabels, setSourceLabels] = useState<SkillLabel[]>([]);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [selectedPrompt, setSelectedPrompt] = useState<AdminPrompt | null>(
+    null
+  );
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("__all__");
+  const [source, setSource] = useState("__all__");
 
-export function usePrompts(options: UsePromptsOptions = {}) {
-  const { autoFetch = true } = options;
-  const [prompts, setPrompts] = useState<PromptTemplate[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const fetchPrompts = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await promptService.getAll();
-      setPrompts(data);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to fetch prompts")
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  const fetchStats = useCallback(async () => {
+    const data = await promptService.getStats();
+    setStats(data);
+    return data;
   }, []);
 
-  const createPrompt = useCallback(async (data: CreatePromptDto) => {
-    setIsLoading(true);
-    try {
-      const newPrompt = await promptService.create(data);
-      setPrompts((prev) => [...prev, newPrompt]);
-      return newPrompt;
-    } finally {
-      setIsLoading(false);
-    }
+  const fetchLabels = useCallback(async () => {
+    const data = await promptService.getLabels();
+    setCategoryLabels(data.categories || []);
+    setSourceLabels(data.sources || []);
+    return data;
   }, []);
 
-  const updatePrompt = useCallback(
-    async (id: string, data: UpdatePromptDto) => {
-      setIsLoading(true);
-      try {
-        const updated = await promptService.update(id, data);
-        setPrompts((prev) => prev.map((p) => (p.id === id ? updated : p)));
-        return updated;
-      } finally {
-        setIsLoading(false);
-      }
+  const getCategoryLabel = useCallback(
+    (code: string) => {
+      if (!code) return "";
+      const label = categoryLabels.find((l) => l.code === code);
+      return label ? (lang === "zh" ? label.labelZh : label.labelEn) : code;
     },
-    []
+    [categoryLabels, lang]
   );
 
-  const deletePrompt = useCallback(async (id: string) => {
-    setIsLoading(true);
+  const getSourceLabel = useCallback(
+    (code: string) => {
+      if (!code) return "";
+      const label = sourceLabels.find((l) => l.code === code);
+      return label ? (lang === "zh" ? label.labelZh : label.labelEn) : code;
+    },
+    [sourceLabels, lang]
+  );
+
+  const fetchPrompts = useCallback(
+    async (page: number) => {
+      const params = {
+        page,
+        limit: 20,
+        search: search || undefined,
+        category: category !== "__all__" ? category : undefined,
+        source: source !== "__all__" ? source : undefined,
+      };
+      const res = await promptService.getList(params);
+      return { data: res.data || [], total: res.meta?.total || 0 };
+    },
+    [search, category, source]
+  );
+
+  const {
+    data: prompts,
+    isLoading,
+    hasMore,
+    total,
+    loadMoreRef,
+    refresh,
+  } = useInfiniteScroll<AdminPrompt>({ fetchFn: fetchPrompts });
+
+  const handleToggle = useCallback(
+    async (id: string) => {
+      await promptService.toggle(id);
+      fetchStats();
+      refresh();
+    },
+    [fetchStats, refresh]
+  );
+
+  const handleSync = useCallback(async () => {
+    setIsSyncing(true);
     try {
-      await promptService.delete(id);
-      setPrompts((prev) => prev.filter((p) => p.id !== id));
+      const result = await promptService.sync();
+      fetchStats();
+      refresh();
+      return result;
     } finally {
-      setIsLoading(false);
+      setIsSyncing(false);
     }
+  }, [fetchStats, refresh]);
+
+  const handleReset = useCallback(() => {
+    setSearch("");
+    setCategory("__all__");
+    setSource("__all__");
   }, []);
 
   useEffect(() => {
     if (autoFetch) {
-      fetchPrompts();
+      fetchStats();
+      fetchLabels();
     }
-  }, [autoFetch, fetchPrompts]);
+  }, [autoFetch, fetchStats, fetchLabels]);
 
   return {
     prompts,
+    stats,
+    categoryLabels,
+    sourceLabels,
     isLoading,
-    error,
-    fetchPrompts,
-    createPrompt,
-    updatePrompt,
-    deletePrompt,
+    hasMore,
+    total,
+    loadMoreRef,
+    isSyncing,
+    selectedPrompt,
+    setSelectedPrompt,
+    search,
+    setSearch,
+    category,
+    setCategory,
+    source,
+    setSource,
+    fetchStats,
+    fetchLabels,
+    getCategoryLabel,
+    getSourceLabel,
+    handleToggle,
+    handleSync,
+    handleReset,
+    refresh,
   };
 }

@@ -10,23 +10,40 @@ from .dto import (
     UpdateDomainCategoryRequest,
     UpdateDomainRequest,
 )
-from .service import DomainCategoryService, DomainService, QuestionService
+from .service import DomainCategoryService, DomainService, ProductLineService, QuestionService
 
 router = APIRouter(prefix="/domains", tags=["domains"])
 
 
+# ========== Product Line Routes ==========
+@router.get("/product-lines")
+def get_product_lines():
+    """获取所有产品线"""
+    service = ProductLineService()
+    items = service.find_active()
+    return success_response(items)
+
+
+@router.get("/product-lines/{code}")
+def get_product_line_by_code(code: str):
+    """根据 code 获取产品线"""
+    service = ProductLineService()
+    item = service.find_by_code(code)
+    return success_response(item)
+
+
 # ========== Domain Category Routes ==========
 @router.get("/categories")
-def get_domain_categories():
+def get_domain_categories(product_line_id: str | None = None):
     service = DomainCategoryService()
-    categories = service.find_all()
+    categories = service.find_all(product_line_id)
     return success_response(categories)
 
 
 @router.get("/categories/active")
-def get_active_domain_categories():
+def get_active_domain_categories(product_line_id: str | None = None):
     service = DomainCategoryService()
-    categories = service.find_active()
+    categories = service.find_active(product_line_id)
     return success_response(categories)
 
 
@@ -72,6 +89,14 @@ def get_active_domains():
     service = DomainService()
     domains = service.find_active()
     return success_response(domains)
+
+
+@router.get("/grouped")
+def get_grouped_domains(lang: str = "zh", product_line_id: str | None = None):
+    """按分类分组返回领域配置（用户端使用）"""
+    service = DomainService()
+    grouped = service.find_grouped_by_category(lang, product_line_id)
+    return success_response(grouped)
 
 
 @router.get("/{id}")

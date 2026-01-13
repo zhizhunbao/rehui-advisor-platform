@@ -10,11 +10,10 @@ import requests
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
 from src.common.config import get_settings
+from src.common.enum import RAW_GITHUB, GITHUB_API
+from src.common.helper import paginate
 
 DOC_TYPE_MODEL = "admin_llm_model"
-
-RAW_GITHUB = "https://raw.githubusercontent.com"
-GITHUB_API = "https://api.github.com"
 
 
 class LLMService:
@@ -26,9 +25,7 @@ class LLMService:
     def find_all_models(self, page: int = 1, limit: int = 20) -> tuple[list[dict], int]:
         docs = self.store.find(DOC_TYPE_MODEL, status="active", limit=1000)
         docs.sort(key=lambda x: x.get("created_at", ""), reverse=True)
-        total = len(docs)
-        start = (page - 1) * limit
-        paged = docs[start:start + limit]
+        paged, total = paginate(docs, page, limit)
         return [self._model_to_response(doc) for doc in paged], total
 
     def find_model_by_id(self, id: str) -> dict | None:

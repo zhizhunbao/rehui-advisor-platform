@@ -32,6 +32,7 @@ from src.modules.member.house import router as house_router
 from src.modules.member.insurance import router as insurance_router
 from src.modules.member.investment import router as investment_router
 from src.modules.member.job import router as job_router
+from src.modules.member.learning.router import router as learning_router
 
 __all__ = [
     # Admin
@@ -63,4 +64,5 @@ __all__ = [
     "insurance_router",
     "investment_router",
     "job_router",
+    "learning_router",
 ]

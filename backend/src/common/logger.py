@@ -23,6 +23,30 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(log_entry, ensure_ascii=False)
 
 
+class ConsoleFormatter(logging.Formatter):
+    """控制台友好格式"""
+    
+    COLORS = {
+        "DEBUG": "\033[36m",     # cyan
+        "INFO": "\033[32m",      # green
+        "WARNING": "\033[33m",   # yellow
+        "ERROR": "\033[31m",     # red
+        "CRITICAL": "\033[35m",  # magenta
+    }
+    RESET = "\033[0m"
+    
+    def format(self, record: logging.LogRecord) -> str:
+        color = self.COLORS.get(record.levelname, "")
+        timestamp = datetime.utcnow().strftime("%H:%M:%S")
+        message = f"{color}{timestamp} [{record.levelname}]{self.RESET} {record.getMessage()}"
+        if hasattr(record, "extra_data") and record.extra_data:
+            extras = " ".join(f"{k}={v}" for k, v in record.extra_data.items())
+            message += f" | {extras}"
+        if record.exc_info:
+            message += f"\n{self.formatException(record.exc_info)}"
+        return message
+
+
 def setup_logger() -> logging.Logger:
     settings = get_settings()
     log_dir = Path(settings.log_dir)
@@ -32,12 +56,12 @@ def setup_logger() -> logging.Logger:
     _logger.setLevel(getattr(logging, settings.log_level.upper()))
     _logger.handlers.clear()
 
-    # Console handler
+    # Console handler - 人类可读格式
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(JsonFormatter())
+    console_handler.setFormatter(ConsoleFormatter())
     _logger.addHandler(console_handler)
 
-    # File handler
+    # File handler - JSON 格式
     file_handler = logging.FileHandler(log_dir / "app.log", encoding="utf-8")
     file_handler.setFormatter(JsonFormatter())
     _logger.addHandler(file_handler)

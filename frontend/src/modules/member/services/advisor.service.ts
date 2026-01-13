@@ -1,16 +1,11 @@
-import type { Message, GroundingSource, Language } from "../types";
+// Member 顾问服务 API
+import type { Message, StreamChunk, Lang } from "@/common/types";
 
 const API_BASE = "/api/advisor";
 
-export interface StreamChunk {
-  text: string;
-  sources: GroundingSource[];
-  error?: string;
-}
-
 export async function* streamChat(
   messages: Message[],
-  lang: Language = "zh"
+  lang: Lang = "zh"
 ): AsyncGenerator<StreamChunk> {
   const response = await fetch(`${API_BASE}/chat`, {
     method: "POST",

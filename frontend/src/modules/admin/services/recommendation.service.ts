@@ -1,16 +1,11 @@
+// Admin 推荐管理 API
 import { http } from "@/common/http";
 import type {
   AdminRecommendation,
   UpdateRecommendationDto,
   PaginatedResponse,
-} from "../types/admin.types";
-
-export interface RecommendationListParams {
-  page?: number;
-  limit?: number;
-  domainId?: string;
-  status?: string;
-}
+  RecommendationListParams,
+} from "@/common/types";
 
 export const recommendationService = {
   getAll(params?: RecommendationListParams) {

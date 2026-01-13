@@ -4,7 +4,7 @@ import type {
   SubscriptionPlan,
   CreateSubscriptionDto,
   UpdateSubscriptionDto,
-} from "../types/admin.types";
+} from "@/common/types";
 
 export function useSubscriptions() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionPlan[]>([]);

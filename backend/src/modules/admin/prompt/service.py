@@ -6,12 +6,12 @@ import requests
 
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.enum import RAW_GITHUB
+from src.common.helper import paginate
 
 # Document types
 DOC_TYPE_PROMPT = "admin_prompt"
 DOC_TYPE_PROMPT_LABEL = "admin_prompt_label"
-
-RAW_GITHUB = "https://raw.githubusercontent.com"
 
 CATEGORY_MAP = {
     "act as": "roleplay", "pretend": "roleplay", "simulate": "roleplay",
@@ -106,9 +106,7 @@ class PromptService:
             x.get("updated_at") or ""
         ), reverse=True)
         
-        total = len(filtered)
-        start = (page - 1) * limit
-        paged = filtered[start:start + limit]
+        paged, total = paginate(filtered, page, limit)
         
         return [self._prompt_to_response(doc) for doc in paged], total
 

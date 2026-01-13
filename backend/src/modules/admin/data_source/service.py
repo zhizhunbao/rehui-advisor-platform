@@ -5,11 +5,10 @@ import requests
 
 from src.common.document import DocumentStore
 from src.common.errors import AppError, AppErrorCode
+from src.common.enum import GITHUB_API, RAW_GITHUB
+from src.common.helper import paginate
 
 DOC_TYPE = "admin_data_source"
-
-GITHUB_API = "https://api.github.com"
-RAW_GITHUB = "https://raw.githubusercontent.com"
 
 
 class DataSourceService:
@@ -62,9 +61,7 @@ class DataSourceService:
             filtered.append(doc)
         
         filtered.sort(key=lambda x: x.get("created_at", ""), reverse=True)
-        total = len(filtered)
-        start = (page - 1) * limit
-        paged = filtered[start:start + limit]
+        paged, total = paginate(filtered, page, limit)
         
         return [self._to_response(doc) for doc in paged], total
 

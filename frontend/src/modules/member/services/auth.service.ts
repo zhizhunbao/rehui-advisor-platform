@@ -1,57 +1,33 @@
+// Member 认证服务 API
 import { http } from "@/common/http";
-import type { LoginDto, RegisterDto, QuotaStatus, User } from "../types";
-
-// 后端返回的原始格式
-interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  user_id: string;
-  user_type: string;
-}
-
-interface AnonymousSessionResponse {
-  session_token: string;
-  user_id: string;
-  user_type: string;
-  search_limit: number;
-  search_count: number;
-}
-
-interface QuotaStatusResponse {
-  user_type: string;
-  search_count: number;
-  search_limit: number;
-  remaining: number;
-}
-
-interface UserResponse {
-  id: string;
-  email: string | null;
-  name: string | null;
-  user_type: string;
-  is_anonymous: boolean;
-  search_limit: number;
-  search_count: number;
-}
+import type {
+  LoginDto,
+  RegisterDto,
+  QuotaStatus,
+  User,
+  AuthApiResponse,
+  AnonymousSessionApiResponse,
+  QuotaStatusApiResponse,
+  UserApiResponse,
+} from "@/common/types";
 
 export const authService = {
-  async login(data: LoginDto): Promise<AuthResponse> {
-    return http.post<AuthResponse>("/auth/login", data);
+  async login(data: LoginDto): Promise<AuthApiResponse> {
+    return http.post<AuthApiResponse>("/auth/login", data);
   },
 
-  async register(data: RegisterDto): Promise<AuthResponse> {
-    return http.post<AuthResponse>("/auth/register", data);
+  async register(data: RegisterDto): Promise<AuthApiResponse> {
+    return http.post<AuthApiResponse>("/auth/register", data);
   },
 
-  async refreshToken(refreshToken: string): Promise<AuthResponse> {
-    return http.post<AuthResponse>("/auth/refresh", {
+  async refreshToken(refreshToken: string): Promise<AuthApiResponse> {
+    return http.post<AuthApiResponse>("/auth/refresh", {
       refresh_token: refreshToken,
     });
   },
 
   async getCurrentUser(): Promise<User> {
-    const res = await http.get<UserResponse>("/auth/me");
+    const res = await http.get<UserApiResponse>("/auth/me");
     return {
       id: res.id,
       email: res.email,
@@ -72,7 +48,7 @@ export const authService = {
   },
 
   async getQuotaStatus(): Promise<QuotaStatus> {
-    const res = await http.get<QuotaStatusResponse>("/auth/quota/status");
+    const res = await http.get<QuotaStatusApiResponse>("/auth/quota/status");
     return {
       userType: res.user_type as QuotaStatus["userType"],
       searchCount: res.search_count,
@@ -83,7 +59,7 @@ export const authService = {
     };
   },
 
-  async createAnonymousSession(): Promise<AnonymousSessionResponse> {
-    return http.post<AnonymousSessionResponse>("/auth/session/anonymous");
+  async createAnonymousSession(): Promise<AnonymousSessionApiResponse> {
+    return http.post<AnonymousSessionApiResponse>("/auth/session/anonymous");
   },
 };

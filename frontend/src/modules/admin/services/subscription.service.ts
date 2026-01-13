@@ -3,7 +3,7 @@ import type {
   SubscriptionPlan,
   CreateSubscriptionDto,
   UpdateSubscriptionDto,
-} from "../types/admin.types";
+} from "@/common/types";
 
 export const subscriptionService = {
   getAll() {

@@ -1,16 +1,25 @@
+// Admin 路由守卫组件 - Props: admin, children
 import { Navigate, useLocation } from "react-router-dom";
-import { useAdminAuth } from "../context/AdminAuthContext";
+
+interface Admin {
+  role: string;
+}
 
 interface AdminRouteProps {
   children: React.ReactNode;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  admin: Admin | null;
   requireSuperAdmin?: boolean;
 }
 
 export default function AdminRoute({
   children,
+  isAuthenticated,
+  isLoading,
+  admin,
   requireSuperAdmin = false,
 }: AdminRouteProps) {
-  const { isAuthenticated, isLoading, admin } = useAdminAuth();
   const location = useLocation();
 
   if (isLoading) {

@@ -1,93 +1,78 @@
+// Admin 会话管理 Hook - 封装 API 调用和筛选状态
 import { useState, useCallback } from "react";
-import {
-  conversationService,
-  type ConversationListParams,
-} from "../services/conversation.service";
-import type {
-  AdminConversation,
-  PaginatedResponse,
-} from "../types/admin.types";
+import type { AdminConversation } from "@/common/types";
+import { useInfiniteScroll } from "@/common/hooks";
+import { conversationService } from "../services/conversation.service";
 
 export function useConversations() {
-  const [data, setData] = useState<PaginatedResponse<AdminConversation> | null>(
-    null
-  );
+  const [userId, setUserId] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [showDetail, setShowDetail] = useState(false);
   const [selectedConversation, setSelectedConversation] =
     useState<AdminConversation | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
 
   const fetchConversations = useCallback(
-    async (params?: ConversationListParams) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const result = await conversationService.getAll(params);
-        setData(result);
-        return result;
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err
-            : new Error("Failed to fetch conversations")
-        );
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
+    async (page: number) => {
+      const result = await conversationService.getAll({
+        page,
+        limit: 20,
+        userId: userId || undefined,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+      });
+      return { data: result.data, total: result.total };
     },
-    []
+    [userId, startDate, endDate]
   );
 
-  const fetchConversationById = useCallback(async (id: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const result = await conversationService.getById(id);
-      setSelectedConversation(result);
-      return result;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to fetch conversation")
-      );
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
+  const {
+    data: conversations,
+    isLoading,
+    hasMore,
+    total,
+    loadMoreRef,
+    refresh,
+  } = useInfiniteScroll<AdminConversation>({ fetchFn: fetchConversations });
+
+  const fetchConversationDetail = useCallback(async (id: string) => {
+    const result = await conversationService.getById(id);
+    setSelectedConversation(result);
+    setShowDetail(true);
   }, []);
 
-  const deleteConversation = useCallback(async (id: string) => {
-    try {
+  const deleteConversation = useCallback(
+    async (id: string) => {
       await conversationService.delete(id);
-      setData((prev) =>
-        prev
-          ? {
-              ...prev,
-              data: prev.data.filter((c) => c.id !== id),
-              total: prev.total - 1,
-            }
-          : null
-      );
-      return true;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to delete conversation")
-      );
-      return false;
-    }
+      refresh();
+    },
+    [refresh]
+  );
+
+  const resetFilters = useCallback(() => {
+    setUserId("");
+    setStartDate("");
+    setEndDate("");
   }, []);
 
   return {
-    conversations: data?.data || [],
-    total: data?.total || 0,
-    page: data?.page || 1,
-    limit: data?.limit || 20,
+    conversations,
     selectedConversation,
     isLoading,
-    error,
-    fetchConversations,
-    fetchConversationById,
+    hasMore,
+    total,
+    loadMoreRef,
+    showDetail,
+    setShowDetail,
+    userId,
+    setUserId,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    refresh,
+    fetchConversationDetail,
     deleteConversation,
-    setSelectedConversation,
+    resetFilters,
   };
 }

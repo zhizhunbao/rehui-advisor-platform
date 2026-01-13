@@ -1,9 +1,25 @@
+// Admin 布局组件 - Hooks: useAdminSettings, useAdminAuth
 import { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
-import { useAdminAuth } from "../context/AdminAuthContext";
-import { useAdminSettings } from "../context/AdminSettingsContext";
 import { adminLocales } from "@/common/i18n";
-import ThemeSelector from "./ThemeSelector";
+import type { Language } from "@/common/types";
+import { AdminThemeSelector } from "./AdminThemeSelector";
+import type { ThemeName } from "./AdminThemeSelector";
+
+interface Admin {
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface AdminLayoutProps {
+  admin: Admin | null;
+  lang: Language;
+  themeName: ThemeName;
+  onLogout: () => void;
+  onLangChange: (lang: Language) => void;
+  onThemeChange: (theme: ThemeName) => void;
+}
 
 interface MenuItem {
   path: string;
@@ -22,12 +38,9 @@ interface MenuGroup {
 
 type MenuConfig = (MenuItem | MenuGroup)[];
 
-const menuConfig: MenuConfig = [
-  // 独立菜单项
+const MENU_CONFIG: MenuConfig = [
   { path: "/admin", label: "dashboard", icon: "📊" },
   { path: "/admin/analytics", label: "analytics", icon: "📈" },
-
-  // AI 核心
   {
     key: "ai",
     label: "aiCore",
@@ -39,8 +52,6 @@ const menuConfig: MenuConfig = [
       { path: "/admin/agent-frameworks", label: "agentFrameworks", icon: "🤝" },
     ],
   },
-
-  // 数据管理
   {
     key: "data",
     label: "dataManagement",
@@ -50,11 +61,9 @@ const menuConfig: MenuConfig = [
       { path: "/admin/data-sources", label: "dataSources", icon: "🔗" },
       { path: "/admin/crawlers", label: "crawlers", icon: "🕷️" },
       { path: "/admin/retrieval", label: "retrieval", icon: "🔍" },
-      { path: "/admin/scheduler", label: "scheduler", icon: "⏰" },
+      { path: "/admin/scheduler", label: "scheduler", icon: "📅" },
     ],
   },
-
-  // 内容管理
   {
     key: "content",
     label: "contentManagement",
@@ -64,8 +73,6 @@ const menuConfig: MenuConfig = [
       { path: "/admin/recommendations", label: "recommendations", icon: "⭐" },
     ],
   },
-
-  // 用户与订阅
   {
     key: "users",
     label: "userManagement",
@@ -76,8 +83,6 @@ const menuConfig: MenuConfig = [
       { path: "/admin/subscriptions", label: "subscriptions", icon: "💳" },
     ],
   },
-
-  // 系统设置
   {
     path: "/admin/configs",
     label: "configs",
@@ -102,11 +107,16 @@ function getAllMenuItems(config: MenuConfig): MenuItem[] {
   return items;
 }
 
-export default function AdminLayout() {
-  const { lang, setLang } = useAdminSettings();
+export default function AdminLayout({
+  admin,
+  lang,
+  themeName,
+  onLogout,
+  onLangChange,
+  onThemeChange,
+}: AdminLayoutProps) {
   const t = adminLocales[lang];
   const location = useLocation();
-  const { admin, logout } = useAdminAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([
     "ai",
@@ -123,17 +133,21 @@ export default function AdminLayout() {
     return group.children.some((child) => location.pathname === child.path);
   };
 
-  const allMenuItems = getAllMenuItems(menuConfig);
+  const allMenuItems = getAllMenuItems(MENU_CONFIG);
+  const isSuperAdmin = admin?.role === "super_admin";
+
+  const getLabel = (key: string): string => {
+    const value = t[key as keyof typeof t];
+    return typeof value === "string" ? value : key;
+  };
 
   return (
     <div className="min-h-screen flex bg-background">
-      {/* Sidebar */}
       <aside
         className={`${
           sidebarOpen ? "w-64" : "w-16"
         } bg-sidebar text-sidebar-foreground transition-all duration-300 flex flex-col sticky top-0 h-screen`}
       >
-        {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
           {sidebarOpen && <span className="font-bold text-lg">{t.title}</span>}
           <button
@@ -144,15 +158,10 @@ export default function AdminLayout() {
           </button>
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 py-4 overflow-y-auto scrollbar-hide">
-          {menuConfig.map((item) => {
-            // 权限过滤
-            if (item.superAdminOnly && admin?.role !== "super_admin") {
-              return null;
-            }
+          {MENU_CONFIG.map((item) => {
+            if (item.superAdminOnly && !isSuperAdmin) return null;
 
-            // 菜单组
             if (isMenuGroup(item)) {
               const isExpanded = expandedGroups.includes(item.key);
               const isActive = isGroupActive(item);
@@ -171,7 +180,7 @@ export default function AdminLayout() {
                     {sidebarOpen && (
                       <>
                         <span className="ml-3 flex-1 text-left">
-                          {t[item.label as keyof typeof t] || item.label}
+                          {getLabel(item.label)}
                         </span>
                         <span
                           className={`transition-transform duration-200 ${
@@ -183,15 +192,11 @@ export default function AdminLayout() {
                       </>
                     )}
                   </button>
-
-                  {/* 子菜单 */}
                   {sidebarOpen && isExpanded && (
                     <div className="bg-sidebar-accent/30">
                       {item.children
                         .filter(
-                          (child) =>
-                            !child.superAdminOnly ||
-                            admin?.role === "super_admin"
+                          (child) => !child.superAdminOnly || isSuperAdmin
                         )
                         .map((child) => {
                           const isChildActive =
@@ -208,8 +213,7 @@ export default function AdminLayout() {
                             >
                               <span className="text-base">{child.icon}</span>
                               <span className="ml-2">
-                                {t[child.label as keyof typeof t] ||
-                                  child.label}
+                                {getLabel(child.label)}
                               </span>
                             </Link>
                           );
@@ -220,7 +224,6 @@ export default function AdminLayout() {
               );
             }
 
-            // 独立菜单项
             const isActive = location.pathname === item.path;
             return (
               <Link
@@ -234,16 +237,13 @@ export default function AdminLayout() {
               >
                 <span className="text-xl">{item.icon}</span>
                 {sidebarOpen && (
-                  <span className="ml-3">
-                    {t[item.label as keyof typeof t] || item.label}
-                  </span>
+                  <span className="ml-3">{getLabel(item.label)}</span>
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* User Info */}
         <div className="border-t border-sidebar-border p-4">
           {sidebarOpen ? (
             <div className="flex items-center justify-between">
@@ -254,7 +254,7 @@ export default function AdminLayout() {
                 </div>
               </div>
               <button
-                onClick={logout}
+                onClick={onLogout}
                 className="p-2 rounded text-destructive transition-colors hover:bg-sidebar-accent"
                 title={t.logout}
               >
@@ -263,7 +263,7 @@ export default function AdminLayout() {
             </div>
           ) : (
             <button
-              onClick={logout}
+              onClick={onLogout}
               className="w-full p-2 rounded text-destructive transition-colors hover:bg-sidebar-accent"
               title={t.logout}
             >
@@ -273,35 +273,31 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        {/* Top Bar */}
         <header className="h-16 shadow flex items-center justify-between px-6 bg-card border-b border-border">
           <h1 className="text-xl font-semibold text-card-foreground">
-            {t[
-              allMenuItems.find((m) => m.path === location.pathname)
-                ?.label as keyof typeof t
-            ] || t.dashboard}
+            {getLabel(
+              allMenuItems.find((m) => m.path === location.pathname)?.label ||
+                "dashboard"
+            )}
           </h1>
           <div className="flex items-center space-x-4">
-            {/* Theme Selector */}
-            <ThemeSelector lang={lang} />
-
-            {/* Language Toggle */}
+            <AdminThemeSelector
+              lang={lang}
+              themeName={themeName}
+              onThemeChange={onThemeChange}
+            />
             <button
-              onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+              onClick={() => onLangChange(lang === "zh" ? "en" : "zh")}
               className="px-3 py-2 rounded-lg text-sm font-medium transition-colors bg-secondary hover:bg-secondary/80 text-secondary-foreground"
             >
               {lang === "zh" ? "EN" : "中文"}
             </button>
-
             <span className="text-sm text-muted-foreground">
               {admin?.email}
             </span>
           </div>
         </header>
-
-        {/* Page Content */}
         <div className="p-6 text-foreground">
           <Outlet />
         </div>
