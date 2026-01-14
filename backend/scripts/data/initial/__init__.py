@@ -1,11 +1,9 @@
-# Admin 模块数据
-from scripts.data.admin.domain import CATEGORIES, DOMAINS, TAGS
-from scripts.data.admin.llm import LLM_MODELS
-from scripts.data.admin.prompt import PROMPTS
-from scripts.data.admin.retrieval import RETRIEVAL_ENGINES
-from scripts.data.admin.scheduler import SCHEDULER_JOBS
-from scripts.data.admin.user import ADMIN_USERS, MEMBER_USERS
-from scripts.data.admin.data_source import DATA_SOURCES
+# Initial 模块数据 - 系统初始化种子数据
+from scripts.data.initial.domain import CATEGORIES, DOMAINS, TAGS, PROMPTS
+from scripts.data.initial.llm import LLM_MODELS
+from scripts.data.initial.retrieval import RETRIEVAL_ENGINES
+from scripts.data.initial.scheduler import SCHEDULER_JOBS
+from scripts.data.initial.user import ADMIN_USERS, MEMBER_USERS
 
 __all__ = [
     "CATEGORIES",
@@ -17,5 +15,4 @@ __all__ = [
     "SCHEDULER_JOBS",
     "ADMIN_USERS",
     "MEMBER_USERS",
-    "DATA_SOURCES",
 ]

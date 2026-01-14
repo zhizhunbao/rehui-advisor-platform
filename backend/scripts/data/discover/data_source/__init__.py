@@ -1,9 +1,9 @@
 # 数据源模块 - 按 source_type 组织
 from typing import Any, Dict, List
 
-from scripts.data.discover.data_sources.github import GITHUB_SOURCES
-from scripts.data.discover.data_sources.rss import RSS_SOURCES
-from scripts.data.discover.data_sources.website import WEBSITE_SOURCES
+from scripts.data.discover.data_source.github import GITHUB_SOURCES
+from scripts.data.discover.data_source.rss import RSS_SOURCES
+from scripts.data.discover.data_source.website import WEBSITE_SOURCES
 
 DATA_SOURCES: List[Dict[str, Any]] = []
 DATA_SOURCES.extend(GITHUB_SOURCES)

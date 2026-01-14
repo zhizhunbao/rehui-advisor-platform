@@ -1,5 +1,5 @@
 # 数据定义模块 - 纯数据，无逻辑
-from scripts.data.admin import (
+from scripts.data.initial import (
     CATEGORIES,
     DOMAINS,
     TAGS,
@@ -9,7 +9,6 @@ from scripts.data.admin import (
     SCHEDULER_JOBS,
     ADMIN_USERS,
     MEMBER_USERS,
-    DATA_SOURCES,
 )
 
 __all__ = [
@@ -22,5 +21,4 @@ __all__ = [
     "SCHEDULER_JOBS",
     "ADMIN_USERS",
     "MEMBER_USERS",
-    "DATA_SOURCES",
 ]
