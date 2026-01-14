@@ -1,11 +1,11 @@
 // Admin 提示词列表组件
-import type { Language, AdminPrompt } from "@/common/types";
+import type { AdminPrompt } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminPromptCard } from "./AdminPromptCard";
 import { AdminLoadMoreIndicator } from "./AdminLoadMoreIndicator";
 
 interface AdminPromptsListProps {
-  lang: Language;
   prompts: AdminPrompt[];
   isLoading: boolean;
   hasMore: boolean;
@@ -18,7 +18,6 @@ interface AdminPromptsListProps {
 }
 
 export function AdminPromptsList({
-  lang,
   prompts,
   isLoading,
   hasMore,
@@ -29,6 +28,7 @@ export function AdminPromptsList({
   getCategoryLabel,
   getSourceLabel,
 }: AdminPromptsListProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (isLoading && prompts.length === 0) {
@@ -50,7 +50,6 @@ export function AdminPromptsList({
           <AdminPromptCard
             key={prompt.id}
             prompt={prompt}
-            lang={lang}
             onClick={() => onPromptClick(prompt)}
             onToggle={() => onToggle(prompt.id)}
             getCategoryLabel={getCategoryLabel}
@@ -64,7 +63,6 @@ export function AdminPromptsList({
         isLoading={isLoading}
         total={total}
         count={prompts.length}
-        lang={lang}
       />
     </>
   );

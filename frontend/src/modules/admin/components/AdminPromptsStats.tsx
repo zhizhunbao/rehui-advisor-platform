@@ -1,14 +1,15 @@
 // Admin 提示词统计卡片组件
-import type { Language, AdminPromptStats } from "@/common/types";
+import type { AdminPromptStats } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminStatCard } from "./AdminStatCard";
 
 interface AdminPromptsStatsProps {
-  lang: Language;
   stats: AdminPromptStats | null;
 }
 
-export function AdminPromptsStats({ lang, stats }: AdminPromptsStatsProps) {
+export function AdminPromptsStats({ stats }: AdminPromptsStatsProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (!stats) return null;

@@ -1,6 +1,7 @@
 // Admin LLM 表单对话框组件
 import { useState } from "react";
-import type { Language, LLMModelCreate, LLMModelForm } from "@/common/types";
+import type { LLMModelCreate, LLMModelForm } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import {
   LLMProviderLabel,
@@ -34,7 +35,6 @@ import {
 } from "@/libs/shadcn/ui/dialog";
 
 interface AdminLLMFormDialogProps {
-  lang: Language;
   open: boolean;
   isEditing: boolean;
   initialForm: LLMModelForm;
@@ -43,13 +43,13 @@ interface AdminLLMFormDialogProps {
 }
 
 export function AdminLLMFormDialog({
-  lang,
   open,
   isEditing,
   initialForm,
   onClose,
   onSave,
 }: AdminLLMFormDialogProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
   const [activeTab, setActiveTab] = useState("basic");
   const [form, setForm] = useState<LLMModelForm>(initialForm);

@@ -1,6 +1,4 @@
 // Admin 技能管理页面
-import type { Language } from "@/common/types";
-import { adminLocales } from "@/common/i18n";
 import { useSkills } from "../hooks/useSkills";
 import { AdminSkillsHeader } from "../components/AdminSkillsHeader";
 import { AdminSkillsStats } from "../components/AdminSkillsStats";
@@ -8,8 +6,7 @@ import { AdminSkillsFilter } from "../components/AdminSkillsFilter";
 import { AdminSkillsList } from "../components/AdminSkillsList";
 import { AdminSkillDetailModal } from "../components/AdminSkillDetailModal";
 
-export default function SkillsView({ lang }: { lang: Language }) {
-  const t = adminLocales[lang];
+export default function SkillsView() {
   const {
     skills,
     stats,
@@ -31,23 +28,15 @@ export default function SkillsView({ lang }: { lang: Language }) {
     handleToggle,
     handleSync,
     handleReset,
-  } = useSkills(lang);
-
-  const onSync = async () => {
-    const result = await handleSync();
-    if (result) {
-      alert(t.syncedCount.replace("{count}", String(result.synced)));
-    }
-  };
+  } = useSkills();
 
   return (
-    <div>
-      <AdminSkillsHeader lang={lang} isSyncing={isSyncing} onSync={onSync} />
+    <>
+      <AdminSkillsHeader isSyncing={isSyncing} onSync={handleSync} />
 
-      <AdminSkillsStats lang={lang} stats={stats} />
+      <AdminSkillsStats stats={stats} />
 
       <AdminSkillsFilter
-        lang={lang}
         stats={stats}
         search={search}
         filterCategory={filterCategory}
@@ -61,7 +50,6 @@ export default function SkillsView({ lang }: { lang: Language }) {
       />
 
       <AdminSkillsList
-        lang={lang}
         skills={skills}
         isLoading={isLoading}
         hasMore={hasMore}
@@ -75,7 +63,6 @@ export default function SkillsView({ lang }: { lang: Language }) {
 
       {selectedSkill && (
         <AdminSkillDetailModal
-          lang={lang}
           skill={selectedSkill}
           onClose={() => setSelectedSkill(null)}
           onToggle={() => {
@@ -86,6 +73,6 @@ export default function SkillsView({ lang }: { lang: Language }) {
           getSourceLabel={getSourceLabel}
         />
       )}
-    </div>
+    </>
   );
 }

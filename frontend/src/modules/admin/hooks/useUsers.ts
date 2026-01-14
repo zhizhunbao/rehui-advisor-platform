@@ -1,11 +1,13 @@
 // Admin 用户管理 Hook
 import { useState, useCallback } from "react";
-import type { AdminUser, UserListParams, Language } from "@/common/types";
+import type { AdminUser, UserListParams } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { useInfiniteScroll } from "@/common/hooks";
 import { userService } from "../services/user.service";
 
-export function useUsers(lang: Language, autoFetch = true) {
+export function useUsers(autoFetch = true) {
+  const { lang } = useAdminSettingsStore();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 

@@ -122,3 +122,24 @@ export function keysToCamel<T>(obj: unknown): T {
   }
   return obj as T;
 }
+
+// ========== Admin Menu ==========
+import type { AdminMenuItem, AdminMenuGroup, AdminMenuConfig } from "./types";
+
+export function isAdminMenuGroup(
+  item: AdminMenuItem | AdminMenuGroup
+): item is AdminMenuGroup {
+  return "children" in item;
+}
+
+export function getAllAdminMenuItems(config: AdminMenuConfig): AdminMenuItem[] {
+  const items: AdminMenuItem[] = [];
+  for (const item of config) {
+    if (isAdminMenuGroup(item)) {
+      items.push(...item.children);
+    } else {
+      items.push(item);
+    }
+  }
+  return items;
+}

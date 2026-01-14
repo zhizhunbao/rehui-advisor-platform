@@ -1,42 +1,31 @@
-// Admin 分析统计 Hook
+// Admin 数据分析 Hook
 import { useState, useEffect, useCallback } from "react";
-import { analyticsService } from "../services/analytics.service";
 import type { AnalyticsSummary } from "@/common/types";
+import { analyticsService } from "../services/analytics.service";
 
-interface UseAnalyticsOptions {
-  autoFetch?: boolean;
-}
-
-export function useAnalytics(options: UseAnalyticsOptions = {}) {
-  const { autoFetch = true } = options;
+export function useAnalytics(autoFetch = true) {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchSummary = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
     try {
       const data = await analyticsService.getSummary();
       setSummary(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch summary");
-      throw err;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
     if (autoFetch) {
-      fetchSummary();
+      fetchData();
     }
-  }, [autoFetch, fetchSummary]);
+  }, [autoFetch, fetchData]);
 
   return {
     summary,
-    loading,
-    error,
-    fetchSummary,
+    isLoading,
+    refresh: fetchData,
   };
 }

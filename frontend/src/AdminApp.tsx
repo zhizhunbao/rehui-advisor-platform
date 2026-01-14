@@ -1,9 +1,8 @@
+// Admin 应用入口
 import { Routes, Route, Navigate } from "react-router-dom";
-import { AdminAuthProvider } from "./modules/admin/hooks/useAdminAuth";
-import {
-  AdminSettingsProvider,
-  useAdminSettings,
-} from "./modules/admin/hooks/useAdminSettings";
+import { ErrorBoundary } from "./common/ErrorBoundary";
+import { ToastProvider } from "./common/toast";
+import { useAdminApp } from "./modules/admin/hooks/useAdminApp";
 import AdminRoute from "./modules/admin/components/AdminRoute";
 import AdminLayout from "./modules/admin/components/AdminLayout";
 import DashboardView from "./modules/admin/views/DashboardView";
@@ -24,15 +23,13 @@ import LLMView from "./modules/admin/views/LLMView";
 import RetrievalView from "./modules/admin/views/RetrievalView";
 import SchedulerView from "./modules/admin/views/SchedulerView";
 import AgentFrameworksView from "./modules/admin/views/AgentFrameworksView";
-import { ErrorBoundary } from "./common/ErrorBoundary";
-import { ToastProvider } from "./common/toast";
 
 function AdminRoutes() {
-  const { lang } = useAdminSettings();
+  useAdminApp();
 
   return (
     <Routes>
-      <Route path="login" element={<LoginView lang={lang} />} />
+      <Route path="login" element={<LoginView />} />
       <Route
         element={
           <AdminRoute>
@@ -40,42 +37,30 @@ function AdminRoutes() {
           </AdminRoute>
         }
       >
-        <Route index element={<DashboardView lang={lang} />} />
-        <Route path="domains" element={<DomainsView lang={lang} />} />
-        <Route path="prompts" element={<PromptsView lang={lang} />} />
-        <Route path="questions" element={<QuestionsView lang={lang} />} />
-        <Route path="crawlers" element={<CrawlersView lang={lang} />} />
-        <Route path="users" element={<UsersView lang={lang} />} />
-        <Route
-          path="conversations"
-          element={<ConversationsView lang={lang} />}
-        />
-        <Route
-          path="subscriptions"
-          element={<SubscriptionsView lang={lang} />}
-        />
-        <Route
-          path="recommendations"
-          element={<RecommendationsView lang={lang} />}
-        />
-        <Route path="skills" element={<SkillsView lang={lang} />} />
-        <Route path="data-sources" element={<DataSourcesView lang={lang} />} />
-        <Route path="llm" element={<LLMView lang={lang} />} />
-        <Route path="retrieval" element={<RetrievalView lang={lang} />} />
-        <Route path="scheduler" element={<SchedulerView lang={lang} />} />
-        <Route
-          path="agent-frameworks"
-          element={<AgentFrameworksView lang={lang} />}
-        />
+        <Route index element={<DashboardView />} />
+        <Route path="domains" element={<DomainsView />} />
+        <Route path="prompts" element={<PromptsView />} />
+        <Route path="questions" element={<QuestionsView />} />
+        <Route path="crawlers" element={<CrawlersView />} />
+        <Route path="users" element={<UsersView />} />
+        <Route path="conversations" element={<ConversationsView />} />
+        <Route path="subscriptions" element={<SubscriptionsView />} />
+        <Route path="recommendations" element={<RecommendationsView />} />
+        <Route path="skills" element={<SkillsView />} />
+        <Route path="data-sources" element={<DataSourcesView />} />
+        <Route path="llm" element={<LLMView />} />
+        <Route path="retrieval" element={<RetrievalView />} />
+        <Route path="scheduler" element={<SchedulerView />} />
+        <Route path="agent-frameworks" element={<AgentFrameworksView />} />
         <Route
           path="configs"
           element={
             <AdminRoute requireSuperAdmin>
-              <ConfigView lang={lang} />
+              <ConfigView />
             </AdminRoute>
           }
         />
-        <Route path="analytics" element={<AnalyticsView lang={lang} />} />
+        <Route path="analytics" element={<AnalyticsView />} />
       </Route>
       <Route path="*" element={<Navigate to="/admin" replace />} />
     </Routes>
@@ -86,11 +71,7 @@ export default function AdminApp() {
   return (
     <ErrorBoundary>
       <ToastProvider>
-        <AdminSettingsProvider>
-          <AdminAuthProvider>
-            <AdminRoutes />
-          </AdminAuthProvider>
-        </AdminSettingsProvider>
+        <AdminRoutes />
       </ToastProvider>
     </ErrorBoundary>
   );

@@ -1,5 +1,6 @@
 // Admin 技能详情弹窗组件
-import type { Language, Skill } from "@/common/types";
+import type { Skill } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Badge } from "@/libs/shadcn/ui/badge";
 import { Button } from "@/libs/shadcn/ui/button";
@@ -12,7 +13,6 @@ import {
 } from "@/libs/shadcn/ui/dialog";
 
 interface AdminSkillDetailModalProps {
-  lang: Language;
   skill: Skill;
   onClose: () => void;
   onToggle: () => void;
@@ -34,13 +34,13 @@ const getSourceVariant = (
 };
 
 export function AdminSkillDetailModal({
-  lang,
   skill,
   onClose,
   onToggle,
   getCategoryLabel,
   getSourceLabel,
 }: AdminSkillDetailModalProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const handleExportMd = () => {

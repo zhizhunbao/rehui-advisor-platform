@@ -1,5 +1,6 @@
 // Admin LLM 表格组件
-import type { Language, LLMModel } from "@/common/types";
+import type { LLMModel } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Badge } from "@/libs/shadcn/ui/badge";
@@ -19,7 +20,6 @@ import {
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface AdminLLMTableProps {
-  lang: Language;
   groupedModels: Record<string, LLMModel[]>;
   sortedGroups: string[];
   collapsedGroups: Set<string>;
@@ -33,7 +33,6 @@ interface AdminLLMTableProps {
 }
 
 export function AdminLLMTable({
-  lang,
   groupedModels,
   sortedGroups,
   collapsedGroups,
@@ -45,6 +44,7 @@ export function AdminLLMTable({
   getCategoryLabel,
   normalizeProvider,
 }: AdminLLMTableProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (isLoading) {

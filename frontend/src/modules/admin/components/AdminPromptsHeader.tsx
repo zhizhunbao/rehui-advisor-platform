@@ -1,19 +1,18 @@
 // Admin 提示词管理页面头部组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 
 interface AdminPromptsHeaderProps {
-  lang: Language;
   isSyncing: boolean;
   onSync: () => void;
 }
 
 export function AdminPromptsHeader({
-  lang,
   isSyncing,
   onSync,
 }: AdminPromptsHeaderProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (

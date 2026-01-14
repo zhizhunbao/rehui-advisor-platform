@@ -1,11 +1,10 @@
 // Admin 会话筛选表单组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
 
 interface AdminConversationFilterProps {
-  lang: Language;
   userId: string;
   startDate: string;
   endDate: string;
@@ -17,7 +16,6 @@ interface AdminConversationFilterProps {
 }
 
 export function AdminConversationFilter({
-  lang,
   userId,
   startDate,
   endDate,
@@ -27,6 +25,7 @@ export function AdminConversationFilter({
   onFilter,
   onReset,
 }: AdminConversationFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const handleSubmit = (e: React.FormEvent) => {

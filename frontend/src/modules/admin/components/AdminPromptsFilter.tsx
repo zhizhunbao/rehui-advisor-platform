@@ -1,12 +1,12 @@
 // Admin 提示词筛选组件
-import type { Language, AdminPromptStats } from "@/common/types";
+import type { AdminPromptStats } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminTagFilter } from "./AdminTagFilter";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
 
 interface AdminPromptsFilterProps {
-  lang: Language;
   stats: AdminPromptStats | null;
   search: string;
   category: string;
@@ -20,7 +20,6 @@ interface AdminPromptsFilterProps {
 }
 
 export function AdminPromptsFilter({
-  lang,
   stats,
   search,
   category,
@@ -32,6 +31,7 @@ export function AdminPromptsFilter({
   getCategoryLabel,
   getSourceLabel,
 }: AdminPromptsFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
   const hasFilters = search || category !== "__all__" || source !== "__all__";
 
@@ -39,7 +39,6 @@ export function AdminPromptsFilter({
     <div className="space-y-4 mb-6">
       {stats && stats.categories.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.category}
           options={stats.categories
             .filter((c) => c.category)
@@ -56,7 +55,6 @@ export function AdminPromptsFilter({
 
       {stats && stats.sources.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.source}
           options={stats.sources
             .filter((s) => s.source)

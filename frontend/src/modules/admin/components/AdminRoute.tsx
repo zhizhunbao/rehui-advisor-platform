@@ -1,25 +1,17 @@
-// Admin 路由守卫组件 - Props: admin, children
+// Admin 路由守卫组件
 import { Navigate, useLocation } from "react-router-dom";
-
-interface Admin {
-  role: string;
-}
+import { useAdminAuthStore } from "@/common/stores";
 
 interface AdminRouteProps {
   children: React.ReactNode;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  admin: Admin | null;
   requireSuperAdmin?: boolean;
 }
 
 export default function AdminRoute({
   children,
-  isAuthenticated,
-  isLoading,
-  admin,
   requireSuperAdmin = false,
 }: AdminRouteProps) {
+  const { admin, isAuthenticated, isLoading } = useAdminAuthStore();
   const location = useLocation();
 
   if (isLoading) {

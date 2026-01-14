@@ -1,5 +1,6 @@
 // Admin 会话列表表格组件
-import type { Language, AdminConversation } from "@/common/types";
+import type { AdminConversation } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import {
@@ -12,18 +13,17 @@ import {
 } from "@/libs/shadcn/ui/table";
 
 interface AdminConversationTableProps {
-  lang: Language;
   conversations: AdminConversation[];
   onViewDetail: (conversation: AdminConversation) => void;
   onDelete: (id: string) => void;
 }
 
 export function AdminConversationTable({
-  lang,
   conversations,
   onViewDetail,
   onDelete,
 }: AdminConversationTableProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const handleDelete = (id: string) => {

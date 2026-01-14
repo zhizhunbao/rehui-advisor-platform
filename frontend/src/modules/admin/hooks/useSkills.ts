@@ -5,12 +5,13 @@ import type {
   SkillStats,
   SkillLabel,
   SkillListParams,
-  Language,
 } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { useInfiniteScroll } from "@/common/hooks";
 import { skillService } from "../services/skill.service";
 
-export function useSkills(lang: Language, autoFetch = true) {
+export function useSkills(autoFetch = true) {
+  const { lang } = useAdminSettingsStore();
   const [stats, setStats] = useState<SkillStats | null>(null);
   const [categoryLabels, setCategoryLabels] = useState<SkillLabel[]>([]);
   const [sourceLabels, setSourceLabels] = useState<SkillLabel[]>([]);
@@ -84,21 +85,17 @@ export function useSkills(lang: Language, autoFetch = true) {
     [fetchStats, refresh]
   );
 
-  const sync = useCallback(async () => {
-    return skillService.sync();
-  }, []);
-
   const handleSync = useCallback(async () => {
     setIsSyncing(true);
     try {
-      const result = await sync();
+      const result = await skillService.sync();
       fetchStats();
       refresh();
       return result;
     } finally {
       setIsSyncing(false);
     }
-  }, [sync, fetchStats, refresh]);
+  }, [fetchStats, refresh]);
 
   const handleReset = useCallback(() => {
     setSearch("");
@@ -131,8 +128,6 @@ export function useSkills(lang: Language, autoFetch = true) {
     setFilterCategory,
     filterSource,
     setFilterSource,
-    fetchStats,
-    fetchLabels,
     getCategoryLabel,
     getSourceLabel,
     handleToggle,

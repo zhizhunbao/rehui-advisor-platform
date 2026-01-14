@@ -1,0 +1,20 @@
+// Admin 问题管理页面头部组件
+import { useAdminSettingsStore } from "@/common/stores";
+import { adminLocales } from "@/common/i18n";
+import { Button } from "@/libs/shadcn/ui/button";
+
+interface AdminQuestionsHeaderProps {
+  onAdd: () => void;
+}
+
+export function AdminQuestionsHeader({ onAdd }: AdminQuestionsHeaderProps) {
+  const { lang } = useAdminSettingsStore();
+  const t = adminLocales[lang];
+
+  return (
+    <div className="flex justify-between items-center mb-6">
+      <h1 className="text-2xl font-bold text-foreground">{t.questions}</h1>
+      <Button onClick={onAdd}>{t.addQuestion}</Button>
+    </div>
+  );
+}

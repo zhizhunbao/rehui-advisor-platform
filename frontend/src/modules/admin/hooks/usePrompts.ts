@@ -1,15 +1,14 @@
 // Admin 提示词管理 Hook
 import { useState, useEffect, useCallback } from "react";
-import type {
-  AdminPrompt,
-  AdminPromptStats,
-  SkillLabel,
-  Language,
-} from "@/common/types";
+import type { AdminPrompt, AdminPromptStats, SkillLabel } from "@/common/types";
 import { useInfiniteScroll } from "@/common/hooks";
+import { useAdminSettingsStore } from "@/common/stores";
+import { adminLocales } from "@/common/i18n";
 import { promptService } from "../services/prompt.service";
 
-export function usePrompts(lang: Language, autoFetch = true) {
+export function usePrompts(autoFetch = true) {
+  const { lang } = useAdminSettingsStore();
+  const t = adminLocales[lang];
   const [stats, setStats] = useState<AdminPromptStats | null>(null);
   const [categoryLabels, setCategoryLabels] = useState<SkillLabel[]>([]);
   const [sourceLabels, setSourceLabels] = useState<SkillLabel[]>([]);
@@ -91,17 +90,27 @@ export function usePrompts(lang: Language, autoFetch = true) {
       const result = await promptService.sync();
       fetchStats();
       refresh();
+      if (result) {
+        alert(t.syncedCount.replace("{count}", String(result.synced)));
+      }
       return result;
     } finally {
       setIsSyncing(false);
     }
-  }, [fetchStats, refresh]);
+  }, [fetchStats, refresh, t]);
 
   const handleReset = useCallback(() => {
     setSearch("");
     setCategory("__all__");
     setSource("__all__");
   }, []);
+
+  const handleToggleSelected = useCallback(() => {
+    if (selectedPrompt) {
+      handleToggle(selectedPrompt.id);
+      setSelectedPrompt(null);
+    }
+  }, [selectedPrompt, handleToggle]);
 
   useEffect(() => {
     if (autoFetch) {
@@ -133,6 +142,7 @@ export function usePrompts(lang: Language, autoFetch = true) {
     getCategoryLabel,
     getSourceLabel,
     handleToggle,
+    handleToggleSelected,
     handleSync,
     handleReset,
     refresh,

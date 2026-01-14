@@ -1,5 +1,6 @@
 // Admin 会话详情弹窗组件
-import type { Language, AdminConversation } from "@/common/types";
+import type { AdminConversation } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import {
   Dialog,
@@ -9,18 +10,17 @@ import {
 } from "@/libs/shadcn/ui/dialog";
 
 interface AdminConversationDetailDialogProps {
-  lang: Language;
   conversation: AdminConversation | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function AdminConversationDetailDialog({
-  lang,
   conversation,
   open,
   onOpenChange,
 }: AdminConversationDetailDialogProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (

@@ -6,8 +6,8 @@ import type {
   LLMSyncResult,
   LLMModelCreate,
   LLMModelForm,
-  Language,
 } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import {
   LLMProviderLabel,
   LLMProviderPriority,
@@ -16,7 +16,8 @@ import {
 } from "@/common/enum";
 import { llmService } from "../services/llm.service";
 
-export function useLLM(lang: Language, autoFetch = true) {
+export function useLLM(autoFetch = true) {
+  const { lang } = useAdminSettingsStore();
   const [models, setModels] = useState<LLMModel[]>([]);
   const [syncSources, setSyncSources] = useState<LLMSyncSource[]>([]);
   const [loading, setLoading] = useState(false);
@@ -33,6 +34,12 @@ export function useLLM(lang: Language, autoFetch = true) {
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
     new Set()
   );
+  const [showDialog, setShowDialog] = useState(false);
+  const [editingModel, setEditingModel] = useState<LLMModel | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const fetchModels = useCallback(async () => {
     setLoading(true);
@@ -420,6 +427,51 @@ export function useLLM(lang: Language, autoFetch = true) {
     ]
   );
 
+  const initialForm = useMemo(
+    () => getModelForm(editingModel),
+    [editingModel, getModelForm]
+  );
+
+  const handleCreate = useCallback(() => {
+    setEditingModel(null);
+    setShowDialog(true);
+  }, []);
+
+  const handleEdit = useCallback((model: LLMModel) => {
+    setEditingModel(model);
+    setShowDialog(true);
+  }, []);
+
+  const handleSave = useCallback(
+    async (data: LLMModelCreate) => {
+      if (editingModel) {
+        await update(editingModel.id, data);
+      } else {
+        await create(data);
+      }
+      setShowDialog(false);
+    },
+    [editingModel, update, create]
+  );
+
+  const handleCloseDialog = useCallback(() => {
+    setShowDialog(false);
+  }, []);
+
+  const handleSetDeleteTarget = useCallback((model: LLMModel) => {
+    setDeleteTarget({ id: model.id, name: model.displayName });
+  }, []);
+
+  const handleClearDeleteTarget = useCallback(() => {
+    setDeleteTarget(null);
+  }, []);
+
+  const handleDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    await remove(deleteTarget.id);
+    setDeleteTarget(null);
+  }, [deleteTarget, remove]);
+
   useEffect(() => {
     if (autoFetch) {
       fetchModels();
@@ -467,5 +519,16 @@ export function useLLM(lang: Language, autoFetch = true) {
     update,
     remove,
     sync,
+    showDialog,
+    editingModel,
+    deleteTarget,
+    initialForm,
+    handleCreate,
+    handleEdit,
+    handleSave,
+    handleCloseDialog,
+    handleSetDeleteTarget,
+    handleClearDeleteTarget,
+    handleDelete,
   };
 }

@@ -1,11 +1,11 @@
 // Admin 技能列表组件
-import type { Language, Skill } from "@/common/types";
+import type { Skill } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminSkillCard } from "./AdminSkillCard";
 import { AdminLoadMoreIndicator } from "./AdminLoadMoreIndicator";
 
 interface AdminSkillsListProps {
-  lang: Language;
   skills: Skill[];
   isLoading: boolean;
   hasMore: boolean;
@@ -18,7 +18,6 @@ interface AdminSkillsListProps {
 }
 
 export function AdminSkillsList({
-  lang,
   skills,
   isLoading,
   hasMore,
@@ -29,6 +28,7 @@ export function AdminSkillsList({
   getCategoryLabel,
   getSourceLabel,
 }: AdminSkillsListProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (isLoading && skills.length === 0) {
@@ -50,7 +50,6 @@ export function AdminSkillsList({
           <AdminSkillCard
             key={skill.id}
             skill={skill}
-            lang={lang}
             onClick={() => onSkillClick(skill)}
             onToggle={() => onToggle(skill.id)}
             getCategoryLabel={getCategoryLabel}
@@ -64,7 +63,6 @@ export function AdminSkillsList({
         isLoading={isLoading}
         total={total}
         count={skills.length}
-        lang={lang}
       />
     </>
   );

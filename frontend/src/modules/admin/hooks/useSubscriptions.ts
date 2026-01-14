@@ -1,91 +1,107 @@
-import { useState, useCallback } from "react";
-import { subscriptionService } from "../services/subscription.service";
+// Admin 订阅计划管理 Hook
+import { useState, useCallback, useEffect } from "react";
 import type {
   SubscriptionPlan,
   CreateSubscriptionDto,
   UpdateSubscriptionDto,
 } from "@/common/types";
+import { subscriptionService } from "../services/subscription.service";
 
 export function useSubscriptions() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionPlan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingPlan, setEditingPlan] = useState<SubscriptionPlan | null>(null);
+  const [formData, setFormData] = useState<CreateSubscriptionDto>(
+    getDefaultForm()
+  );
 
   const fetchSubscriptions = useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const result = await subscriptionService.getAll();
       setSubscriptions(result);
-      return result;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to fetch subscriptions")
-      );
-      return [];
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const createSubscription = useCallback(
-    async (data: CreateSubscriptionDto) => {
-      try {
-        const created = await subscriptionService.create(data);
-        setSubscriptions((prev) => [...prev, created]);
-        return created;
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err
-            : new Error("Failed to create subscription")
-        );
-        return null;
-      }
-    },
-    []
-  );
+  useEffect(() => {
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
 
-  const updateSubscription = useCallback(
-    async (id: string, data: UpdateSubscriptionDto) => {
-      try {
-        const updated = await subscriptionService.update(id, data);
-        setSubscriptions((prev) =>
-          prev.map((s) => (s.id === id ? updated : s))
-        );
-        return updated;
-      } catch (err) {
-        setError(
-          err instanceof Error
-            ? err
-            : new Error("Failed to update subscription")
-        );
-        return null;
-      }
-    },
-    []
-  );
+  const handleCreate = useCallback(() => {
+    setEditingPlan(null);
+    setFormData(getDefaultForm());
+    setShowForm(true);
+  }, []);
 
-  const deleteSubscription = useCallback(async (id: string) => {
-    try {
-      await subscriptionService.delete(id);
-      setSubscriptions((prev) => prev.filter((s) => s.id !== id));
-      return true;
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("Failed to delete subscription")
+  const handleEdit = useCallback((plan: SubscriptionPlan) => {
+    setEditingPlan(plan);
+    setFormData({
+      name: plan.name,
+      nameEn: plan.nameEn,
+      description: plan.description,
+      descriptionEn: plan.descriptionEn,
+      price: plan.price,
+      currency: plan.currency,
+      dailyQuota: plan.dailyQuota,
+      features: plan.features,
+      sortOrder: plan.sortOrder,
+    });
+    setShowForm(true);
+  }, []);
+
+  const handleSubmit = useCallback(async () => {
+    if (editingPlan) {
+      const updated = await subscriptionService.update(editingPlan.id, {
+        ...formData,
+        isActive: editingPlan.isActive,
+      } as UpdateSubscriptionDto);
+      setSubscriptions((prev) =>
+        prev.map((s) => (s.id === editingPlan.id ? updated : s))
       );
-      return false;
+    } else {
+      const created = await subscriptionService.create(formData);
+      setSubscriptions((prev) => [...prev, created]);
     }
+    setShowForm(false);
+  }, [editingPlan, formData]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    await subscriptionService.delete(id);
+    setSubscriptions((prev) => prev.filter((s) => s.id !== id));
+  }, []);
+
+  const handleCloseForm = useCallback(() => {
+    setShowForm(false);
   }, []);
 
   return {
     subscriptions,
     isLoading,
-    error,
-    fetchSubscriptions,
-    createSubscription,
-    updateSubscription,
-    deleteSubscription,
+    showForm,
+    editingPlan,
+    formData,
+    setFormData,
+    handleCreate,
+    handleEdit,
+    handleSubmit,
+    handleDelete,
+    handleCloseForm,
+  };
+}
+
+function getDefaultForm(): CreateSubscriptionDto {
+  return {
+    name: "",
+    nameEn: "",
+    description: "",
+    descriptionEn: "",
+    price: 0,
+    currency: "CNY",
+    dailyQuota: 10,
+    features: [],
+    sortOrder: 0,
   };
 }

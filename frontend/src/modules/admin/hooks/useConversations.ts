@@ -55,6 +55,11 @@ export function useConversations() {
     setEndDate("");
   }, []);
 
+  const handleReset = useCallback(() => {
+    resetFilters();
+    refresh();
+  }, [resetFilters, refresh]);
+
   return {
     conversations,
     selectedConversation,
@@ -74,5 +79,6 @@ export function useConversations() {
     fetchConversationDetail,
     deleteConversation,
     resetFilters,
+    handleReset,
   };
 }

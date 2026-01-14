@@ -1,5 +1,6 @@
 // Admin 用户列表表格组件
-import type { Language, AdminUser } from "@/common/types";
+import type { AdminUser } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminLoadMoreIndicator } from "./AdminLoadMoreIndicator";
 import { Button } from "@/libs/shadcn/ui/button";
@@ -14,7 +15,6 @@ import {
 } from "@/libs/shadcn/ui/table";
 
 interface AdminUsersTableProps {
-  lang: Language;
   users: AdminUser[];
   isLoading: boolean;
   hasMore: boolean;
@@ -29,7 +29,6 @@ interface AdminUsersTableProps {
 }
 
 export function AdminUsersTable({
-  lang,
   users,
   isLoading,
   hasMore,
@@ -40,6 +39,7 @@ export function AdminUsersTable({
   getStatusLabel,
   getStatusVariant,
 }: AdminUsersTableProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (isLoading && users.length === 0) {
@@ -102,7 +102,6 @@ export function AdminUsersTable({
         isLoading={isLoading}
         total={total}
         count={users.length}
-        lang={lang}
       />
     </>
   );

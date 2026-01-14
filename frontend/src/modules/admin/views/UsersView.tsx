@@ -1,11 +1,10 @@
 // Admin 用户管理页面
-import type { Language } from "@/common/types";
 import { useUsers } from "../hooks/useUsers";
 import { AdminUsersHeader } from "../components/AdminUsersHeader";
 import { AdminUsersFilter } from "../components/AdminUsersFilter";
 import { AdminUsersTable } from "../components/AdminUsersTable";
 
-export default function UsersView({ lang }: { lang: Language }) {
+export default function UsersView() {
   const {
     users,
     isLoading,
@@ -21,14 +20,13 @@ export default function UsersView({ lang }: { lang: Language }) {
     getUserTypeLabel,
     getStatusLabel,
     getStatusVariant,
-  } = useUsers(lang);
+  } = useUsers();
 
   return (
-    <div>
-      <AdminUsersHeader lang={lang} />
+    <>
+      <AdminUsersHeader />
 
       <AdminUsersFilter
-        lang={lang}
         search={search}
         statusFilter={statusFilter}
         onSearchChange={setSearch}
@@ -37,7 +35,6 @@ export default function UsersView({ lang }: { lang: Language }) {
       />
 
       <AdminUsersTable
-        lang={lang}
         users={users}
         isLoading={isLoading}
         hasMore={hasMore}
@@ -48,6 +45,6 @@ export default function UsersView({ lang }: { lang: Language }) {
         getStatusLabel={getStatusLabel}
         getStatusVariant={getStatusVariant}
       />
-    </div>
+    </>
   );
 }

@@ -6,9 +6,6 @@ import type {
   MessageRole,
   ChartType,
   UserType,
-  AssignmentStatus,
-  ResourceType,
-  FileType,
 } from "./enum";
 
 // ==================== 基础类型 ====================
@@ -88,123 +85,6 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
-// ==================== Learning 类型 ====================
-
-export interface Course {
-  id: string;
-  name: string;
-  code: string | null;
-  description: string | null;
-  semester: string | null;
-  instructor: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface CourseCreate {
-  name: string;
-  code?: string;
-  description?: string;
-  semester?: string;
-  instructor?: string;
-}
-
-export type CourseUpdate = Partial<CourseCreate>;
-
-export interface Lab {
-  id: string;
-  courseId: string;
-  title: string;
-  description: string | null;
-  instructionsMd: string | null;
-  originalFileId: string | null;
-  dueDate: string | null;
-  order: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface LabCreate {
-  courseId: string;
-  title: string;
-  description?: string;
-  instructionsMd?: string;
-  originalFileId?: string;
-  dueDate?: string;
-  order?: number;
-}
-
-export type LabUpdate = Partial<Omit<LabCreate, "courseId">>;
-
-export interface Assignment {
-  id: string;
-  labId: string;
-  title: string | null;
-  notebookFileId: string | null;
-  notes: string | null;
-  status: AssignmentStatus;
-  score: number | null;
-  feedback: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AssignmentCreate {
-  labId: string;
-  title?: string;
-  notebookFileId?: string;
-  notes?: string;
-}
-
-export interface AssignmentUpdate {
-  title?: string;
-  notebookFileId?: string;
-  notes?: string;
-  status?: AssignmentStatus;
-  score?: number;
-  feedback?: string;
-}
-
-export interface Resource {
-  id: string;
-  url: string;
-  title: string;
-  description: string | null;
-  type: ResourceType;
-  courseId: string | null;
-  labId: string | null;
-  cachedContent: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ResourceCreate {
-  url: string;
-  title: string;
-  description?: string;
-  type?: ResourceType;
-  courseId?: string;
-  labId?: string;
-}
-
-export type ResourceUpdate = Partial<ResourceCreate>;
-
-export interface UploadedFile {
-  id: string;
-  filename: string;
-  fileType: FileType;
-  size: number;
-  path: string;
-  url: string | null;
-  createdAt: string;
-}
-
-export interface ConvertResult {
-  fileId: string;
-  markdown: string;
-  originalFilename: string;
-}
-
 // ==================== Member 类型 ====================
 
 export interface LoginDto {
@@ -232,6 +112,7 @@ export interface DomainCategory {
   nameEn: string;
   description: string;
   descriptionEn: string;
+  icon: string;
   isActive: boolean;
   sortOrder: number;
   createdAt: string;
@@ -728,6 +609,15 @@ export interface RetrievalTestResult {
   latencyMs: number;
 }
 
+export interface RetrievalEngineForm {
+  name: string;
+  display_name: string;
+  type: string;
+  description: string;
+  config: Record<string, unknown>;
+  is_active: boolean;
+}
+
 // ==================== Admin Scheduler ====================
 
 export interface ScheduledJob {
@@ -782,16 +672,21 @@ export interface DataSource {
   name: string;
   description: string;
   type: string;
+  category: string;
   categoryId: string;
   domainId: string;
-  tags: string[];
+  subcategory: string;
   status: string;
-  githubStars?: number;
-  githubForks?: number;
-  githubLanguage?: string;
-  lastSyncedAt?: string;
+  owner: string;
+  repo: string;
+  stars: number;
+  forks: number;
+  language: string;
+  topics: string[];
+  config: Record<string, string>;
+  lastCheckedAt: string;
+  lastUpdatedAt: string;
   createdAt: string;
-  updatedAt: string;
 }
 
 export interface DataSourceStats {
@@ -908,6 +803,29 @@ export interface StreamChunk {
   error?: string;
 }
 
+// ==================== Admin AgentFramework ====================
+
+export interface AgentFramework {
+  id: string;
+  url: string;
+  name: string;
+  description: string;
+  tags: string[];
+  status: string;
+  githubStars?: number;
+  githubForks?: number;
+  githubLanguage?: string;
+  lastSyncedAt?: string;
+  createdAt: string;
+}
+
+export interface CreateAgentFrameworkDto {
+  url: string;
+  name?: string;
+  description?: string;
+  tags?: string[];
+}
+
 // ==================== Admin Auth ====================
 
 export type AdminRole = "super_admin" | "admin";
@@ -944,6 +862,25 @@ export interface AdminSettingsContextValue {
   themeName: string;
   setThemeName: (name: string) => void;
 }
+
+// ==================== Admin Layout ====================
+
+export interface AdminMenuItem {
+  path: string;
+  label: string;
+  icon: string;
+  superAdminOnly?: boolean;
+}
+
+export interface AdminMenuGroup {
+  key: string;
+  label: string;
+  icon: string;
+  children: AdminMenuItem[];
+  superAdminOnly?: boolean;
+}
+
+export type AdminMenuConfig = (AdminMenuItem | AdminMenuGroup)[];
 
 // ==================== Member Domain (内部) ====================
 
@@ -1031,14 +968,4 @@ export interface UserApiResponse {
 
 // ==================== 重新导出枚举类型 ====================
 
-export type {
-  Lang,
-  ThemeMode,
-  AppView,
-  MessageRole,
-  ChartType,
-  UserType,
-  AssignmentStatus,
-  ResourceType,
-  FileType,
-};
+export type { Lang, ThemeMode, AppView, MessageRole, ChartType, UserType };

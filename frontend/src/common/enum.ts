@@ -13,36 +13,6 @@ export const UserStatus = {
 } as const;
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
-// ========== Learning ==========
-export const AssignmentStatus = {
-  NotStarted: "not_started",
-  InProgress: "in_progress",
-  Completed: "completed",
-  Submitted: "submitted",
-} as const;
-export type AssignmentStatus =
-  (typeof AssignmentStatus)[keyof typeof AssignmentStatus];
-
-export const ResourceType = {
-  Link: "link",
-  Paper: "paper",
-  Tutorial: "tutorial",
-  Docs: "docs",
-  Video: "video",
-  Other: "other",
-} as const;
-export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType];
-
-export const FileType = {
-  Docx: "docx",
-  Pdf: "pdf",
-  Notebook: "notebook",
-  Markdown: "markdown",
-  Image: "image",
-  Other: "other",
-} as const;
-export type FileType = (typeof FileType)[keyof typeof FileType];
-
 // ========== Common ==========
 export const HttpMethod = {
   Get: "GET",
@@ -122,31 +92,6 @@ export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 // ========== UI Mappings ==========
 
-// Assignment Status
-export const AssignmentStatusColor: Record<AssignmentStatus, string> = {
-  [AssignmentStatus.NotStarted]: "bg-gray-100 text-gray-800",
-  [AssignmentStatus.InProgress]: "bg-blue-100 text-blue-800",
-  [AssignmentStatus.Completed]: "bg-green-100 text-green-800",
-  [AssignmentStatus.Submitted]: "bg-purple-100 text-purple-800",
-};
-
-export const AssignmentStatusLabel: Record<AssignmentStatus, string> = {
-  [AssignmentStatus.NotStarted]: "Not Started",
-  [AssignmentStatus.InProgress]: "In Progress",
-  [AssignmentStatus.Completed]: "Completed",
-  [AssignmentStatus.Submitted]: "Submitted",
-};
-
-// Resource Type
-export const ResourceTypeColor: Record<ResourceType, string> = {
-  [ResourceType.Link]: "bg-gray-100",
-  [ResourceType.Paper]: "bg-yellow-100",
-  [ResourceType.Tutorial]: "bg-blue-100",
-  [ResourceType.Docs]: "bg-green-100",
-  [ResourceType.Video]: "bg-red-100",
-  [ResourceType.Other]: "bg-gray-100",
-};
-
 // Entity Status
 export const EntityStatusColor: Record<EntityStatus, string> = {
   [EntityStatus.Active]: "bg-green-500/20 text-green-700 dark:text-green-400",
@@ -182,6 +127,20 @@ export const DataSourceTypeColor: Record<DataSourceType, string> = {
   [DataSourceType.Web]:
     "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400",
   [DataSourceType.File]: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
+};
+
+export const DataSourceTypeColors: Record<string, string> = {
+  github: "bg-violet-500/20 text-violet-700 dark:text-violet-400",
+  api: "bg-blue-500/20 text-blue-700 dark:text-blue-400",
+  website: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
+  rss: "bg-orange-500/20 text-orange-700 dark:text-orange-400",
+};
+
+export const DataSourceStatusColors: Record<string, string> = {
+  active: "bg-green-500/20 text-green-700 dark:text-green-400",
+  archived: "bg-slate-500/20 text-slate-600 dark:text-slate-400",
+  invalid: "bg-rose-500/20 text-rose-700 dark:text-rose-400",
+  pending: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
 };
 
 // Icon Mapping (domain icons)
@@ -324,3 +283,95 @@ export const LLMCapabilities = [
   "web_search",
 ] as const;
 export type LLMCapability = (typeof LLMCapabilities)[number];
+
+// ========== Retrieval Engine ==========
+export const RetrievalEngineTypeCode = {
+  KeywordMatch: "keyword_match",
+  StructuredQuery: "structured_query",
+  RagVector: "rag_vector",
+  PageIndex: "page_index",
+  AgentTools: "agent_tools",
+  RealtimeSearch: "realtime_search",
+  Hybrid: "hybrid",
+} as const;
+export type RetrievalEngineTypeCode =
+  (typeof RetrievalEngineTypeCode)[keyof typeof RetrievalEngineTypeCode];
+
+export const RetrievalEngineTypeConfig: Record<
+  string,
+  { icon: string; color: string }
+> = {
+  keyword_match: { icon: "🔤", color: "slate" },
+  structured_query: { icon: "📊", color: "blue" },
+  rag_vector: { icon: "🧠", color: "violet" },
+  page_index: { icon: "🌲", color: "emerald" },
+  agent_tools: { icon: "🤖", color: "amber" },
+  realtime_search: { icon: "🌐", color: "cyan" },
+  hybrid: { icon: "🔀", color: "rose" },
+};
+
+export const RetrievalEngineTypeColor: Record<string, string> = {
+  keyword_match: "bg-slate-500/20 text-slate-600 dark:text-slate-400",
+  structured_query: "bg-blue-500/20 text-blue-600 dark:text-blue-400",
+  rag_vector: "bg-violet-500/20 text-violet-600 dark:text-violet-400",
+  page_index: "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400",
+  agent_tools: "bg-amber-500/20 text-amber-600 dark:text-amber-400",
+  realtime_search: "bg-cyan-500/20 text-cyan-600 dark:text-cyan-400",
+  hybrid: "bg-rose-500/20 text-rose-600 dark:text-rose-400",
+};
+
+// ========== Admin Menu ==========
+import type { AdminMenuConfig } from "./types";
+
+export const ADMIN_MENU_CONFIG: AdminMenuConfig = [
+  { path: "/admin", label: "dashboard", icon: "📊" },
+  { path: "/admin/analytics", label: "analytics", icon: "📈" },
+  {
+    key: "ai",
+    label: "aiCore",
+    icon: "🤖",
+    children: [
+      { path: "/admin/llm", label: "llm", icon: "🧠" },
+      { path: "/admin/prompts", label: "prompts", icon: "💬" },
+      { path: "/admin/skills", label: "skills", icon: "🧩" },
+      { path: "/admin/agent-frameworks", label: "agentFrameworks", icon: "🤝" },
+    ],
+  },
+  {
+    key: "data",
+    label: "dataManagement",
+    icon: "📦",
+    children: [
+      { path: "/admin/domains", label: "domains", icon: "🌐" },
+      { path: "/admin/data-sources", label: "dataSources", icon: "🔗" },
+      { path: "/admin/crawlers", label: "crawlers", icon: "🕷️" },
+      { path: "/admin/retrieval", label: "retrieval", icon: "🔍" },
+      { path: "/admin/scheduler", label: "scheduler", icon: "📅" },
+    ],
+  },
+  {
+    key: "content",
+    label: "contentManagement",
+    icon: "📝",
+    children: [
+      { path: "/admin/questions", label: "questions", icon: "❓" },
+      { path: "/admin/recommendations", label: "recommendations", icon: "⭐" },
+    ],
+  },
+  {
+    key: "users",
+    label: "userManagement",
+    icon: "👥",
+    children: [
+      { path: "/admin/users", label: "users", icon: "👤" },
+      { path: "/admin/conversations", label: "conversations", icon: "💭" },
+      { path: "/admin/subscriptions", label: "subscriptions", icon: "💳" },
+    ],
+  },
+  {
+    path: "/admin/configs",
+    label: "configs",
+    icon: "⚙️",
+    superAdminOnly: true,
+  },
+];

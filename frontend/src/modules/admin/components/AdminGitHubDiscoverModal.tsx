@@ -1,6 +1,7 @@
-// Admin GitHub 发现弹窗组件 - Props: lang, categories, domainKeywords, results, onClose, onSearch, onImport
+// Admin GitHub 发现弹窗组件
 import { useState } from "react";
-import { adminLocales, type Language } from "@/common/i18n";
+import { useAdminSettingsStore } from "@/common/stores";
+import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
 import { Badge } from "@/libs/shadcn/ui/badge";
@@ -64,7 +65,6 @@ export interface Domain {
 }
 
 interface AdminGitHubDiscoverModalProps {
-  lang: Language;
   categories: Category[];
   domainKeywords: DomainKeywords[];
   domains: Domain[];
@@ -81,7 +81,6 @@ interface AdminGitHubDiscoverModalProps {
 }
 
 export function AdminGitHubDiscoverModal({
-  lang,
   categories,
   domainKeywords,
   domains,
@@ -96,6 +95,7 @@ export function AdminGitHubDiscoverModal({
   onImport,
   onCategoryChange,
 }: AdminGitHubDiscoverModalProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const [activeTab, setActiveTab] = useState("manual");

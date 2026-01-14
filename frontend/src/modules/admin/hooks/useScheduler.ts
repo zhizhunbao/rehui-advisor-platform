@@ -1,4 +1,4 @@
-// Admin 定时任务管理 Hook
+// Admin 调度任务管理 Hook
 import { useState, useEffect, useCallback } from "react";
 import type {
   ScheduledJob,
@@ -8,95 +8,182 @@ import type {
 } from "@/common/types";
 import { schedulerService } from "../services/scheduler.service";
 
-interface UseSchedulerOptions {
-  autoFetch?: boolean;
-}
-
-export function useScheduler(options: UseSchedulerOptions = {}) {
-  const { autoFetch = true } = options;
+export function useScheduler() {
   const [jobs, setJobs] = useState<ScheduledJob[]>([]);
   const [jobTypes, setJobTypes] = useState<JobType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [executionsMap, setExecutionsMap] = useState<
     Record<string, JobExecution[]>
   >({});
-  const [loading, setLoading] = useState(false);
-  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  const [showJobModal, setShowJobModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<ScheduledJob | null>(null);
+  const [expandedJobId, setExpandedJobId] = useState<string | null>(null);
+  const [filterType, setFilterType] = useState("");
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    new Set()
+  );
+
+  const [formData, setFormData] = useState<ScheduledJobCreate>(
+    getDefaultForm()
+  );
 
   const fetchJobs = useCallback(async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const data = await schedulerService.getJobs();
       setJobs(data);
-      return data;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }, []);
 
   const fetchJobTypes = useCallback(async () => {
     const data = await schedulerService.getJobTypes();
     setJobTypes(data);
-    return data;
   }, []);
 
   const fetchHistory = useCallback(async (jobId: string) => {
-    setLoadingHistory(true);
+    setIsLoadingHistory(true);
     try {
-      const data = await schedulerService.getJobHistory(jobId);
+      const data = await schedulerService.getHistory(jobId);
       setExecutionsMap((prev) => ({ ...prev, [jobId]: data }));
-      return data;
     } finally {
-      setLoadingHistory(false);
+      setIsLoadingHistory(false);
     }
-  }, []);
-
-  const create = useCallback(async (data: ScheduledJobCreate) => {
-    const job = await schedulerService.create(data);
-    setJobs((prev) => [...prev, job]);
-    return job;
-  }, []);
-
-  const update = useCallback(async (id: string, data: ScheduledJobCreate) => {
-    const job = await schedulerService.update(id, data);
-    setJobs((prev) => prev.map((j) => (j.id === id ? job : j)));
-    return job;
-  }, []);
-
-  const remove = useCallback(async (id: string) => {
-    await schedulerService.delete(id);
-    setJobs((prev) => prev.filter((j) => j.id !== id));
-  }, []);
-
-  const toggle = useCallback(async (id: string) => {
-    const job = await schedulerService.toggle(id);
-    setJobs((prev) => prev.map((j) => (j.id === id ? job : j)));
-    return job;
-  }, []);
-
-  const trigger = useCallback(async (id: string) => {
-    return schedulerService.trigger(id);
   }, []);
 
   useEffect(() => {
-    if (autoFetch) {
+    fetchJobs();
+    fetchJobTypes();
+  }, [fetchJobs, fetchJobTypes]);
+
+  const handleCreate = useCallback(() => {
+    setSelectedJob(null);
+    setFormData(getDefaultForm());
+    setShowJobModal(true);
+  }, []);
+
+  const handleEdit = useCallback((job: ScheduledJob) => {
+    setSelectedJob(job);
+    setFormData({
+      name: job.name,
+      description: job.description || "",
+      jobType: job.jobType,
+      cronExpression: job.cronExpression,
+      parameters: job.parameters || {},
+      isActive: job.isActive,
+    });
+    setShowJobModal(true);
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      if (selectedJob) {
+        await schedulerService.update(selectedJob.id, formData);
+      } else {
+        await schedulerService.create(formData);
+      }
+      setShowJobModal(false);
       fetchJobs();
-      fetchJobTypes();
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [autoFetch, fetchJobs, fetchJobTypes]);
+  }, [selectedJob, formData, fetchJobs]);
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await schedulerService.delete(id);
+      fetchJobs();
+    },
+    [fetchJobs]
+  );
+
+  const handleToggle = useCallback(
+    async (id: string) => {
+      await schedulerService.toggle(id);
+      fetchJobs();
+    },
+    [fetchJobs]
+  );
+
+  const handleTrigger = useCallback(
+    async (id: string) => {
+      const success = await schedulerService.trigger(id);
+      fetchJobs();
+      return success;
+    },
+    [fetchJobs]
+  );
+
+  const handleViewHistory = useCallback(
+    (job: ScheduledJob) => {
+      if (expandedJobId === job.id) {
+        setExpandedJobId(null);
+      } else {
+        setExpandedJobId(job.id);
+        if (!executionsMap[job.id]) {
+          fetchHistory(job.id);
+        }
+      }
+    },
+    [expandedJobId, executionsMap, fetchHistory]
+  );
+
+  const toggleGroup = useCallback((group: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(group)) next.delete(group);
+      else next.add(group);
+      return next;
+    });
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowJobModal(false);
+  }, []);
+
+  const filteredJobs = filterType
+    ? jobs.filter((j) => j.jobType === filterType)
+    : jobs;
 
   return {
-    jobs,
+    jobs: filteredJobs,
     jobTypes,
+    isLoading,
     executionsMap,
-    loading,
-    loadingHistory,
-    fetchJobs,
-    fetchJobTypes,
-    fetchHistory,
-    create,
-    update,
-    remove,
-    toggle,
-    trigger,
+    isLoadingHistory,
+    showJobModal,
+    isSubmitting,
+    selectedJob,
+    expandedJobId,
+    filterType,
+    setFilterType,
+    collapsedGroups,
+    formData,
+    setFormData,
+    handleCreate,
+    handleEdit,
+    handleSave,
+    handleDelete,
+    handleToggle,
+    handleTrigger,
+    handleViewHistory,
+    toggleGroup,
+    handleCloseModal,
+  };
+}
+
+function getDefaultForm(): ScheduledJobCreate {
+  return {
+    name: "",
+    description: "",
+    jobType: "",
+    cronExpression: "0 0 * * *",
+    parameters: {},
+    isActive: true,
   };
 }

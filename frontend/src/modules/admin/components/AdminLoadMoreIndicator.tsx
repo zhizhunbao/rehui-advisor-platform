@@ -1,6 +1,6 @@
-// Admin 加载更多指示器组件 - Props: loadMoreRef, hasMore, isLoading, total, count, lang
+// Admin 加载更多指示器组件
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
-import type { Language } from "@/common/types";
 
 interface AdminLoadMoreIndicatorProps {
   loadMoreRef: (node: HTMLDivElement | null) => void;
@@ -8,7 +8,6 @@ interface AdminLoadMoreIndicatorProps {
   isLoading: boolean;
   total: number;
   count: number;
-  lang: Language;
 }
 
 export function AdminLoadMoreIndicator({
@@ -17,8 +16,8 @@ export function AdminLoadMoreIndicator({
   isLoading,
   total,
   count,
-  lang,
 }: AdminLoadMoreIndicatorProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (!hasMore && count > 0) {

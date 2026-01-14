@@ -1,47 +1,11 @@
-// Admin 数据源卡片组件 - Props: source, lang, onClick, onRefresh, onDelete
-import type { Language } from "@/common/i18n";
+// Admin 数据源卡片组件
+import type { DataSource } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
-
-export interface DataSource {
-  id: string;
-  url: string;
-  name: string;
-  description: string;
-  type: string;
-  category: string;
-  categoryId: string;
-  domainId: string;
-  subcategory: string;
-  status: string;
-  owner: string;
-  repo: string;
-  stars: number;
-  forks: number;
-  language: string;
-  topics: string[];
-  config: Record<string, string>;
-  lastCheckedAt: string;
-  lastUpdatedAt: string;
-  createdAt: string;
-}
-
-const STATUS_COLORS: Record<string, string> = {
-  active: "bg-green-500/20 text-green-700 dark:text-green-400",
-  archived: "bg-slate-500/20 text-slate-600 dark:text-slate-400",
-  invalid: "bg-rose-500/20 text-rose-700 dark:text-rose-400",
-  pending: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  github: "bg-violet-500/20 text-violet-700 dark:text-violet-400",
-  api: "bg-blue-500/20 text-blue-700 dark:text-blue-400",
-  website: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
-  rss: "bg-orange-500/20 text-orange-700 dark:text-orange-400",
-};
+import { DataSourceStatusColors, DataSourceTypeColors } from "@/common/enum";
 
 interface AdminDataSourceCardProps {
   source: DataSource;
-  lang: Language;
   onClick: () => void;
   onRefresh: () => void;
   onDelete: () => void;
@@ -49,11 +13,11 @@ interface AdminDataSourceCardProps {
 
 export function AdminDataSourceCard({
   source,
-  lang,
   onClick,
   onRefresh,
   onDelete,
 }: AdminDataSourceCardProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (
@@ -71,7 +35,7 @@ export function AdminDataSourceCard({
           </h3>
           <span
             className={`text-xs px-2 py-1 rounded-full ml-2 shrink-0 ${
-              STATUS_COLORS[source.status] || "bg-slate-100"
+              DataSourceStatusColors[source.status] || "bg-slate-100"
             }`}
           >
             {source.status}
@@ -93,7 +57,7 @@ export function AdminDataSourceCard({
         <div className="flex flex-wrap gap-1 mb-3">
           <span
             className={`text-xs px-2 py-1 rounded-full ${
-              TYPE_COLORS[source.type] || "bg-slate-500/20"
+              DataSourceTypeColors[source.type] || "bg-slate-500/20"
             }`}
           >
             {source.type}

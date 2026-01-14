@@ -1,44 +1,22 @@
-// Admin 数据源弹窗组件 - Props: lang, source/categories, onClose, onRefresh/onSubmit
+// Admin 数据源弹窗组件
 import { useState } from "react";
-import type { Language } from "@/common/i18n";
-import type { DataSource } from "./AdminDataSourceCard";
+import type { DataSource, DataSourceCategory } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
-
-const STATUS_COLORS: Record<string, string> = {
-  active: "bg-green-500/20 text-green-700 dark:text-green-400",
-  archived: "bg-slate-500/20 text-slate-600 dark:text-slate-400",
-  invalid: "bg-rose-500/20 text-rose-700 dark:text-rose-400",
-  pending: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  github: "bg-violet-500/20 text-violet-700 dark:text-violet-400",
-  api: "bg-blue-500/20 text-blue-700 dark:text-blue-400",
-  website: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
-  rss: "bg-orange-500/20 text-orange-700 dark:text-orange-400",
-};
-
-export interface Category {
-  id: string;
-  code: string;
-  name: string;
-  nameEn: string;
-  count: number;
-}
+import { DataSourceStatusColors, DataSourceTypeColors } from "@/common/enum";
 
 interface SourceDetailModalProps {
-  lang: Language;
   source: DataSource;
   onClose: () => void;
   onRefresh: () => void;
 }
 
 export function AdminSourceDetailModal({
-  lang,
   source,
   onClose,
   onRefresh,
 }: SourceDetailModalProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (
@@ -83,7 +61,7 @@ export function AdminSourceDetailModal({
               <div>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
-                    TYPE_COLORS[source.type] || "bg-slate-500/20"
+                    DataSourceTypeColors[source.type] || "bg-slate-500/20"
                   }`}
                 >
                   {source.type}
@@ -97,7 +75,7 @@ export function AdminSourceDetailModal({
               <div>
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
-                    STATUS_COLORS[source.status] || "bg-slate-100"
+                    DataSourceStatusColors[source.status] || "bg-slate-100"
                   }`}
                 >
                   {source.status}
@@ -208,20 +186,19 @@ export function AdminSourceDetailModal({
 }
 
 interface AddSourceModalProps {
-  lang: Language;
-  categories: Category[];
+  categories: DataSourceCategory[];
   isLoading: boolean;
   onClose: () => void;
   onSubmit: (data: { urls: string[]; type: string; category: string }) => void;
 }
 
 export function AdminAddSourceModal({
-  lang,
   categories,
   isLoading,
   onClose,
   onSubmit,
 }: AddSourceModalProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
   const [urls, setUrls] = useState("");
   const [type, setType] = useState("github");

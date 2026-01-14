@@ -1,5 +1,6 @@
 // Admin 提示词详情弹窗组件
-import type { Language, AdminPrompt } from "@/common/types";
+import type { AdminPrompt } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Badge } from "@/libs/shadcn/ui/badge";
 import { Button } from "@/libs/shadcn/ui/button";
@@ -12,7 +13,6 @@ import {
 } from "@/libs/shadcn/ui/dialog";
 
 interface AdminPromptDetailModalProps {
-  lang: Language;
   prompt: AdminPrompt;
   onClose: () => void;
   onToggle: () => void;
@@ -30,13 +30,13 @@ const getSourceVariant = (
 };
 
 export function AdminPromptDetailModal({
-  lang,
   prompt,
   onClose,
   onToggle,
   getCategoryLabel,
   getSourceLabel,
 }: AdminPromptDetailModalProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const handleCopyTemplate = () => {

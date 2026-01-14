@@ -1,34 +1,48 @@
-// Admin 推荐管理 API
-import { http } from "@/common/http";
+// Admin 推荐管理 Service
 import type {
   AdminRecommendation,
-  UpdateRecommendationDto,
-  PaginatedResponse,
   RecommendationListParams,
 } from "@/common/types";
+import { getApiBase, getAuthHeaders, keysToCamel } from "@/common/helper";
+
+const API_BASE = getApiBase();
 
 export const recommendationService = {
-  getAll(params?: RecommendationListParams) {
-    const query = new URLSearchParams();
-    if (params?.page) query.set("page", String(params.page));
-    if (params?.limit) query.set("limit", String(params.limit));
-    if (params?.domainId) query.set("domain_id", params.domainId);
-    if (params?.status) query.set("status", params.status);
-    const queryStr = query.toString();
-    return http.get<PaginatedResponse<AdminRecommendation>>(
-      `/admin/recommendations${queryStr ? `?${queryStr}` : ""}`
+  async getList(params: RecommendationListParams) {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", String(params.page));
+    if (params.limit) searchParams.set("limit", String(params.limit));
+    if (params.status) searchParams.set("status", params.status);
+    if (params.domainId) searchParams.set("domain_id", params.domainId);
+
+    const res = await fetch(
+      `${API_BASE}/admin/recommendations?${searchParams}`,
+      {
+        headers: getAuthHeaders(),
+      }
     );
+    const json = await res.json();
+    return {
+      data: (json.data || []).map(keysToCamel) as AdminRecommendation[],
+      meta: { total: json.meta?.total || 0 },
+    };
   },
 
-  getById(id: string) {
-    return http.get<AdminRecommendation>(`/admin/recommendations/${id}`);
+  async updateStatus(
+    id: string,
+    status: "APPROVED" | "REJECTED"
+  ): Promise<void> {
+    await fetch(`${API_BASE}/admin/recommendations/${id}`, {
+      method: "PUT",
+      headers: { ...getAuthHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
   },
 
-  update(id: string, data: UpdateRecommendationDto) {
-    return http.put<AdminRecommendation>(`/admin/recommendations/${id}`, data);
-  },
-
-  delete(id: string) {
-    return http.delete<void>(`/admin/recommendations/${id}`);
+  async delete(id: string): Promise<void> {
+    await fetch(`${API_BASE}/admin/recommendations/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
   },
 };

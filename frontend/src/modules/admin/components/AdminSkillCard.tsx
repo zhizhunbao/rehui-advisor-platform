@@ -1,5 +1,6 @@
 // Admin 技能卡片组件
-import type { Language, Skill } from "@/common/types";
+import type { Skill } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Badge } from "@/libs/shadcn/ui/badge";
 import { Button } from "@/libs/shadcn/ui/button";
@@ -7,7 +8,6 @@ import { Card, CardContent } from "@/libs/shadcn/ui/card";
 
 interface AdminSkillCardProps {
   skill: Skill;
-  lang: Language;
   onClick: () => void;
   onToggle: () => void;
   getCategoryLabel: (code: string) => string;
@@ -29,12 +29,12 @@ const getSourceVariant = (
 
 export function AdminSkillCard({
   skill,
-  lang,
   onClick,
   onToggle,
   getCategoryLabel,
   getSourceLabel,
 }: AdminSkillCardProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (

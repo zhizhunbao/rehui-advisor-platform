@@ -1,7 +1,4 @@
 // Admin 提示词管理页面
-import { useState } from "react";
-import { adminLocales } from "@/common/i18n";
-import type { Language, AdminPrompt } from "@/common/types";
 import { usePrompts } from "../hooks/usePrompts";
 import { AdminPromptsHeader } from "../components/AdminPromptsHeader";
 import { AdminPromptsStats } from "../components/AdminPromptsStats";
@@ -9,8 +6,7 @@ import { AdminPromptsFilter } from "../components/AdminPromptsFilter";
 import { AdminPromptsList } from "../components/AdminPromptsList";
 import { AdminPromptDetailModal } from "../components/AdminPromptDetailModal";
 
-export default function PromptsView({ lang }: { lang: Language }) {
-  const t = adminLocales[lang];
+export default function PromptsView() {
   const {
     prompts,
     stats,
@@ -27,30 +23,21 @@ export default function PromptsView({ lang }: { lang: Language }) {
     getCategoryLabel,
     getSourceLabel,
     handleToggle,
+    handleToggleSelected,
     handleSync,
     handleReset,
     isSyncing,
-  } = usePrompts(lang);
-
-  const [selectedPrompt, setSelectedPrompt] = useState<AdminPrompt | null>(
-    null
-  );
-
-  const onSync = async () => {
-    const result = await handleSync();
-    if (result) {
-      alert(t.syncedCount.replace("{count}", String(result.synced)));
-    }
-  };
+    selectedPrompt,
+    setSelectedPrompt,
+  } = usePrompts();
 
   return (
-    <div>
-      <AdminPromptsHeader lang={lang} isSyncing={isSyncing} onSync={onSync} />
+    <>
+      <AdminPromptsHeader isSyncing={isSyncing} onSync={handleSync} />
 
-      <AdminPromptsStats lang={lang} stats={stats} />
+      <AdminPromptsStats stats={stats} />
 
       <AdminPromptsFilter
-        lang={lang}
         stats={stats}
         search={search}
         category={category}
@@ -64,7 +51,6 @@ export default function PromptsView({ lang }: { lang: Language }) {
       />
 
       <AdminPromptsList
-        lang={lang}
         prompts={prompts}
         isLoading={isLoading}
         hasMore={hasMore}
@@ -78,17 +64,13 @@ export default function PromptsView({ lang }: { lang: Language }) {
 
       {selectedPrompt && (
         <AdminPromptDetailModal
-          lang={lang}
           prompt={selectedPrompt}
           onClose={() => setSelectedPrompt(null)}
-          onToggle={() => {
-            handleToggle(selectedPrompt.id);
-            setSelectedPrompt(null);
-          }}
+          onToggle={handleToggleSelected}
           getCategoryLabel={getCategoryLabel}
           getSourceLabel={getSourceLabel}
         />
       )}
-    </div>
+    </>
   );
 }

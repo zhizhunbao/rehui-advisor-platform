@@ -1,14 +1,15 @@
 // Admin 技能统计卡片组件
-import type { Language, SkillStats } from "@/common/types";
+import type { SkillStats } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminStatCard } from "./AdminStatCard";
 
 interface AdminSkillsStatsProps {
-  lang: Language;
   stats: SkillStats | null;
 }
 
-export function AdminSkillsStats({ lang, stats }: AdminSkillsStatsProps) {
+export function AdminSkillsStats({ stats }: AdminSkillsStatsProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   if (!stats) return null;

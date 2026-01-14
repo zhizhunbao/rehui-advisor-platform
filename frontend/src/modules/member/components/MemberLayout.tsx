@@ -1,55 +1,54 @@
-// Member 主布局组件 - Props: view, user, quotaStatus, lang, theme, conversations, children
+// Member 主布局组件
 import type { ReactNode } from "react";
-import type {
-  AppView,
-  User,
-  Conversation,
-  Language,
-  Theme,
-  QuotaStatus,
-} from "@/common/types";
+import {
+  useAuthStore,
+  useMemberSettingsStore,
+  useMemberNavigationStore,
+  useMemberConversationStore,
+} from "@/common/stores";
 import MemberSidebar from "./MemberSidebar";
 import MemberHeader from "./MemberHeader";
 import MemberFooter from "./MemberFooter";
 
 interface MemberLayoutProps {
-  view: AppView;
-  user: User | null;
-  quotaStatus: QuotaStatus | null;
-  lang: Language;
-  theme: Theme;
-  onNavigate: (view: AppView) => void;
-  onLogout: () => void;
-  onToggleLang: () => void;
-  onToggleTheme: () => void;
-  conversations: Conversation[];
-  activeConversationId: string | null;
-  onSelectConversation: (id: string | null) => void;
-  onNewChat: () => void;
-  onDeleteConversation: (id: string) => void;
   children: ReactNode;
 }
 
-export default function MemberLayout({
-  view,
-  user,
-  quotaStatus,
-  lang,
-  theme,
-  onNavigate,
-  onLogout,
-  onToggleLang,
-  onToggleTheme,
-  conversations,
-  activeConversationId,
-  onSelectConversation,
-  onNewChat,
-  onDeleteConversation,
-  children,
-}: MemberLayoutProps) {
+export default function MemberLayout({ children }: MemberLayoutProps) {
+  const { user, quotaStatus, logout } = useAuthStore();
+  const { lang, theme, toggleLang, toggleTheme } = useMemberSettingsStore();
+  const { view, setView } = useMemberNavigationStore();
+  const {
+    conversations,
+    activeConversationId,
+    setActiveConversationId,
+    deleteConversation,
+    updateConversations,
+  } = useMemberConversationStore();
+
   const isConversationView = view === "conversation";
   const isAuthView = view === "login" || view === "register";
   const showFooter = !isConversationView && !isAuthView;
+
+  const handleSelectConversation = (id: string | null) => {
+    setActiveConversationId(id);
+    setView(id ? "conversation" : "home");
+  };
+
+  const handleNewChat = () => {
+    setActiveConversationId(null);
+    setView("home");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("sessionToken");
+    logout();
+    updateConversations(() => []);
+    setActiveConversationId(null);
+    setView("home");
+  };
 
   return (
     <div className="flex h-screen bg-white dark:bg-admin-bg-dark transition-colors duration-300 overflow-hidden">
@@ -59,19 +58,19 @@ export default function MemberLayout({
         lang={lang}
         conversations={conversations}
         activeConversationId={activeConversationId}
-        onSelectConversation={onSelectConversation}
-        onNewChat={onNewChat}
-        onDeleteConversation={onDeleteConversation}
-        onNavigate={onNavigate}
-        onLogout={onLogout}
+        onSelectConversation={handleSelectConversation}
+        onNewChat={handleNewChat}
+        onDeleteConversation={deleteConversation}
+        onNavigate={setView}
+        onLogout={handleLogout}
       />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         <MemberHeader
           lang={lang}
           theme={theme}
-          onToggleLang={onToggleLang}
-          onToggleTheme={onToggleTheme}
+          onToggleLang={toggleLang}
+          onToggleTheme={toggleTheme}
         />
 
         <main className="flex-1 overflow-y-auto flex flex-col items-center">

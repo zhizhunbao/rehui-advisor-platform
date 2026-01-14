@@ -1,20 +1,19 @@
-// Admin 主题选择器组件 - Props: lang, value, onChange
-import type { Language } from "@/common/types";
+// Admin 主题选择器组件
+import { useAdminSettingsStore } from "@/common/stores";
 import { themes, type ThemeName } from "@/common/themes";
 
 export type { ThemeName };
 
 interface AdminThemeSelectorProps {
-  lang: Language;
   themeName: ThemeName;
   onThemeChange: (theme: ThemeName) => void;
 }
 
 export function AdminThemeSelector({
-  lang,
   themeName,
   onThemeChange,
 }: AdminThemeSelectorProps) {
+  const { lang } = useAdminSettingsStore();
   const shadcnThemes = themes.filter((t) => t.group === "shadcn");
   const editorThemes = themes.filter((t) => t.group === "editor");
 

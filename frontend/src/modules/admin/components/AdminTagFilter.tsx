@@ -1,5 +1,5 @@
-// Admin 标签筛选组件 - Props: lang, label, options, value, onChange, color
-import type { Language } from "@/common/types";
+// Admin 标签筛选组件
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 
 export interface TagOption {
@@ -17,7 +17,6 @@ export type TagColor =
   | "orange";
 
 interface AdminTagFilterProps {
-  lang: Language;
   label: string;
   options: TagOption[];
   value: string;
@@ -59,13 +58,13 @@ const COLOR_CLASSES: Record<TagColor, { active: string; inactive: string }> = {
 };
 
 export function AdminTagFilter({
-  lang,
   label,
   options,
   value,
   onChange,
   color = "violet",
 }: AdminTagFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
   const colorClass = COLOR_CLASSES[color] || COLOR_CLASSES.violet;
   const isAllSelected = value === "__all__" || value === "";

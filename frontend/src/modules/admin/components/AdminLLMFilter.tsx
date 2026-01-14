@@ -1,5 +1,5 @@
 // Admin LLM 筛选组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminTagFilter } from "./AdminTagFilter";
 import { Button } from "@/libs/shadcn/ui/button";
@@ -12,7 +12,6 @@ interface FilterOption {
 }
 
 interface AdminLLMFilterProps {
-  lang: Language;
   searchQuery: string;
   filterProvider: string;
   filterCategory: string;
@@ -38,7 +37,6 @@ interface AdminLLMFilterProps {
 }
 
 export function AdminLLMFilter({
-  lang,
   searchQuery,
   filterProvider,
   filterCategory,
@@ -62,13 +60,13 @@ export function AdminLLMFilter({
   onContextChange,
   onReset,
 }: AdminLLMFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (
     <div className="space-y-4">
       {providerCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.company}
           options={providerCounts}
           value={filterProvider || "__all__"}
@@ -79,7 +77,6 @@ export function AdminLLMFilter({
 
       {categoryCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.category}
           options={categoryCounts}
           value={filterCategory || "__all__"}
@@ -90,7 +87,6 @@ export function AdminLLMFilter({
 
       {deploymentCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.deploymentType}
           options={deploymentCounts}
           value={filterDeployment || "__all__"}
@@ -101,7 +97,6 @@ export function AdminLLMFilter({
 
       {inputPriceCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.inputPrice}
           options={inputPriceCounts}
           value={filterInputPrice || "__all__"}
@@ -112,7 +107,6 @@ export function AdminLLMFilter({
 
       {outputPriceCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.outputPrice}
           options={outputPriceCounts}
           value={filterOutputPrice || "__all__"}
@@ -123,7 +117,6 @@ export function AdminLLMFilter({
 
       {contextCounts.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.context}
           options={contextCounts}
           value={filterContext || "__all__"}

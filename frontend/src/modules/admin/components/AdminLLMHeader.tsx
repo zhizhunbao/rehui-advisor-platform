@@ -1,21 +1,20 @@
 // Admin LLM 头部组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 
 interface AdminLLMHeaderProps {
-  lang: Language;
   isSyncing: boolean;
   onSync: () => void;
   onCreate: () => void;
 }
 
 export function AdminLLMHeader({
-  lang,
   isSyncing,
   onSync,
   onCreate,
 }: AdminLLMHeaderProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (

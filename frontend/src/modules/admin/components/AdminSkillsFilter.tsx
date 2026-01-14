@@ -1,12 +1,12 @@
 // Admin 技能筛选组件
-import type { Language, SkillStats } from "@/common/types";
+import type { SkillStats } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminTagFilter } from "./AdminTagFilter";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
 
 interface AdminSkillsFilterProps {
-  lang: Language;
   stats: SkillStats | null;
   search: string;
   filterCategory: string;
@@ -20,7 +20,6 @@ interface AdminSkillsFilterProps {
 }
 
 export function AdminSkillsFilter({
-  lang,
   stats,
   search,
   filterCategory,
@@ -32,6 +31,7 @@ export function AdminSkillsFilter({
   getCategoryLabel,
   getSourceLabel,
 }: AdminSkillsFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
   const hasFilters =
     search || filterCategory !== "__all__" || filterSource !== "__all__";
@@ -40,7 +40,6 @@ export function AdminSkillsFilter({
     <div className="space-y-4 mb-6">
       {stats && stats.categories.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.category}
           options={stats.categories
             .filter((c) => c.category)
@@ -57,7 +56,6 @@ export function AdminSkillsFilter({
 
       {stats && stats.sources.length > 0 && (
         <AdminTagFilter
-          lang={lang}
           label={t.source}
           options={stats.sources
             .filter((s) => s.source)

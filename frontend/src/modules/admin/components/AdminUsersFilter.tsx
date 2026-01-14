@@ -1,5 +1,5 @@
 // Admin 用户筛选组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { Button } from "@/libs/shadcn/ui/button";
 import { Input } from "@/libs/shadcn/ui/input";
@@ -12,7 +12,6 @@ import {
 } from "@/libs/shadcn/ui/select";
 
 interface AdminUsersFilterProps {
-  lang: Language;
   search: string;
   statusFilter: string;
   onSearchChange: (value: string) => void;
@@ -21,13 +20,13 @@ interface AdminUsersFilterProps {
 }
 
 export function AdminUsersFilter({
-  lang,
   search,
   statusFilter,
   onSearchChange,
   onStatusChange,
   onSearch,
 }: AdminUsersFilterProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   const handleSubmit = (e: React.FormEvent) => {

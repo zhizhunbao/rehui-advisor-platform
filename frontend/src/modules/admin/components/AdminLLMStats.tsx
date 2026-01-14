@@ -1,10 +1,9 @@
 // Admin LLM 统计组件
-import type { Language } from "@/common/types";
+import { useAdminSettingsStore } from "@/common/stores";
 import { adminLocales } from "@/common/i18n";
 import { AdminStatCard } from "./AdminStatCard";
 
 interface AdminLLMStatsProps {
-  lang: Language;
   stats: {
     total: number;
     active: number;
@@ -14,7 +13,8 @@ interface AdminLLMStatsProps {
   };
 }
 
-export function AdminLLMStats({ lang, stats }: AdminLLMStatsProps) {
+export function AdminLLMStats({ stats }: AdminLLMStatsProps) {
+  const { lang } = useAdminSettingsStore();
   const t = adminLocales[lang];
 
   return (

@@ -1,20 +1,25 @@
-// Member 认证 Hook
+// Member 认证 Hook - AuthView 使用
 import { useCallback, useState } from "react";
-import { useAuthStore } from "@/common/stores";
+import {
+  useAuthStore,
+  useMemberSettingsStore,
+  useMemberNavigationStore,
+} from "@/common/stores";
+import { useErrorHandler } from "@/common/toast";
 import type { LoginDto, RegisterDto, User, QuotaStatus } from "@/common/types";
 import { authService } from "../services/auth.service";
 
-export function useAuth() {
+export function useAuth(type: "login" | "register") {
   const [isLoading, setIsLoading] = useState(false);
   const {
-    user,
-    isAuthenticated,
-    quotaStatus,
     login: storeLogin,
     logout: storeLogout,
     setQuotaStatus,
     setUser,
   } = useAuthStore();
+  const { lang } = useMemberSettingsStore();
+  const { setView } = useMemberNavigationStore();
+  const { handleError } = useErrorHandler();
 
   const login = useCallback(
     async (data: LoginDto): Promise<void> => {
@@ -64,6 +69,34 @@ export function useAuth() {
     [storeLogin]
   );
 
+  const handleSubmit = useCallback(
+    async (data: { email: string; password: string; name?: string }) => {
+      try {
+        if (type === "login") {
+          await login({ email: data.email, password: data.password });
+        } else {
+          await register({
+            email: data.email,
+            password: data.password,
+            name: data.name,
+          });
+        }
+        setView("home");
+      } catch (error) {
+        handleError(error, type === "login" ? "Login" : "Register");
+      }
+    },
+    [type, login, register, setView, handleError]
+  );
+
+  const handleSocialLogin = useCallback((platform: string) => {
+    console.info("Social login:", platform);
+  }, []);
+
+  const handleSwitchType = useCallback(() => {
+    setView(type === "login" ? "register" : "login");
+  }, [type, setView]);
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
@@ -99,45 +132,21 @@ export function useAuth() {
     setQuotaStatus(quota);
   }, [setQuotaStatus]);
 
-  const refreshToken = useCallback(async (): Promise<boolean> => {
-    const storedRefreshToken = localStorage.getItem("refreshToken");
-    if (!storedRefreshToken) return false;
-
-    try {
-      const res = await authService.refreshToken(storedRefreshToken);
-      localStorage.setItem("token", res.access_token);
-      localStorage.setItem("refreshToken", res.refresh_token);
-      return true;
-    } catch {
-      logout();
-      return false;
-    }
-  }, [logout]);
-
-  const updatePassword = useCallback(
-    async (oldPassword: string, newPassword: string): Promise<void> => {
-      await authService.updatePassword(oldPassword, newPassword);
-    },
-    []
-  );
-
   const fetchCurrentUser = useCallback(async (): Promise<void> => {
     const userData = await authService.getCurrentUser();
     setUser(userData);
   }, [setUser]);
 
   return {
-    user,
-    isAuthenticated,
+    lang,
+    type,
     isLoading,
-    quotaStatus,
-    login,
-    register,
+    handleSubmit,
+    handleSocialLogin,
+    handleSwitchType,
     logout,
     initAnonymousSession,
     refreshQuota,
-    refreshToken,
-    updatePassword,
     fetchCurrentUser,
   };
 }
