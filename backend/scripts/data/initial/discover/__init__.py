@@ -1,0 +1,22 @@
+# 发现配置 - 平台 URL
+from scripts.data.initial.discover.urls import (
+    CODE_PLATFORMS,
+    AI_PLATFORMS,
+    TECH_COMMUNITIES,
+    SOCIAL_PLATFORMS,
+    QA_PLATFORMS,
+    GOVERNMENT_WEBSITES,
+    RSS_FEEDS,
+    AWESOME_LISTS,
+)
+
+__all__ = [
+    "CODE_PLATFORMS",
+    "AI_PLATFORMS",
+    "TECH_COMMUNITIES",
+    "SOCIAL_PLATFORMS",
+    "QA_PLATFORMS",
+    "GOVERNMENT_WEBSITES",
+    "RSS_FEEDS",
+    "AWESOME_LISTS",
+]

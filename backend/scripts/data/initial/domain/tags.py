@@ -647,3 +647,50 @@ TAGS: List[Dict[str, Any]] = [
         "domain_code": "retrieval",
     },
 ]
+
+# AI 补充标签 - 更多搜索关键词
+AI_EXTRA_TAGS: List[Dict[str, Any]] = [
+    # llm_models - 更多模型和框架
+    {"code": "openai", "name": "OpenAI", "name_en": "OpenAI", "domain_code": "llm_models"},
+    {"code": "mistral", "name": "Mistral", "name_en": "Mistral", "domain_code": "llm_models"},
+    {"code": "gemini", "name": "Gemini", "name_en": "Gemini", "domain_code": "llm_models"},
+    {"code": "ollama", "name": "Ollama", "name_en": "Ollama", "domain_code": "llm_models"},
+    {"code": "vllm", "name": "vLLM", "name_en": "vLLM", "domain_code": "llm_models"},
+    {"code": "huggingface", "name": "HuggingFace", "name_en": "HuggingFace", "domain_code": "llm_models"},
+    {"code": "transformers", "name": "Transformers", "name_en": "Transformers", "domain_code": "llm_models"},
+    {"code": "chatbot", "name": "聊天机器人", "name_en": "Chatbot", "domain_code": "llm_models"},
+
+    # agents - 更多 Agent 框架
+    {"code": "dify", "name": "Dify", "name_en": "Dify", "domain_code": "agents"},
+    {"code": "smolagents", "name": "Smolagents", "name_en": "Smolagents", "domain_code": "agents"},
+    {"code": "camel", "name": "CAMEL", "name_en": "CAMEL", "domain_code": "agents"},
+    {"code": "metagpt", "name": "MetaGPT", "name_en": "MetaGPT", "domain_code": "agents"},
+    {"code": "agentgpt", "name": "AgentGPT", "name_en": "AgentGPT", "domain_code": "agents"},
+    {"code": "autonomous_agent", "name": "自主Agent", "name_en": "Autonomous Agent", "domain_code": "agents"},
+    {"code": "multi_agent", "name": "多智能体", "name_en": "Multi Agent", "domain_code": "agents"},
+    {"code": "agentic", "name": "Agentic", "name_en": "Agentic", "domain_code": "agents"},
+
+    # prompts - 更多提示词相关
+    {"code": "system_prompt", "name": "系统提示词", "name_en": "System Prompt", "domain_code": "prompts"},
+    {"code": "few_shot", "name": "少样本", "name_en": "Few Shot", "domain_code": "prompts"},
+    {"code": "chain_of_thought", "name": "思维链", "name_en": "Chain of Thought", "domain_code": "prompts"},
+    {"code": "jailbreak", "name": "越狱", "name_en": "Jailbreak", "domain_code": "prompts"},
+
+    # retrieval - 更多检索相关
+    {"code": "chroma", "name": "Chroma", "name_en": "Chroma", "domain_code": "retrieval"},
+    {"code": "pinecone", "name": "Pinecone", "name_en": "Pinecone", "domain_code": "retrieval"},
+    {"code": "qdrant", "name": "Qdrant", "name_en": "Qdrant", "domain_code": "retrieval"},
+    {"code": "weaviate", "name": "Weaviate", "name_en": "Weaviate", "domain_code": "retrieval"},
+    {"code": "milvus", "name": "Milvus", "name_en": "Milvus", "domain_code": "retrieval"},
+    {"code": "pgvector", "name": "pgvector", "name_en": "pgvector", "domain_code": "retrieval"},
+    {"code": "semantic_search", "name": "语义搜索", "name_en": "Semantic Search", "domain_code": "retrieval"},
+
+    # interview - 更多面试相关
+    {"code": "leetcode", "name": "LeetCode", "name_en": "LeetCode", "domain_code": "interview"},
+    {"code": "system_design", "name": "系统设计", "name_en": "System Design", "domain_code": "interview"},
+    {"code": "coding_interview", "name": "编程面试", "name_en": "Coding Interview", "domain_code": "interview"},
+    {"code": "algorithm", "name": "算法", "name_en": "Algorithm", "domain_code": "interview"},
+    {"code": "data_structure", "name": "数据结构", "name_en": "Data Structure", "domain_code": "interview"},
+]
+
+TAGS.extend(AI_EXTRA_TAGS)
