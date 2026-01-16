@@ -21,6 +21,7 @@
 - `common/stores.ts` → 所有全局状态（按模块分类）
 - `common/components/` → 通用 UI 组件（无业务逻辑）
 - `modules/*/components/` → 业务组件（可用同模块 hooks）
+- 直接从具体文件导入，禁止使用 `index.ts` 或 `__init__.py` 集中导出
 
 ### 代码
 
@@ -99,12 +100,15 @@
 
 - 使用 FastAPI 框架
 - 使用 Pydantic 做数据验证
+- 使用 uv 管理 Python 依赖和虚拟环境
 - 函数/变量使用 snake_case
 - 类名使用 PascalCase
 - 异步函数使用 async/await
 - 分页使用 `paginate()` 函数
 - 响应使用 `success_response()` 包装
 - 错误抛出 `AppError` 异常
+- 使用 Python 3.10+ 新式类型注解（`list[str]` 而非 `List[str]`）
+- 魔法数字提取为类常量
 
 ### router 层
 
@@ -138,7 +142,8 @@
 
 - 模块内分散导出枚举/常量
 - 模块内分散导出工具函数
-- 使用 `index.ts` 文件（直接导入具体文件）
+- 使用 `index.ts` 文件集中导出（直接导入具体文件）
+- 使用 `__init__.py` 文件集中导出（直接导入具体文件）
 
 ### 代码
 
@@ -209,6 +214,7 @@
 ### 后端代码
 
 - 硬编码配置值（应放 `common/config.py`）
+- 使用 pip/conda 管理依赖（必须使用 uv）
 - 在 service 层 catch 异常后静默处理
 - print 调试代码提交
 - 注释掉的代码提交
@@ -217,6 +223,8 @@
 - 嵌套超过 3 层
 - 直接返回数据库原始数据（应转换格式）
 - 在 router 层写业务逻辑
+- 使用旧式类型注解（`List[str]` 应改为 `list[str]`）
+- 魔法数字硬编码在函数中
 
 ### router 层
 

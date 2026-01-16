@@ -1,0 +1,15 @@
+{
+  "name": "json_to_table",
+  "description": "将JSON转换为表格",
+  "category": "format_conversion",
+  "tags": [
+    "json",
+    "table",
+    "conversion"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "Excel Sheet",
+  "created_at": "2026-01-15T15:15:20.922857"
+}

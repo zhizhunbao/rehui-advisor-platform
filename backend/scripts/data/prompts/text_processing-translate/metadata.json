@@ -1,0 +1,15 @@
+{
+  "name": "translate",
+  "description": "翻译文本到指定语言",
+  "category": "text_processing",
+  "tags": [
+    "translation",
+    "language",
+    "text"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "English Translator and Improver",
+  "created_at": "2026-01-15T15:15:20.918173"
+}

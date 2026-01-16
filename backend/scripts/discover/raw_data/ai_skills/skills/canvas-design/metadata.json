@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "canvas-design",
+  "skill_path": "skills/canvas-design",
+  "has_skill_md": true,
+  "name": "canvas-design",
+  "description": "Create beautiful visual art in .png and .pdf documents using design philosophy. You should use this skill when the user asks to create a poster, piece of art, design, or other static piece. Create original visual designs, never copying existing artists' work to avoid copyright violations.",
+  "instructions": "These are instructions for creating design philosophies - aesthetic movements that are then EXPRESSED VISUALLY. Output only .md files, .pdf files, and .png files.\n\nComplete this in two steps:\n1. Design Philosophy Creation (.md file)\n2. Express by creating it on a canvas (.pdf file or .png file)\n\nFirst, undertake this task:\n\n## DESIGN PHILOSOPHY CREATION\n\nTo begin, create a VISUAL PHILOSOPHY (not layouts or templates) that will be interpreted through:\n- Form, space, color, composition\n- Images, g",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

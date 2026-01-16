@@ -1,0 +1,15 @@
+{
+  "name": "simplify",
+  "description": "简化文本使其更易理解",
+  "category": "text_processing",
+  "tags": [
+    "simplification",
+    "text",
+    "readability"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "Spoken English Teacher and Improver",
+  "created_at": "2026-01-15T15:15:20.923943"
+}

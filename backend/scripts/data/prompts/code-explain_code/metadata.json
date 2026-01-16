@@ -1,0 +1,8 @@
+{
+  "category": "code",
+  "name": "explain_code",
+  "display_name": "代码解释器",
+  "display_name_en": "Code Explainer",
+  "description": "逐行解释代码逻辑",
+  "description_en": "Explain code logic line by line"
+}

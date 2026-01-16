@@ -1,0 +1,8 @@
+{
+  "category": "test",
+  "name": "generate_quiz",
+  "display_name": "测验生成器",
+  "display_name_en": "Quiz Generator",
+  "description": "生成练习测验题",
+  "description_en": "Generate practice quiz questions"
+}

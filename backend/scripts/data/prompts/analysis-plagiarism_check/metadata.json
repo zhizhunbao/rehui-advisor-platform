@@ -1,0 +1,15 @@
+{
+  "name": "plagiarism_check",
+  "description": "检查文本原创性",
+  "category": "analysis",
+  "tags": [
+    "plagiarism",
+    "originality",
+    "analysis"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "Plagiarism Checker",
+  "created_at": "2026-01-15T15:15:20.924738"
+}

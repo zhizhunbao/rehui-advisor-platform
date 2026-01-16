@@ -1,0 +1,8 @@
+{
+  "category": "mv",
+  "name": "opencv_helper",
+  "display_name": "OpenCV 代码助手",
+  "display_name_en": "OpenCV Code Helper",
+  "description": "OpenCV 函数选择、参数调优和代码实现指导",
+  "description_en": "OpenCV function selection, parameter tuning, and implementation guidance"
+}

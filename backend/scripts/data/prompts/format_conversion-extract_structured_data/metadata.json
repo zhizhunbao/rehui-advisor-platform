@@ -1,0 +1,15 @@
+{
+  "name": "extract_structured_data",
+  "description": "提取结构化数据",
+  "category": "format_conversion",
+  "tags": [
+    "extraction",
+    "structure",
+    "data"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "Logistician",
+  "created_at": "2026-01-15T15:15:20.932724"
+}

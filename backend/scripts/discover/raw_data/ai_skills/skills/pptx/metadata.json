@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "pptx",
+  "skill_path": "skills/pptx",
+  "has_skill_md": true,
+  "name": "pptx",
+  "description": "Presentation creation, editing, and analysis. When Claude needs to work with presentations (.pptx files) for: (1) Creating new presentations, (2) Modifying or editing content, (3) Working with layouts, (4) Adding comments or speaker notes, or any other presentation tasks",
+  "instructions": "# PPTX creation, editing, and analysis\n\n## Overview\n\nA user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.\n\n## Reading and analyzing content\n\n### Text extraction\nIf you just need to read the text contents of a presentation, you should convert the document to markdown:\n\n```bash\n# Convert document ",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

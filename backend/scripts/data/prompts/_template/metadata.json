@@ -1,0 +1,25 @@
+{
+  "name": "template",
+  "description": "Prompt 模板示例",
+  "category": "text_processing|analysis|generation|format_conversion",
+  "tags": ["tag1", "tag2", "tag3"],
+  "variables": [
+    {
+      "name": "variable_1",
+      "type": "string",
+      "required": true,
+      "default": null,
+      "description": "变量说明"
+    },
+    {
+      "name": "variable_2",
+      "type": "string",
+      "required": false,
+      "default": "默认值",
+      "description": "变量说明"
+    }
+  ],
+  "is_public": true,
+  "source": "custom",
+  "created_at": "2026-01-15T00:00:00"
+}

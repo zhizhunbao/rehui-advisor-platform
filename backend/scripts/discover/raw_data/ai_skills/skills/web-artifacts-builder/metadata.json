@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "web-artifacts-builder",
+  "skill_path": "skills/web-artifacts-builder",
+  "has_skill_md": true,
+  "name": "web-artifacts-builder",
+  "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
+  "instructions": "# Web Artifacts Builder\n\nTo build powerful frontend claude.ai artifacts, follow these steps:\n1. Initialize the frontend repo using `scripts/init-artifact.sh`\n2. Develop your artifact by editing the generated code\n3. Bundle all code into a single HTML file using `scripts/bundle-artifact.sh`\n4. Display artifact to user\n5. (Optional) Test the artifact\n\n**Stack**: React 18 + TypeScript + Vite + Parcel (bundling) + Tailwind CSS + shadcn/ui\n\n## Design & Style Guidelines\n\nVERY IMPORTANT: To avoid what ",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

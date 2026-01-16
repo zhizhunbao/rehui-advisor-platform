@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "template",
+  "skill_path": "template",
+  "has_skill_md": true,
+  "name": "template-skill",
+  "description": "Replace with description of the skill and when Claude should use it.",
+  "instructions": "# Insert instructions below",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

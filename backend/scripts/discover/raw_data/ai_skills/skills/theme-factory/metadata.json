@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "theme-factory",
+  "skill_path": "skills/theme-factory",
+  "has_skill_md": true,
+  "name": "theme-factory",
+  "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly.",
+  "instructions": "# Theme Factory Skill\n\nThis skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a theme is chosen, it can be applied to any artifact.\n\n## Purpose\n\nTo apply consistent, professional styling to presentation slide decks, use this skill. Each theme includes:\n- A cohesive color palette with hex codes\n- Complementary font pairings for headers and body text\n- A distinct visual identity suitable for differe",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

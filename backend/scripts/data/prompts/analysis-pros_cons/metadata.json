@@ -1,0 +1,15 @@
+{
+  "name": "pros_cons",
+  "description": "分析选项的优缺点",
+  "category": "analysis",
+  "tags": [
+    "analysis",
+    "decision",
+    "comparison"
+  ],
+  "variables": [],
+  "is_public": true,
+  "source": "awesome-chatgpt-prompts",
+  "original_title": "Debater",
+  "created_at": "2026-01-15T15:15:20.926989"
+}

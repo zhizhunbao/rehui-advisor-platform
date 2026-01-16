@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "pdf",
+  "skill_path": "skills/pdf",
+  "has_skill_md": true,
+  "name": "pdf",
+  "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale.",
+  "instructions": "# PDF Processing Guide\n\n## Overview\n\nThis guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see reference.md. If you need to fill out a PDF form, read forms.md and follow its instructions.\n\n## Quick Start\n\n```python\nfrom pypdf import PdfReader, PdfWriter\n\n# Read a PDF\nreader = PdfReader(\"document.pdf\")\nprint(f\"Pages: {len(reader.pages)}\")\n\n# Extract text\ntext = \"\"\nfor page in reader.",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

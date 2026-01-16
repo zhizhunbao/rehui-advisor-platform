@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "xlsx",
+  "skill_path": "skills/xlsx",
+  "has_skill_md": true,
+  "name": "xlsx",
+  "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization. When Claude needs to work with spreadsheets (.xlsx, .xlsm, .csv, .tsv, etc) for: (1) Creating new spreadsheets with formulas and formatting, (2) Reading or analyzing data, (3) Modify existing spreadsheets while preserving formulas, (4) Data analysis and visualization in spreadsheets, or (5) Recalculating formulas",
+  "instructions": "# Requirements for Outputs\n\n## All Excel files\n\n### Zero Formula Errors\n- Every Excel model MUST be delivered with ZERO formula errors (#REF!, #DIV/0!, #VALUE!, #N/A, #NAME?)\n\n### Preserve Existing Templates (when updating templates)\n- Study and EXACTLY match existing format, style, and conventions when modifying files\n- Never impose standardized formatting on files with established patterns\n- Existing template conventions ALWAYS override these guidelines\n\n## Financial models\n\n### Color Coding S",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "algorithmic-art",
+  "skill_path": "skills/algorithmic-art",
+  "has_skill_md": true,
+  "name": "algorithmic-art",
+  "description": "Creating algorithmic art using p5.js with seeded randomness and interactive parameter exploration. Use this when users request creating art using code, generative art, algorithmic art, flow fields, or particle systems. Create original algorithmic art rather than copying existing artists' work to avoid copyright violations.",
+  "instructions": "Algorithmic philosophies are computational aesthetic movements that are then expressed through code. Output .md files (philosophy), .html files (interactive viewer), and .js files (generative algorithms).\n\nThis happens in two steps:\n1. Algorithmic Philosophy Creation (.md file)\n2. Express by creating p5.js generative art (.html + .js files)\n\nFirst, undertake this task:\n\n## ALGORITHMIC PHILOSOPHY CREATION\n\nTo begin, create an ALGORITHMIC PHILOSOPHY (not static images or templates) that will be in",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}

@@ -26,6 +26,7 @@
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/button-icon.js" as="script" crossorigin="anonymous">
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/menu-item-separator.js" as="script" crossorigin="anonymous">
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/input-search.js" as="script" crossorigin="anonymous">
+		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/count-badge.js" as="script" crossorigin="anonymous">
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/dropdown-context-menu.js" as="script" crossorigin="anonymous">
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/dropdown-more.js" as="script" crossorigin="anonymous">
 		<link rel="modulepreload" href="https://s.brightspace.com/lib/bsi/2025.12.237/unbundled/button-subtle.js" as="script" crossorigin="anonymous">
@@ -33,7 +34,7 @@
 		<script>
 		(function(){if('PerformanceLongTaskTiming' in window) {var g = window.__tti = {e:[]};g.o = new PerformanceObserver( function( l ){ g.e = g.e.concat( l.getEntries() ) });g.o.observe({ entryTypes:['longtask']})}})();
 		(function(){var client;var errors = [];window.addEventListener('d2l-logging-loaded', function(e) {client = e.detail.createClient('uncaught-errors', { shouldThrottle: true });if (errors.length > 0) {client.legacyErrorBatch(errors);}});var handleError = function(data) {if (!data.message) return;if (data.error && data.error.stack && (data.error.stack.includes('/content/') || data.error.stack.includes('/shared/'))) return;if (client) {client.legacyError(data.message, data.source, data.lineno, data.colno, data.error);} else {errors.push(data);}};window.addEventListener('error', function(e) {handleError({ message: e.message, source: e.source, lineno: e.lineno, colno: e.colno, error: e.error });});window.addEventListener('unhandledrejection', function(e) {handleError({message: e.reason ? (e.reason.message ? e.reason.message : e.reason) : '',error: e.reason});});})();
-		(function(){try { localStorage.setItem('XSRF.Token','PNXYsnCJSkOyUCau7mT4b3JBH7ZQTkf3');localStorage.setItem('Session.UserId','201270');} catch(e) {}})();
+		(function(){try { localStorage.setItem('XSRF.Token','rcCu4xZ1XR48NnYWy6AXdrf00cOFvta9');localStorage.setItem('Session.UserId','201270');} catch(e) {}})();
 		(function(){if(window['FontFace'] === undefined) { window.d2lFontsLoaded = true; return; }window.d2lFontsLoaded = false;Promise.all(['400','700'].map(function(w) {return new FontFace('Lato','url(https://s.brightspace.com/lib/fonts/0.6.1/assets/Lato-' + w + '.woff2) format("woff2")', {style:'normal',weight: w}).load();})).then(function() {window.d2lFontsLoaded = true;if(window['D2L'] && window.D2L['FontsLoaded']) { window.D2L.FontsLoaded(); }});})();
 		(function(){
 				D2L = window.D2L || {}; D2L.LP = D2L.LP || {}; D2L.LP.Web = D2L.LP.Web || {}; D2L.LP.Web.UI = D2L.LP.Web.UI || {};
@@ -58,44 +59,46 @@
 			html { font-size:20px; }
 			html { --d2l-branding-primary-color: #00703c; }
 			.d2l-branding-navigation-background-color {background-color: #FFFFFF;}
-			.d2l_1_16_633 {margin:10px;}
-			.d2l_1_56_879 {width:500px;}
-			.d2l_1_57_620 {background-position:left top;}
-			.d2l_1_58_630 {padding:1em;}
-			.d2l_1_59_956 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/alert.svg');}
-			.d2l_1_60_109 {background-position:right top;}
-			.d2l_1_61_73 {padding-right:31px;}
-			.d2l_1_62_782 {min-height:18px;}
-			.d2l_1_63_702 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/check.svg');}
-			.d2l_1_64_702 {padding:3.4em;}
-			.d2l_1_65_296 {table-layout: Inherit;}
-			.d2l_1_66_219 {vertical-align:top;}
-			.d2l_1_68_629 {margin-left:0px;}
-			.d2l_1_69_548 {width:67%;}
-			.d2l_1_70_76 {line-height:1.5rem;}
-			.d2l_1_72_56 {float:right;}
-			.d2l_1_75_517 {margin-right:0.65rem;}
-			.d2l_1_78_652 {vertical-align:baseline;}
-			.d2l_1_79_899 {width:100%;}
-			.d2l_1_80_544 {table-layout: Fixed;}
-			.d2l_1_87_744 {margin-bottom:10px;}
-			.d2l_1_88_335 {padding:5px 0 10px 0;}
-			.d2l_1_91_326:before {content:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/download.svg');}
-			.d2l_1_93_594 {max-width:100%;}
-			.d2l_1_94_27 {height:20px;}
-			.d2l_1_95_150 {text-align:center;}
-			.d2l_1_96_279 {margin-right:10px;}
-			.d2l_1_102_470 {padding-top:23px;}
-			.d2l_1_113_730 {width:61%;}
-			.d2l_1_114_411 {max-width:80%;}
-			.d2l_1_115_785 {overflow:auto;}
-			.d2l_1_116_693 {overflow-wrap:anywhere;}
-			.d2l_1_117_959 {margin:6px 0 0 0;}
-			.d2l_1_118_96 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/file-document.svg');}
-			.d2l_1_119_894 {background-position:left center;}
-			.d2l_1_120_773 {padding-left:31px;}
-			.d2l_1_122_198 {padding:0 0.8rem 0 0;}
-			.d2l_1_123_264 {font-size:0.8rem;}
+			.d2l_1_22_847 {margin:10px;}
+			.d2l_1_62_243 {width:500px;}
+			.d2l_1_63_435 {background-position:left top;}
+			.d2l_1_64_630 {padding:1em;}
+			.d2l_1_65_386 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/alert.svg');}
+			.d2l_1_66_249 {background-position:right top;}
+			.d2l_1_67_304 {padding-right:31px;}
+			.d2l_1_68_153 {min-height:18px;}
+			.d2l_1_69_60 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/check.svg');}
+			.d2l_1_70_621 {padding:3.4em;}
+			.d2l_1_71_690 {table-layout: Inherit;}
+			.d2l_1_72_906 {vertical-align:top;}
+			.d2l_1_74_46 {margin-left:0px;}
+			.d2l_1_75_560 {width:67%;}
+			.d2l_1_76_716 {line-height:1.5rem;}
+			.d2l_1_78_199 {float:right;}
+			.d2l_1_80_22 {padding:0rem 0.3rem;}
+			.d2l_1_82_792 {margin-right:0.65rem;}
+			.d2l_1_86_142 {margin-left:20px;}
+			.d2l_1_89_546 {vertical-align:baseline;}
+			.d2l_1_90_462 {width:100%;}
+			.d2l_1_91_247 {table-layout: Fixed;}
+			.d2l_1_98_837 {margin-bottom:10px;}
+			.d2l_1_99_269 {padding:5px 0 10px 0;}
+			.d2l_1_102_867:before {content:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/download.svg');}
+			.d2l_1_104_77 {max-width:100%;}
+			.d2l_1_105_869 {height:20px;}
+			.d2l_1_106_18 {text-align:center;}
+			.d2l_1_107_488 {margin-right:10px;}
+			.d2l_1_113_11 {padding-top:23px;}
+			.d2l_1_124_597 {width:61%;}
+			.d2l_1_125_374 {max-width:80%;}
+			.d2l_1_126_126 {overflow:auto;}
+			.d2l_1_127_162 {overflow-wrap:anywhere;}
+			.d2l_1_128_866 {margin:6px 0 0 0;}
+			.d2l_1_129_782 {background-image:url('https://s.brightspace.com/lib/bsi/2025.12.237/images/tier1/file-document.svg');}
+			.d2l_1_130_844 {background-position:left center;}
+			.d2l_1_131_506 {padding-left:31px;}
+			.d2l_1_133_929 {padding:0 0.8rem 0 0;}
+			.d2l_1_134_114 {font-size:0.8rem;}
 		</style>
 		<script>(function() {})();</script><style id="d2l-colors">
 		html {
@@ -188,19 +191,19 @@
 		}
 	</style></head>
 	<body class="d2l-body d2l-typography vui-typography daylight">
-		<header><nav class="d2l-navigation-s d2l-branding-navigation-dark-foreground-color d2l-navigation-s-linkarea-no-color"><d2l-labs-navigation has-skip-nav=""><d2l-labs-navigation-main-header><div class="d2l-labs-navigation-header-left" slot="left"><div class="d2l-navigation-s-header-open-button-wrapper"><d2l-labs-navigation-button-icon icon="tier3:menu-hamburger" text="Menu" text-hidden="" tooltip-offset="0"></d2l-labs-navigation-button-icon></div><div class="d2l-navigation-s-header-logo-area"><d2l-labs-navigation-link-icon class="d2l-navigation-s-home-icon" text="My Home" href="/d2l/lp/ouHome/defaultHome.d2l" text-hidden="" icon="tier1:home" tooltip-offset="0"></d2l-labs-navigation-link-icon><d2l-labs-navigation-separator class="d2l-navigation-s-logo-divider"></d2l-labs-navigation-separator><d2l-labs-navigation-link-image class="d2l-navigation-s-logo" src="/d2l/lp/navbars/6606/theme/viewimage/400/view?v=20.25.12.23526" text="" slim="" tooltip-offset="0"></d2l-labs-navigation-link-image><d2l-labs-navigation-separator class="d2l-navigation-s-title-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-title-container"><a class="d2l-navigation-s-link" href="/d2l/home/846092" title="26W_CST8508_100_101_102 Machine Vision">26W_CST8508_100_101_102 Machine Vision</a></div></div></div><div class="d2l-labs-navigation-header-right" slot="right"><div class="d2l-navigation-s-course-menu"><d2l-labs-navigation-dropdown-button-icon icon="tier3:classes" text="Select a course..." no-auto-open="" tooltip-offset="0" data-prl="/d2l/lp/courseSelector/846092/InitPartial" data-prid="d2l_1_13_186"><d2l-dropdown-content max-width="800" min-width="450" no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_13_186" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+		<header><nav class="d2l-navigation-s d2l-branding-navigation-dark-foreground-color d2l-navigation-s-linkarea-no-color"><d2l-labs-navigation has-skip-nav=""><d2l-labs-navigation-main-header><div class="d2l-labs-navigation-header-left" slot="left"><div class="d2l-navigation-s-header-open-button-wrapper"><d2l-labs-navigation-button-icon icon="tier3:menu-hamburger" text="Menu" text-hidden="" tooltip-offset="0"></d2l-labs-navigation-button-icon></div><div class="d2l-navigation-s-header-logo-area"><d2l-labs-navigation-link-icon class="d2l-navigation-s-home-icon" text="My Home" href="/d2l/lp/ouHome/defaultHome.d2l" text-hidden="" icon="tier1:home" tooltip-offset="0"></d2l-labs-navigation-link-icon><d2l-labs-navigation-separator class="d2l-navigation-s-logo-divider"></d2l-labs-navigation-separator><d2l-labs-navigation-link-image class="d2l-navigation-s-logo" src="/d2l/lp/navbars/6606/theme/viewimage/400/view?v=20.25.12.23526" text="" slim="" tooltip-offset="0"></d2l-labs-navigation-link-image><d2l-labs-navigation-separator class="d2l-navigation-s-title-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-title-container"><a class="d2l-navigation-s-link" href="/d2l/home/846092" title="26W_CST8508_100_101_102 Machine Vision">26W_CST8508_100_101_102 Machine Vision</a></div></div></div><div class="d2l-labs-navigation-header-right" slot="right"><div class="d2l-navigation-s-course-menu"><d2l-labs-navigation-dropdown-button-icon icon="tier3:classes" text="Select a course..." no-auto-open="" tooltip-offset="0" data-prl="/d2l/lp/courseSelector/846092/InitPartial" data-prid="d2l_1_19_126"><d2l-dropdown-content max-width="800" min-width="450" no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_19_126" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
 		</div>
-		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div><d2l-labs-navigation-separator class="d2l-navigation-s-course-menu-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-notifications"><div class="d2l-navigation-s-notifications-wrapper"><div class="d2l-navigation-s-notification" data-category="alerts" data-aria-message="You have new Subscriptions"><d2l-labs-navigation-dropdown-button-icon icon="tier3:discussions" text="Subscription alerts" no-auto-open="" tooltip-offset="0" data-prl="/d2l/NavigationArea/846092/ActivityFeed/GetAlertsDaylight?Category=0" data-prid="d2l_1_14_469"><d2l-dropdown-content no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_14_469" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div><d2l-labs-navigation-separator class="d2l-navigation-s-course-menu-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-notifications"><div class="d2l-navigation-s-notifications-wrapper"><div class="d2l-navigation-s-notification" data-category="alerts" data-aria-message="You have new Subscriptions"><d2l-labs-navigation-dropdown-button-icon icon="tier3:discussions" text="Subscription alerts" no-auto-open="" tooltip-offset="0" data-prl="/d2l/NavigationArea/846092/ActivityFeed/GetAlertsDaylight?Category=0" data-prid="d2l_1_20_519"><d2l-dropdown-content no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_20_519" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
 		</div>
-		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div><div class="d2l-navigation-s-notification" data-category="grades" data-aria-message="You have new Updates"><d2l-labs-navigation-dropdown-button-icon icon="tier3:notification-bell" text="Update alerts" no-auto-open="" tooltip-offset="0" data-prl="/d2l/NavigationArea/846092/ActivityFeed/GetAlertsDaylight?Category=1" data-prid="d2l_1_15_25"><d2l-dropdown-content no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_15_25" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div><div class="d2l-navigation-s-notification" data-category="grades" data-aria-message="You have new Updates"><d2l-labs-navigation-dropdown-button-icon icon="tier3:notification-bell" text="Update alerts" no-auto-open="" tooltip-offset="0" has-notification="" notification-text="Update alerts - You have new alerts" data-prl="/d2l/NavigationArea/846092/ActivityFeed/GetAlertsDaylight?Category=1" data-prid="d2l_1_21_362"><d2l-dropdown-content no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_21_362" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
 		</div>
 		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div></div><div class="d2l-navigation-s-notifications-div"></div></div><d2l-labs-navigation-separator class="d2l-navigation-s-notifications-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-personal-menu"><d2l-labs-navigation-dropdown-button-custom opener-label="Peng Wang, avatar"><span class="d2l-navigation-s-personal-menu-wrapper" slot="opener"><d2l-profile-image-base class="d2l-token-receiver" data-token-receiver-scope="core:*:*" href="" first-name="Peng" last-name="Wang" color-id="201270" size="medium" aria-hidden="true" style="--d2l-initials-background-color: #804167;"></d2l-profile-image-base><span class="d2l-navigation-s-personal-menu-text">Peng Wang</span></span><d2l-dropdown-content min-width="300" no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><ul class="d2l-personal-tools-list"><li><div class="d2l-personal-tools-category-item d2l-personal-tools-category-item-first"><span style="white-space:nowrap;"><a class="d2l-link" aria-label="" href="/d2l/lp/profile/profile_edit.d2l?ou=846092" onclick="D2L.O(&quot;__g1&quot;,0)();">Profile</a>
 		</span></div></li><li class="d2l-personal-tools-category-item"><span style="white-space:nowrap;"><a class="d2l-link" aria-label="" href="/d2l/Notifications/Settings?ou=846092" onclick="D2L.O(&quot;__g1&quot;,1)();">Notifications</a>
 		</span></li><li class="d2l-personal-tools-category-item d2l-personal-tools-category-item-last"><span style="white-space:nowrap;"><a class="d2l-link" aria-label="" href="/d2l/lp/preferences/preferences_main/preferences_main.d2l?ou=846092" onclick="D2L.O(&quot;__g1&quot;,2)();">Account Settings</a>
 		</span></li><li class="d2l-personal-tools-separated-item"><div class="d2l-personal-tools-category-item d2l-personal-tools-category-item-first d2l-personal-tools-category-item-last"><span style="white-space:nowrap;"><a class="d2l-link" aria-label="" href="/d2l/le/userprogress/201270/846092/Summary?searchString=&amp;sortField=SortLastName&amp;sortDirection=0">Progress</a>
-		</span></div></li><li class="d2l-personal-tools-separated-item"><span style="white-space:nowrap;"><a class="d2l-link d2l_1_16_633" aria-label="" id="LocaleLinkId" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,3)();return false;">English (Canada)</a>
-		</span></li><li class="d2l-personal-tools-separated-item"><span style="white-space:nowrap;"><a class="d2l-link d2l_1_16_633" aria-label="" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,4)();return false;">Log Out</a>
-		</span></li></ul></d2l-dropdown-content></d2l-labs-navigation-dropdown-button-custom></div><div class="d2l-navigation-s-admin-menu"><div class="d2l-navigation-s-admin-menu-spacer"></div><d2l-labs-navigation-dropdown-button-icon icon="tier3:gear" text="Admin Tools" no-auto-open="" tooltip-offset="0" data-prl="/d2l/lp/admintools/846092/dropdownpartial" data-prid="d2l_1_17_608"><d2l-dropdown-content max-width="960" min-width="200" no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_17_608" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+		</span></div></li><li class="d2l-personal-tools-separated-item"><span style="white-space:nowrap;"><a class="d2l-link d2l_1_22_847" aria-label="" id="LocaleLinkId" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,3)();return false;">English (Canada)</a>
+		</span></li><li class="d2l-personal-tools-separated-item"><span style="white-space:nowrap;"><a class="d2l-link d2l_1_22_847" aria-label="" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,4)();return false;">Log Out</a>
+		</span></li></ul></d2l-dropdown-content></d2l-labs-navigation-dropdown-button-custom></div><div class="d2l-navigation-s-admin-menu"><div class="d2l-navigation-s-admin-menu-spacer"></div><d2l-labs-navigation-dropdown-button-icon icon="tier3:gear" text="Admin Tools" no-auto-open="" tooltip-offset="0" data-prl="/d2l/lp/admintools/846092/dropdownpartial" data-prid="d2l_1_23_855"><d2l-dropdown-content max-width="960" min-width="200" no-padding="" vertical-offset="0" popover="manual" dropdown-content=""><div id="d2l_1_23_855" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
 		</div>
 		</d2l-dropdown-content></d2l-labs-navigation-dropdown-button-icon></div></div></d2l-labs-navigation-main-header><d2l-labs-navigation-main-footer class="d2l-branding-navigation-background-color d2l-visible-on-ancestor-target"><div slot="main"><div class="d2l-navigation-s-main-wrapper" role="list"><div class="d2l-navigation-s-item" role="listitem"><a href="/d2l/home/846092" class="d2l-navigation-s-link">Course Home</a></div>
 		<div class="d2l-navigation-s-item" role="listitem"><a href="/d2l/le/content/846092/Home" class="d2l-navigation-s-link">Content</a></div>
@@ -227,32 +230,32 @@
 		</d2l-dropdown-menu></d2l-dropdown>
 		</div>
 		<div class="d2l-navigation-s-item" role="listitem"><d2l-dropdown><button class="d2l-navigation-s-group d2l-dropdown-opener" aria-expanded="false" aria-haspopup="true"><span class="d2l-navigation-s-group-wrapper"><span class="d2l-navigation-s-group-text">Tools</span><d2l-icon icon="tier1:chevron-down"></d2l-icon></span></button><d2l-dropdown-menu popover="manual" dropdown-content=""><d2l-menu label="Tools" class="d2l-menu-mvc" active="" aria-label="Tools" role="menu">
-			<d2l-menu-item text="Algonquin Email/Office 365" class="d2l-navigation-s-menu-item-root" id="d2l_1_18_163" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Algonquin Email/Office 365" first="true"></d2l-menu-item>
+			<d2l-menu-item text="Algonquin Email/Office 365" class="d2l-navigation-s-menu-item-root" id="d2l_1_24_510" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Algonquin Email/Office 365" first="true"></d2l-menu-item>
 			<d2l-menu-item-link text="Announcements" href="/d2l/lms/news/main.d2l?ou=846092" class="d2l-navigation-s-menu-item-root" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Announcements"></d2l-menu-item-link>
 			<d2l-menu-item-link text="Classlist" href="/d2l/lms/classlist/classlist.d2l?ou=846092" class="d2l-navigation-s-menu-item-root" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Classlist"></d2l-menu-item-link>
-			<d2l-menu-item text="College Surveys" class="d2l-navigation-s-menu-item-root" id="d2l_1_19_389" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
+			<d2l-menu-item text="College Surveys" class="d2l-navigation-s-menu-item-root" id="d2l_1_25_696" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
 			<d2l-menu-item-link text="FAQ" href="/d2l/lms/faq/view_faq.d2l?ou=846092" class="d2l-navigation-s-menu-item-root" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="FAQ"></d2l-menu-item-link>
-			<d2l-menu-item text="Glossary" class="d2l-navigation-s-menu-item-root" id="d2l_1_20_580" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
-			<d2l-menu-item text="Library Resources 1.3" class="d2l-navigation-s-menu-item-root" id="d2l_1_21_173" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
-			<d2l-menu-item text="Mediasite Videos" class="d2l-navigation-s-menu-item-root" id="d2l_1_22_369" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
-			<d2l-menu-item text="My Mediasite" class="d2l-navigation-s-menu-item-root" id="d2l_1_23_742" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
-			<d2l-menu-item text="Zoom Classroom 1.3" class="d2l-navigation-s-menu-item-root" id="d2l_1_24_174" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
+			<d2l-menu-item text="Glossary" class="d2l-navigation-s-menu-item-root" id="d2l_1_26_369" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
+			<d2l-menu-item text="Library Resources 1.3" class="d2l-navigation-s-menu-item-root" id="d2l_1_27_96" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
+			<d2l-menu-item text="Mediasite Videos" class="d2l-navigation-s-menu-item-root" id="d2l_1_28_97" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
+			<d2l-menu-item text="My Mediasite" class="d2l-navigation-s-menu-item-root" id="d2l_1_29_474" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
+			<d2l-menu-item text="Zoom Classroom 1.3" class="d2l-navigation-s-menu-item-root" id="d2l_1_30_5" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
 		</d2l-menu>
 		</d2l-dropdown-menu></d2l-dropdown>
 		</div>
 		<div class="d2l-navigation-s-item" role="listitem"><d2l-dropdown><button class="d2l-navigation-s-group d2l-dropdown-opener" aria-expanded="false" aria-haspopup="true"><span class="d2l-navigation-s-group-wrapper"><span class="d2l-navigation-s-group-text">Help</span><d2l-icon icon="tier1:chevron-down"></d2l-icon></span></button><d2l-dropdown-menu popover="manual" dropdown-content=""><d2l-menu label="Help" class="d2l-menu-mvc" active="" aria-label="Help" role="menu">
-			<d2l-menu-item text="Centre for Accessible Learning (CAL)" class="d2l-navigation-s-menu-item-root" id="d2l_1_25_972" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)" first="true"></d2l-menu-item>
-			<d2l-menu-item text="LMS Help at Algonquin College (Students)" class="d2l-navigation-s-menu-item-root" id="d2l_1_26_425" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
-			<d2l-menu-item text="Privacy" class="d2l-navigation-s-menu-item-root" id="d2l_1_27_402" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
-			<d2l-menu-item text="Student Success Specialists" class="d2l-navigation-s-menu-item-root" id="d2l_1_28_843" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
-			<d2l-menu-item text="Support for Math, Writing, ESL, etc." class="d2l-navigation-s-menu-item-root" id="d2l_1_29_899" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
+			<d2l-menu-item text="Centre for Accessible Learning (CAL)" class="d2l-navigation-s-menu-item-root" id="d2l_1_31_818" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)" first="true"></d2l-menu-item>
+			<d2l-menu-item text="LMS Help at Algonquin College (Students)" class="d2l-navigation-s-menu-item-root" id="d2l_1_32_14" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
+			<d2l-menu-item text="Privacy" class="d2l-navigation-s-menu-item-root" id="d2l_1_33_863" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
+			<d2l-menu-item text="Student Success Specialists" class="d2l-navigation-s-menu-item-root" id="d2l_1_34_974" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
+			<d2l-menu-item text="Support for Math, Writing, ESL, etc." class="d2l-navigation-s-menu-item-root" id="d2l_1_35_485" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
 		</d2l-menu>
 		</d2l-dropdown-menu></d2l-dropdown>
 		</div>
 		<div class="d2l-navigation-s-item d2l-navigation-s-more" role="listitem" data-hidden="1"><d2l-dropdown><button class="d2l-navigation-s-group d2l-dropdown-opener" aria-expanded="false" aria-haspopup="true"><span class="d2l-navigation-s-group-wrapper"><span class="d2l-navigation-s-group-text">More</span><d2l-icon icon="tier1:chevron-down"></d2l-icon></span></button><d2l-dropdown-menu popover="manual" dropdown-content=""><d2l-menu label="More" class="d2l-menu-mvc" active="" aria-label="More" role="menu">
 			<d2l-menu-item-link text="Course Home" href="/d2l/home/846092" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Course Home" first="true"></d2l-menu-item-link>
 			<d2l-menu-item-link text="Content" href="/d2l/le/content/846092/Home" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Content"></d2l-menu-item-link>
-			<d2l-menu-item text="Course Outline" class="d2l-navigation-s-menu-item-root d2l-hidden" id="d2l_1_30_411" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Course Outline"></d2l-menu-item>
+			<d2l-menu-item text="Course Outline" class="d2l-navigation-s-menu-item-root d2l-hidden" id="d2l_1_36_298" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Course Outline"></d2l-menu-item>
 			<d2l-menu-item-link text="Calendar" href="/d2l/le/calendar/846092" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Calendar"></d2l-menu-item-link>
 			<d2l-menu-item text="Activities" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Activities" aria-haspopup="true">
 				<d2l-menu class="d2l-menu-mvc d2l-navigation-s-menu-item-root" child-view="" role="menu" aria-label="Activities">
@@ -276,25 +279,25 @@
 			</d2l-menu-item>
 			<d2l-menu-item text="Tools" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Tools" aria-haspopup="true">
 				<d2l-menu class="d2l-menu-mvc d2l-navigation-s-menu-item-root" child-view="" role="menu" aria-label="Tools">
-					<d2l-menu-item text="Algonquin Email/Office 365" id="d2l_1_31_512" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Algonquin Email/Office 365"></d2l-menu-item>
+					<d2l-menu-item text="Algonquin Email/Office 365" id="d2l_1_37_762" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Algonquin Email/Office 365"></d2l-menu-item>
 					<d2l-menu-item-link text="Announcements" href="/d2l/lms/news/main.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Announcements"></d2l-menu-item-link>
 					<d2l-menu-item-link text="Classlist" href="/d2l/lms/classlist/classlist.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Classlist"></d2l-menu-item-link>
-					<d2l-menu-item text="College Surveys" id="d2l_1_32_592" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
+					<d2l-menu-item text="College Surveys" id="d2l_1_38_489" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
 					<d2l-menu-item-link text="FAQ" href="/d2l/lms/faq/view_faq.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="FAQ"></d2l-menu-item-link>
-					<d2l-menu-item text="Glossary" id="d2l_1_33_520" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
-					<d2l-menu-item text="Library Resources 1.3" id="d2l_1_34_555" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
-					<d2l-menu-item text="Mediasite Videos" id="d2l_1_35_919" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
-					<d2l-menu-item text="My Mediasite" id="d2l_1_36_947" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
-					<d2l-menu-item text="Zoom Classroom 1.3" id="d2l_1_37_868" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
+					<d2l-menu-item text="Glossary" id="d2l_1_39_751" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
+					<d2l-menu-item text="Library Resources 1.3" id="d2l_1_40_80" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
+					<d2l-menu-item text="Mediasite Videos" id="d2l_1_41_958" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
+					<d2l-menu-item text="My Mediasite" id="d2l_1_42_645" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
+					<d2l-menu-item text="Zoom Classroom 1.3" id="d2l_1_43_468" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-menu-item>
 			<d2l-menu-item text="Help" class="d2l-navigation-s-menu-item-root d2l-hidden" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Help" aria-haspopup="true" last="true">
 				<d2l-menu class="d2l-menu-mvc d2l-navigation-s-menu-item-root" child-view="" role="menu" aria-label="Help">
-					<d2l-menu-item text="Centre for Accessible Learning (CAL)" id="d2l_1_38_551" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)"></d2l-menu-item>
-					<d2l-menu-item text="LMS Help at Algonquin College (Students)" id="d2l_1_39_137" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
-					<d2l-menu-item text="Privacy" id="d2l_1_40_224" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
-					<d2l-menu-item text="Student Success Specialists" id="d2l_1_41_63" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
-					<d2l-menu-item text="Support for Math, Writing, ESL, etc." id="d2l_1_42_477" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
+					<d2l-menu-item text="Centre for Accessible Learning (CAL)" id="d2l_1_44_655" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)"></d2l-menu-item>
+					<d2l-menu-item text="LMS Help at Algonquin College (Students)" id="d2l_1_45_322" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
+					<d2l-menu-item text="Privacy" id="d2l_1_46_674" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
+					<d2l-menu-item text="Student Success Specialists" id="d2l_1_47_21" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
+					<d2l-menu-item text="Support for Math, Writing, ESL, etc." id="d2l_1_48_303" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-menu-item>
 		</d2l-menu>
@@ -304,7 +307,7 @@
 		</div></div><div class="d2l-navigation-s-mobile-menu-content"><d2l-labs-navigation-band></d2l-labs-navigation-band><div class="d2l-navigation-s-mobile-menu-header"><div class="d2l-navigation-s-mobile-menu-branded-header"><div class="d2l-navigation-s-header-logo-area"><d2l-labs-navigation-link-icon class="d2l-navigation-s-home-icon" text="My Home" href="/d2l/lp/ouHome/defaultHome.d2l" text-hidden="" icon="tier1:home" tooltip-offset="0"></d2l-labs-navigation-link-icon><d2l-labs-navigation-separator class="d2l-navigation-s-logo-divider"></d2l-labs-navigation-separator><d2l-labs-navigation-link-image class="d2l-navigation-s-logo" src="/d2l/lp/navbars/6606/theme/viewimage/400/view?v=20.25.12.23526" text="" slim="" tooltip-offset="0"></d2l-labs-navigation-link-image><d2l-labs-navigation-separator class="d2l-navigation-s-title-divider"></d2l-labs-navigation-separator><div class="d2l-navigation-s-title-container"><a class="d2l-navigation-s-link" href="/d2l/home/846092" title="26W_CST8508_100_101_102 Machine Vision">26W_CST8508_100_101_102 Machine Vision</a></div></div><div class="d2l-navigation-s-gutter"></div><div class="d2l-navigation-s-mobile-menu-course-selector"><d2l-labs-navigation-button-icon icon="tier3:classes" text="Select a course..." text-hidden="" tooltip-offset="0"></d2l-labs-navigation-button-icon></div></div><div class="d2l-navigation-s-mobile-menu-header-course-menu"><d2l-labs-navigation-button-icon icon="tier1:chevron-left" text="26W_CST8508_100_101_102 Machine Vision" text-hidden="" tooltip-offset="0"></d2l-labs-navigation-button-icon><div class="d2l-navigation-s-title-container"><span class="d2l-navigation-s-title">26W_CST8508_100_101_102 Machine Vision</span></div></div></div><div class="d2l-navigation-s-title-container d2l-navigation-s-mobile-menu-title-bp d2l-branding-navigation-background-color"><a class="d2l-navigation-s-link" href="/d2l/home/846092" title="26W_CST8508_100_101_102 Machine Vision">26W_CST8508_100_101_102 Machine Vision</a></div><div class="d2l-navigation-s-mobile-menu-course-menu"></div><div class="d2l-navigation-s-mobile-menu-nav"><d2l-menu label="Menu" class="d2l-menu-mvc" active="" aria-label="Menu" role="menu">
 			<d2l-menu-item-link text="Course Home" href="/d2l/home/846092" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Course Home" first="true"></d2l-menu-item-link>
 			<d2l-menu-item-link text="Content" href="/d2l/le/content/846092/Home" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Content"></d2l-menu-item-link>
-			<d2l-menu-item text="Course Outline" id="d2l_1_43_749" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Course Outline"></d2l-menu-item>
+			<d2l-menu-item text="Course Outline" id="d2l_1_49_698" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Course Outline"></d2l-menu-item>
 			<d2l-menu-item-link text="Calendar" href="/d2l/le/calendar/846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Calendar"></d2l-menu-item-link>
 			<d2l-menu-item text="Activities" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Activities" aria-haspopup="true">
 				<d2l-menu class="d2l-menu-mvc" child-view="" role="menu" aria-label="Activities">
@@ -328,25 +331,25 @@
 			</d2l-menu-item>
 			<d2l-menu-item text="Tools" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Tools" aria-haspopup="true">
 				<d2l-menu class="d2l-menu-mvc" child-view="" role="menu" aria-label="Tools">
-					<d2l-menu-item text="Algonquin Email/Office 365" id="d2l_1_44_90" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Algonquin Email/Office 365"></d2l-menu-item>
+					<d2l-menu-item text="Algonquin Email/Office 365" id="d2l_1_50_561" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Algonquin Email/Office 365"></d2l-menu-item>
 					<d2l-menu-item-link text="Announcements" href="/d2l/lms/news/main.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Announcements"></d2l-menu-item-link>
 					<d2l-menu-item-link text="Classlist" href="/d2l/lms/classlist/classlist.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Classlist"></d2l-menu-item-link>
-					<d2l-menu-item text="College Surveys" id="d2l_1_45_274" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
+					<d2l-menu-item text="College Surveys" id="d2l_1_51_925" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="College Surveys"></d2l-menu-item>
 					<d2l-menu-item-link text="FAQ" href="/d2l/lms/faq/view_faq.d2l?ou=846092" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="FAQ"></d2l-menu-item-link>
-					<d2l-menu-item text="Glossary" id="d2l_1_46_428" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
-					<d2l-menu-item text="Library Resources 1.3" id="d2l_1_47_101" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
-					<d2l-menu-item text="Mediasite Videos" id="d2l_1_48_23" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
-					<d2l-menu-item text="My Mediasite" id="d2l_1_49_21" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
-					<d2l-menu-item text="Zoom Classroom 1.3" id="d2l_1_50_292" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
+					<d2l-menu-item text="Glossary" id="d2l_1_52_676" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Glossary"></d2l-menu-item>
+					<d2l-menu-item text="Library Resources 1.3" id="d2l_1_53_176" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Library Resources 1.3"></d2l-menu-item>
+					<d2l-menu-item text="Mediasite Videos" id="d2l_1_54_693" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Mediasite Videos"></d2l-menu-item>
+					<d2l-menu-item text="My Mediasite" id="d2l_1_55_428" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="My Mediasite"></d2l-menu-item>
+					<d2l-menu-item text="Zoom Classroom 1.3" id="d2l_1_56_23" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Zoom Classroom 1.3" last="true"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-menu-item>
 			<d2l-menu-item text="Help" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Help" aria-haspopup="true">
 				<d2l-menu class="d2l-menu-mvc" child-view="" role="menu" aria-label="Help">
-					<d2l-menu-item text="Centre for Accessible Learning (CAL)" id="d2l_1_51_603" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)"></d2l-menu-item>
-					<d2l-menu-item text="LMS Help at Algonquin College (Students)" id="d2l_1_52_989" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
-					<d2l-menu-item text="Privacy" id="d2l_1_53_846" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
-					<d2l-menu-item text="Student Success Specialists" id="d2l_1_54_184" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
-					<d2l-menu-item text="Support for Math, Writing, ESL, etc." id="d2l_1_55_189" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
+					<d2l-menu-item text="Centre for Accessible Learning (CAL)" id="d2l_1_57_51" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Centre for Accessible Learning (CAL)"></d2l-menu-item>
+					<d2l-menu-item text="LMS Help at Algonquin College (Students)" id="d2l_1_58_199" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="LMS Help at Algonquin College (Students)"></d2l-menu-item>
+					<d2l-menu-item text="Privacy" id="d2l_1_59_744" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Privacy"></d2l-menu-item>
+					<d2l-menu-item text="Student Success Specialists" id="d2l_1_60_431" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Student Success Specialists"></d2l-menu-item>
+					<d2l-menu-item text="Support for Math, Writing, ESL, etc." id="d2l_1_61_816" role="menuitem" tabindex="-1" aria-disabled="false" aria-label="Support for Math, Writing, ESL, etc." last="true"></d2l-menu-item>
 				</d2l-menu>
 			</d2l-menu-item>
 			<d2l-menu-item-separator role="separator"></d2l-menu-item-separator>
@@ -360,17 +363,17 @@
 				</d2l-menu>
 			</d2l-menu-item>
 		</d2l-menu>
-		</div></div><div class="d2l-navigation-s-mobile-menu-focus-trap-end d2l-offscreen" tabindex="0">Menu End</div></div></d2l-labs-navigation></nav></header><div class="d2l-page-message-container"><div class="d2l-page-message d2l-hidden d2l_1_56_879" id="d2l_sessionExpiryWarning"><div style="display:none;" id="d2l_sessionExpiryAlert" role="alert"><div class="d2l-container-icon d2l_1_57_620 d2l_1_58_630">
-			<div class="d2l-container-icon-inner d2l_1_59_956 d2l_1_60_109 d2l_1_61_73 d2l_1_62_782">
+		</div></div><div class="d2l-navigation-s-mobile-menu-focus-trap-end d2l-offscreen" tabindex="0">Menu End</div></div></d2l-labs-navigation></nav></header><div class="d2l-page-message-container"><div class="d2l-page-message d2l-hidden d2l_1_62_243" id="d2l_sessionExpiryWarning"><div style="display:none;" id="d2l_sessionExpiryAlert" role="alert"><div class="d2l-container-icon d2l_1_63_435 d2l_1_64_630">
+			<div class="d2l-container-icon-inner d2l_1_65_386 d2l_1_66_249 d2l_1_67_304 d2l_1_68_153">
 				<h2 class="d2l-heading vui-heading-2">Are You Still There?</h2>
 				<div class="d2l-textblock">Your session expires after 180 minutes of inactivity, which protects your information in case you've left your device without logging out.<br>
 <br>
 <strong>Hit a key or click anywhere to stay logged in.</strong></div>
 			</div>
 		</div>
-		</div><div style="display:none;" id="d2l_sessionExpiryCheck" role="alert"><div class="d2l-container-icon d2l_1_57_620 d2l_1_58_630">
-			<div class="d2l-container-icon-inner d2l_1_63_702 d2l_1_60_109 d2l_1_61_73 d2l_1_62_782">
-				<div class="d2l_1_64_702">
+		</div><div style="display:none;" id="d2l_sessionExpiryCheck" role="alert"><div class="d2l-container-icon d2l_1_63_435 d2l_1_64_630">
+			<div class="d2l-container-icon-inner d2l_1_69_60 d2l_1_66_249 d2l_1_67_304 d2l_1_68_153">
+				<div class="d2l_1_70_621">
 					<h2 class="d2l-heading vui-heading-2 d2l-heading-none">Oh, There You Are!</h2>
 				</div>
 			</div>
@@ -383,21 +386,21 @@
 			</div>
 		</div>
 		<div class="d2l-twopanelselector-wrapper d2l-max-width d2l-min-width d2l-repsonsive-collapse-layout">
-			<div class="d2l-box-layout d2l_1_65_296">
-				<div class="d2l-box d2l-box-h d2l-twopanelselector-side d2l-twopanelselector-side-sep d2l-repsonsive-collapse-layout d2l-twopanelselector-padding d2l_1_66_219">
+			<div class="d2l-box-layout d2l_1_71_690">
+				<div class="d2l-box d2l-box-h d2l-twopanelselector-side d2l-twopanelselector-side-sep d2l-repsonsive-collapse-layout d2l-twopanelselector-padding d2l_1_72_906">
 					<div class="d2l-page-search" role="search" aria-label="topics">
 						<div class="d2l-search-simple-wc" data-on-search="D2L.O(&quot;__g1&quot;,5)()" data-on-clear="D2L.O(&quot;__g1&quot;,6)()"><d2l-input-search id="Content_Search" class="d2l-search-simple-wc-input" label="topics" value="" placeholder="Search Topics"></d2l-input-search></div>
 					</div>
 					<div class="d2l-twopanelselector-side-padding">
 						<div id="ContentModuleTree" class="d2l-placeholder" role="navigation" aria-labelledby="ContentModuleTreeNavLabel">
 							<div id="ContentTreePlaceholder" class="d2l-placeholder">
-								<ul id="ContentPluginTree" class="d2l-le-TreeAccordion"><li id="ContentPluginTree_Overview" data-key="Overview" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,7)();" id="d2l_1_67_533"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								<ul id="ContentPluginTree" class="d2l-le-TreeAccordion"><li id="ContentPluginTree_Overview" data-key="Overview" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,7)();" id="d2l_1_73_188"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
 										<h2 class="d2l-heading vui-offscreen">Overview</h2>
-										<d2l-icon icon="tier2:syllabus" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_69_548 d2l-inline">
+										<d2l-icon icon="tier2:syllabus" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_75_560 d2l-inline">
 											<div id="TreeItemOverview" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Overview</div>
+												<div class="d2l-textblock d2l_1_76_716">Overview</div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
@@ -405,17 +408,17 @@
 								</div>
 								</div>
 								</a></li>
-								<li id="ContentPluginTree_cc011b9f-3f95-4e3d-ab5d-33f3ed5690e3" data-key="cc011b9f-3f95-4e3d-ab5d-33f3ed5690e3" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,8)();" id="d2l_1_71_764"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								<li id="ContentPluginTree_cc011b9f-3f95-4e3d-ab5d-33f3ed5690e3" data-key="cc011b9f-3f95-4e3d-ab5d-33f3ed5690e3" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,8)();" id="d2l_1_77_378"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
 										<h2 class="d2l-heading vui-offscreen">Bookmarks</h2>
-										<d2l-icon icon="tier2:bookmark-hollow" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_69_548 d2l-inline">
+										<d2l-icon icon="tier2:bookmark-hollow" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_75_560 d2l-inline">
 											<div id="TreeItemcc011b9f3f954e3dab5d33f3ed5690e3" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Bookmarks</div>
+												<div class="d2l-textblock d2l_1_76_716">Bookmarks</div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
-										<div class="d2l_1_72_56">
+										<div class="d2l_1_78_199">
 											<h2 class="d2l-heading vui-offscreen">0 bookmarked topics</h2>
 										</div>
 										<div class="d2l-clear"></div>
@@ -423,19 +426,20 @@
 								</div>
 								</div>
 								</a></li>
-								<li id="ContentPluginTree_Schedule" data-key="Schedule" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,9)();" id="d2l_1_73_26"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								<li id="ContentPluginTree_Schedule" data-key="Schedule" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,9)();" id="d2l_1_79_187"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
 										<h2 class="d2l-heading vui-offscreen">Course Schedule</h2>
-										<d2l-icon icon="tier2:calendar" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_69_548 d2l-inline">
+										<d2l-icon icon="tier2:calendar" class="d2l-tree-browser-icon"></d2l-icon><div class="d2l_1_75_560 d2l-inline">
 											<div id="TreeItemSchedule" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Course Schedule</div>
+												<div class="d2l-textblock d2l_1_76_716">Course Schedule</div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
-										<div class="d2l_1_72_56">
+										<div class="d2l_1_78_199">
 											<div id="UpcomingTreePlaceholder" class="d2l-placeholder">
-												<h2 class="d2l-heading vui-offscreen">0 upcoming events</h2>
+												<div class="d2l_1_80_22">
+													<d2l-count-badge number="1" text="1 Incomplete activities" title="1 upcoming events" max-digits="10" size="large" type="count"></d2l-count-badge></div>
 											</div>
 										</div>
 										<div class="d2l-clear"></div>
@@ -443,54 +447,108 @@
 								</div>
 								</div>
 								</a></li>
-								</ul><ul id="D2L_LE_Content_TreeBrowser" class="d2l-le-TreeAccordion"><li id="D2L_LE_Content_TreeBrowser_TOC" data-key="TOC" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,10)();" id="d2l_1_74_164"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								</ul><ul id="D2L_LE_Content_TreeBrowser" class="d2l-le-TreeAccordion"><li id="D2L_LE_Content_TreeBrowser_TOC" data-key="TOC" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,10)();" id="d2l_1_81_347"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
 										<h2 class="d2l-heading vui-offscreen" id="ContentModuleTreeNavLabel">Table of Contents</h2>
-										<div class="d2l_1_69_548 d2l-inline">
+										<div class="d2l_1_75_560 d2l-inline">
 											<div id="TreeItemTOC" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Table of Contents</div>
+												<div class="d2l-textblock d2l_1_76_716">Table of Contents</div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
-										<div class="d2l_1_72_56">
-											<img class="d2l-image d2l_1_75_517" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
 										</div>
 										<div class="d2l-clear"></div>
 									</div>
 								</div>
 								</div>
 								</a></li>
-								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552843" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552843" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,11)();" id="d2l_1_76_695"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552843" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552843" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root d2l-le-TreeAccordionItem-Active"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,11)();" id="d2l_1_83_397"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
-										<div class="d2l_1_69_548 d2l-inline">
+										<div class="d2l_1_75_560 d2l-inline">
 											<div id="TreeItem12552843" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Course Information</div>
+												<div class="d2l-textblock d2l_1_76_716">Course Information</div>
 												<div class="d2l-textblock d2l-offscreen"> module: contains 0 sub-modules </div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
-										<div class="d2l_1_72_56">
-											<img class="d2l-image d2l_1_75_517" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
 										</div>
 										<div class="d2l-clear"></div>
 									</div>
 								</div>
 								</div>
 								</a></li>
-								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552839" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552839" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root d2l-le-TreeAccordionItem-SelectedRoot d2l-le-TreeAccordionItem-Selected"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,12)();" id="d2l_1_77_618"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
-								<div class="d2l_1_68_629">
+								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552836" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552836" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,12)();" id="d2l_1_84_912"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
 									<div>
-										<div class="d2l_1_69_548 d2l-inline">
-											<div id="TreeItem12552839" class="d2l-placeholder">
-												<div class="d2l-textblock d2l_1_70_76">Labs</div>
+										<div class="d2l_1_75_560 d2l-inline">
+											<div id="TreeItem12552836" class="d2l-placeholder">
+												<div class="d2l-textblock d2l_1_76_716">Lectures</div>
+												<div class="d2l-textblock d2l-offscreen"> module: contains 1 sub-modules </div>
+												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
+											</div>
+										</div>
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										</div>
+										<div class="d2l-clear"></div>
+									</div>
+								</div>
+								</div>
+								</a><ul id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552836_children" class="d2l-le-TreeAccordionGroup d2l-hidden"><li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552845" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552845" class="d2l-le-TreeAccordionItem"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,13)();" id="d2l_1_85_79"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_86_142">
+									<div>
+										<div class="d2l_1_75_560 d2l-inline">
+											<div id="TreeItem12552845" class="d2l-placeholder">
+												<div class="d2l-textblock d2l_1_76_716">Week 1 - Introduction to Machine Vision</div>
 												<div class="d2l-textblock d2l-offscreen"> module: contains 0 sub-modules </div>
 												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
 											</div>
 										</div>
-										<div class="d2l_1_72_56">
-											<img class="d2l-image d2l_1_75_517" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										</div>
+										<div class="d2l-clear"></div>
+									</div>
+								</div>
+								</div>
+								</a></li>
+								</ul></li>
+								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552838" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552838" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,14)();" id="d2l_1_87_836"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
+									<div>
+										<div class="d2l_1_75_560 d2l-inline">
+											<div id="TreeItem12552838" class="d2l-placeholder">
+												<div class="d2l-textblock d2l_1_76_716">Asynchronous material</div>
+												<div class="d2l-textblock d2l-offscreen"> module: contains 0 sub-modules </div>
+												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
+											</div>
+										</div>
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
+										</div>
+										<div class="d2l-clear"></div>
+									</div>
+								</div>
+								</div>
+								</a></li>
+								<li id="D2L_LE_Content_TreeBrowser_D2L.LE.Content.ContentObject.ModuleCO-12552839" data-key="D2L.LE.Content.ContentObject.ModuleCO-12552839" class="d2l-le-TreeAccordionItem d2l-le-TreeAccordionItem-Root d2l-le-TreeAccordionItem-SelectedRoot d2l-le-TreeAccordionItem-Selected"><a class="d2l-le-TreeAccordionItem-anchor vui-heading-4" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,15)();" id="d2l_1_88_169"><div class="d2l-le-TreeAccordionItem-wrapper d2l-body-compact">
+								<div class="d2l_1_74_46">
+									<div>
+										<div class="d2l_1_75_560 d2l-inline">
+											<div id="TreeItem12552839" class="d2l-placeholder">
+												<div class="d2l-textblock d2l_1_76_716">Labs</div>
+												<div class="d2l-textblock d2l-offscreen"> module: contains 0 sub-modules </div>
+												<div class="d2l-textblock d2l-offscreen d2l-tree-item-selected">selected</div>
+											</div>
+										</div>
+										<div class="d2l_1_78_199">
+											<img class="d2l-image d2l_1_82_792" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="All tasks are completed" title="All tasks are completed">
 										</div>
 										<div class="d2l-clear"></div>
 									</div>
@@ -503,37 +561,37 @@
 						</div>
 					</div>
 				</div>
-				<div class="d2l-box d2l-box-h d2l-twopanelselector-main d2l-page-main d2l-twopanelselector-padding d2l_1_66_219" role="main">
+				<div class="d2l-box d2l-box-h d2l-twopanelselector-main d2l-page-main d2l-twopanelselector-padding d2l_1_72_906" role="main">
 					<div id="d2l_two_panel_selector_main" class="d2l-placeholder d2l-placeholder-inner d2l-placeholder-live" aria-live="assertive">
 						<div class="d2l-twopanelselector-main-padding">
 							<div class="d2l-page-header">
-								<div class="d2l-box-layout d2l_1_65_296">
-									<div class="d2l-box d2l-box-v d2l-header-top d2l_1_78_652">
-										<div class="d2l-box-layout d2l_1_65_296">
-											<div class="d2l-box d2l-box-h d2l_1_79_899 d2l_1_78_652">
-												<div class="d2l-page-title-c"><div class="d2l-box-layout d2l_1_80_544">
-													<div class="d2l-box d2l-box-h d2l_1_79_899 d2l_1_78_652">
+								<div class="d2l-box-layout d2l_1_71_690">
+									<div class="d2l-box d2l-box-v d2l-header-top d2l_1_89_546">
+										<div class="d2l-box-layout d2l_1_71_690">
+											<div class="d2l-box d2l-box-h d2l_1_90_462 d2l_1_89_546">
+												<div class="d2l-page-title-c"><div class="d2l-box-layout d2l_1_91_247">
+													<div class="d2l-box d2l-box-h d2l_1_90_462 d2l_1_89_546">
 														<h1 class="d2l-page-title d2l-heading bsi-set-solid vui-heading-1">Labs</h1>
-														<div id="d2l_1_81_323" class="d2l-floating-container d2l-hidden ">
-															<template id="d2l_pageTitleActions" class="d2l-contextmenu-template" data-floating-container-id="d2l_1_81_323" data-dropdown-content-id="d2l_1_82_379">
+														<div id="d2l_1_92_563" class="d2l-floating-container d2l-hidden ">
+															<template id="d2l_pageTitleActions" class="d2l-contextmenu-template" data-floating-container-id="d2l_1_92_563" data-dropdown-content-id="d2l_1_93_744">
 															<d2l-menu class="d2l-menu-mvc d2l-contextmenu">
-																<d2l-menu-item text="Download" id="d2l_1_83_822"></d2l-menu-item>
-																<d2l-menu-item text="View Metadata" id="d2l_1_84_606"></d2l-menu-item>
+																<d2l-menu-item text="Download" id="d2l_1_94_320"></d2l-menu-item>
+																<d2l-menu-item text="View Metadata" id="d2l_1_95_262"></d2l-menu-item>
 															</d2l-menu>
 															</template>
-														</div><d2l-dropdown-context-menu no-auto-open="" text="Actions for 'Labs'" id="d2l_1_6_476" class="d2l-contextmenu-ph d2l-contextmenu-ph-dropdown" data-contextmenuid="d2l_pageTitleActions" data-placeholderkey="d2l_1_85_806" animation-type="opacity-transform"></d2l-dropdown-context-menu>
+														</div><d2l-dropdown-context-menu no-auto-open="" text="Actions for 'Labs'" id="d2l_1_12_168" class="d2l-contextmenu-ph d2l-contextmenu-ph-dropdown" data-contextmenuid="d2l_pageTitleActions" data-placeholderkey="d2l_1_96_714" animation-type="opacity-transform"></d2l-dropdown-context-menu>
 														<div class="d2l-clear"></div>
 													</div>
 												</div>
 												</div></div>
-											<div class="d2l-box d2l-box-h d2l-header-actions d2l_1_78_652">
+											<div class="d2l-box d2l-box-h d2l-header-actions d2l_1_89_546">
 												<div class="page-action-group"><d2l-dropdown-more text="Utilities" animation-type="opacity-transform"><d2l-dropdown-menu no-pointer="" vertical-offset="12" popover="manual" dropdown-content=""><d2l-menu label="Utilities" class="d2l-menu-mvc" active="" aria-label="Utilities" role="menu">
-													<d2l-menu-item text="Print" id="d2l_1_86_521" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Print" first="true" last="true"></d2l-menu-item>
+													<d2l-menu-item text="Print" id="d2l_1_97_210" role="menuitem" tabindex="0" aria-disabled="false" aria-label="Print" first="true" last="true"></d2l-menu-item>
 												</d2l-menu>
 												</d2l-dropdown-menu></d2l-dropdown-more>
 												</div><div class="d2l-page-actions d2l-page-actions-responsive" role="region" aria-label="Utilities">
 													<div class="d2l-button-subtle-group">
-														<d2l-button-subtle icon="tier1:print" id="d2l_1_12_55" onclick="D2L.O(&quot;__g1&quot;,13)();" text="Print" type="button"></d2l-button-subtle>
+														<d2l-button-subtle icon="tier1:print" id="d2l_1_18_939" onclick="D2L.O(&quot;__g1&quot;,16)();" text="Print" type="button"></d2l-button-subtle>
 													</div>
 												</div>
 											</div>
@@ -541,44 +599,44 @@
 									</div>
 								</div>
 							</div>
-							<div class="d2l-messagearea d2l_1_87_744" id="d2l_messagearea" role="alert" tabindex="0"></div><div class="d2l-htmlblock-untrusted"><d2l-html-block html=""></d2l-html-block></div><div id="placeholderid12552839" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
-								<div class="d2l_1_88_335">
-									<button type="button" class="d2l-button" id="d2l_1_89_365"><span class="d2l-icon-custom d2l_1_91_326"></span>Download</button></div>
+							<div class="d2l-messagearea d2l_1_98_837" id="d2l_messagearea" role="alert" tabindex="0"></div><div class="d2l-htmlblock-untrusted"><d2l-html-block html=""></d2l-html-block></div><div id="placeholderid12552839" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+								<div class="d2l_1_99_269">
+									<button type="button" class="d2l-button" id="d2l_1_100_73"><span class="d2l-icon-custom d2l_1_102_867"></span>Download</button></div>
 								<div class="d2l-clear"></div>
 							</div>
-							<div id="d2l_1_7_627" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
+							<div id="d2l_1_13_128" class="d2l-placeholder d2l-placeholder-live" aria-live="assertive">
 								<div class="d2l-sep d2l-sep-t" aria-hidden="true"><hr></div>
-								<div class="d2l-chart d2l_1_93_594"><div class="d2l-progresschart d2l_1_79_899 d2l_1_94_27" data-maximum="1" data-resize="true" id="d2l_1_92_238"><svg height="20" version="1.1" width="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; left: -0.5px" viewBox="0 0 849 20" preserveAspectRatio="none"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs><path fill="#ffffff" stroke="#cdd5dc" d="M4,0H843A4,4,0,0,1,847,4V14A4,4,0,0,1,843,18H4A4,4,0,0,1,0,14V4A4,4,0,0,1,4,0" transform="matrix(1,0,0,1,1,1)" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><a xlink:title="1 of 1 topics complete" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect x="4" y="4" width="839" height="10" r="0" rx="2" ry="2" fill="#006fbf" stroke="#006fbf" transform="matrix(1,0,0,1,1,1)" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect></a></svg></div>
-								<div class="progressChartLabel"><div class="d2l_1_95_150">
-									<span class="d2l-textblock d2l-textblock-strong d2l_1_96_279">100 %</span><span class="d2l-textblock">1 of 1 topics complete</span></div>
-								</div><button type="button" class="d2l-button d2l-offscreen d2l-chart-accessible-button" id="d2l_1_98_47">Show data table for This chart displays the number of completed topics versus the total number of topics within module Labs..</button><table id="d2l_1_97_773" class="d2l-hidden d2l-chart-accessibletable" summary="This chart displays the number of completed topics versus the total number of topics within module Labs."><thead><tr><th scope="col">Topic Completion</th><th scope="col">Number of Tasks Completed</th><th scope="col">Pace value</th><th scope="col">Item status</th><th scope="col">Tooltip</th></tr></thead><tbody><tr class="d2l-chartdatarow" data-fill="#006FBF" data-stroke="#006FBF" data-tooltip="1 of 1 topics complete"><th scope="row" class="d2l-chart-labelitem">Completion</th><td class="d2l-chart-value">1</td><td class="d2l-chart-pace">0</td><td class="d2l-chart-status">Success</td><td class="d2l-chart-tooltip">1 of 1 topics complete</td></tr>
+								<div class="d2l-chart d2l_1_104_77"><div class="d2l-progresschart d2l_1_90_462 d2l_1_105_869" data-maximum="1" data-resize="true" id="d2l_1_103_243"><svg height="20" version="1.1" width="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; left: -0.5px" viewBox="0 0 849 20" preserveAspectRatio="none"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></defs><path fill="#ffffff" stroke="#cdd5dc" d="M4,0H843A4,4,0,0,1,847,4V14A4,4,0,0,1,843,18H4A4,4,0,0,1,0,14V4A4,4,0,0,1,4,0" transform="matrix(1,0,0,1,1,1)" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><a xlink:title="1 of 1 topics complete" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><rect x="4" y="4" width="839" height="10" r="0" rx="2" ry="2" fill="#006fbf" stroke="#006fbf" transform="matrix(1,0,0,1,1,1)" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect></a></svg></div>
+								<div class="progressChartLabel"><div class="d2l_1_106_18">
+									<span class="d2l-textblock d2l-textblock-strong d2l_1_107_488">100 %</span><span class="d2l-textblock">1 of 1 topics complete</span></div>
+								</div><button type="button" class="d2l-button d2l-offscreen d2l-chart-accessible-button" id="d2l_1_109_133">Show data table for This chart displays the number of completed topics versus the total number of topics within module Labs..</button><table id="d2l_1_108_129" class="d2l-hidden d2l-chart-accessibletable" summary="This chart displays the number of completed topics versus the total number of topics within module Labs."><thead><tr><th scope="col">Topic Completion</th><th scope="col">Number of Tasks Completed</th><th scope="col">Pace value</th><th scope="col">Item status</th><th scope="col">Tooltip</th></tr></thead><tbody><tr class="d2l-chartdatarow" data-fill="#006FBF" data-stroke="#006FBF" data-tooltip="1 of 1 topics complete"><th scope="row" class="d2l-chart-labelitem">Completion</th><td class="d2l-chart-value">1</td><td class="d2l-chart-pace">0</td><td class="d2l-chart-status">Success</td><td class="d2l-chart-tooltip">1 of 1 topics complete</td></tr>
 								</tbody></table></div>
 							</div>
 							<h2 class="d2l-heading vui-offscreen">List of Topics and Sub-Modules for Labs</h2>
-							<div id="d2l_1_101_893" class="d2l-placeholder">
-								<div class="d2l_1_102_470">
-									<div id="d2l_1_100_55" class="d2l-datalist-container d2l-datalist-style1" data-moved-item-down="Moved item down to position {reorderPosition}" data-moved-item-up="Moved item up to position {reorderPosition}" data-d2l-actionable-ns="D2L.LP.Web.UI.Desktop.Controls.DataList"><div class="d2l-datalist-summary d2l-hidden"><span class="d2l-datalist-summary-count-nosearch-plural d2l-hidden">{count} items shown</span><span class="d2l-datalist-summary-count-nosearch-singular d2l-hidden">1 item shown</span><span class="d2l-datalist-summary-count-selected-plural d2l-hidden"><strong>{count}</strong> items selected</span><span class="d2l-datalist-summary-count-selected-singular d2l-hidden"><strong>1</strong> item selected</span><span class="d2l-datalist-summary-count-all-selected d2l-hidden">All items selected.</span><a class="d2l-link d2l-datalist-summary-clear d2l-hidden" aria-label="" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,16)();return false;">Clear Selection</a>
+							<div id="d2l_1_112_850" class="d2l-placeholder">
+								<div class="d2l_1_113_11">
+									<div id="d2l_1_111_644" class="d2l-datalist-container d2l-datalist-style1" data-moved-item-down="Moved item down to position {reorderPosition}" data-moved-item-up="Moved item up to position {reorderPosition}" data-d2l-actionable-ns="D2L.LP.Web.UI.Desktop.Controls.DataList"><div class="d2l-datalist-summary d2l-hidden"><span class="d2l-datalist-summary-count-nosearch-plural d2l-hidden">{count} items shown</span><span class="d2l-datalist-summary-count-nosearch-singular d2l-hidden">1 item shown</span><span class="d2l-datalist-summary-count-selected-plural d2l-hidden"><strong>{count}</strong> items selected</span><span class="d2l-datalist-summary-count-selected-singular d2l-hidden"><strong>1</strong> item selected</span><span class="d2l-datalist-summary-count-all-selected d2l-hidden">All items selected.</span><a class="d2l-link d2l-datalist-summary-clear d2l-hidden" aria-label="" href="javascript:void(0);" onclick="D2L.O(&quot;__g1&quot;,19)();return false;">Clear Selection</a>
 									<div class="d2l-clear"></div>
 									</div>
 									<ul class="d2l-datalist vui-list">
-										<li class="d2l-datalist-item d2l-datalist-simpleitem d2l-datalist-lastchild" id="d2l_1_103_473">
+										<li class="d2l-datalist-item d2l-datalist-simpleitem d2l-datalist-lastchild" id="d2l_1_114_722">
 											<div class="d2l-datalist-item-content">
 												<div>
-													<div id="d2l_1_104_943" class="d2l-placeholder">
-														<div class="d2l_1_113_730 d2l-inline d2l-topic-view">
-															<div class="d2l_1_66_219 d2l_1_114_411 d2l_1_115_785 d2l_1_116_693 d2l-inline">
+													<div id="d2l_1_115_83" class="d2l-placeholder">
+														<div class="d2l_1_124_597 d2l-inline d2l-topic-view">
+															<div class="d2l_1_72_906 d2l_1_125_374 d2l_1_126_126 d2l_1_127_162 d2l-inline">
 																<a class="d2l-link" aria-label="" id="d2l_content_846092_12724069" href="/d2l/le/content/846092/viewContent/12724069/View" title="'CST8508_26W_Lab1' - IPYNB File">CST8508_26W_Lab1</a>
-																<div class="d2l-container-icon d2l_1_57_620 d2l_1_117_959 d2l_1_118_96 d2l_1_119_894 d2l_1_120_773 d2l_1_62_782">
+																<div class="d2l-container-icon d2l_1_63_435 d2l_1_128_866 d2l_1_129_782 d2l_1_130_844 d2l_1_131_506 d2l_1_68_153">
 																	<div class="d2l-textblock d2l-body-small">IPYNB File</div>
 																</div>
 															</div>
-															<div id="d2l_1_106_546_cmodph" class="d2l-placeholder d2l-contextmenu-ondemand-ph d2l-placeholder-live" aria-live="assertive">
+															<div id="d2l_1_117_845_cmodph" class="d2l-placeholder d2l-contextmenu-ondemand-ph d2l-placeholder-live" aria-live="assertive">
 															</div>
-															<d2l-dropdown-context-menu no-auto-open="" text="Actions for 'CST8508_26W_Lab1'" id="d2l_1_121_473" class="d2l-contextmenu-ph d2l-contextmenu-ph-dropdown" data-contextmenuid="d2l_1_106_546" data-placeholderkey="12724069" animation-type="opacity-transform"></d2l-dropdown-context-menu>
+															<d2l-dropdown-context-menu no-auto-open="" text="Actions for 'CST8508_26W_Lab1'" id="d2l_1_132_539" class="d2l-contextmenu-ph d2l-contextmenu-ph-dropdown" data-contextmenuid="d2l_1_117_845" data-placeholderkey="12724069" animation-type="opacity-transform"></d2l-dropdown-context-menu>
 														</div>
-														<div class="d2l_1_72_56 d2l_1_122_198">
+														<div class="d2l_1_78_199 d2l_1_133_929">
 															<div class=" d2l-inline d2l-hidden">
-																<div class="d2l-textblock d2l_1_123_264">Updated</div>
+																<div class="d2l-textblock d2l_1_134_114">Updated</div>
 															</div>
 															<img class="d2l-image" src="https://s.brightspace.com/lib/bsi/2025.12.237/images/tier2/check.svg" style="width:24px;height:24px;" alt="You have viewed this topic" title="You have viewed this topic">
 														</div>
@@ -590,7 +648,7 @@
 										</li>
 									</ul>
 									</div>
-									<button type="button" class="d2l-button d2l-loadmore-pager d2l-hidden" id="d2l_1_124_507">Load More</button></div>
+									<button type="button" class="d2l-button d2l-loadmore-pager d2l-hidden" id="d2l_1_135_651">Load More</button></div>
 							</div>
 						</div>
 					</div>
@@ -650,28 +708,28 @@ window['DisplayInSecondaryPosition'] = false;
 		<script src="https://s.brightspace.com/lib/eus-widget/3.1.1/forethoughtscript.js"></script>
 		<script>
 		D2L.LP.Web.UI.Events.OnInit.AddListener( function() {
-D2L.O("__g1",19)();
-D2L.O("__g1",20)();
-D2L.O("__g1",21)();
 D2L.O("__g1",22)();
 D2L.O("__g1",23)();
 D2L.O("__g1",24)();
 D2L.O("__g1",25)();
 D2L.O("__g1",26)();
 D2L.O("__g1",27)();
+D2L.O("__g1",28)();
+D2L.O("__g1",29)();
+D2L.O("__g1",30)();
 } );
 
 		D2L.LP.Web.UI.Events.OnLoad.AddListener( function() {
-D2L.O("__g1",28)();
-D2L.O("__g1",29)();
+D2L.O("__g1",31)();
+D2L.O("__g1",32)();
 } );
 
 		D2L.OR={
-"d2l_1_13_186":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_19_126":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_14_469":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_20_519":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_15_25":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_21_362":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
 "__g1":{"0":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.ReturnPoints.Set\",\"P\":[\"D2L.UXP.Profile.201270\"]}",
 "1":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.ReturnPoints.Set\",\"P\":[\"D2L.LP.Notification.Settings.846092\"]}",
@@ -683,104 +741,107 @@ D2L.O("__g1",29)();
 "7":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/PartialMainView?identifier=Overview&moduleTitle=Overview\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
 "8":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/PartialMainView?identifier=cc011b9f-3f95-4e3d-ab5d-33f3ed5690e3&moduleTitle=Bookmarks\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
 "9":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/PartialMainView?identifier=Schedule&moduleTitle=Course+Schedule\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
-"10":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/PartialMainView?identifier=TOC&moduleTitle=Table+of+Contents\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
-"11":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552843&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
-"12":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552839&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
-"13":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"print\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/printsyllabus\/PrintSyllabus\"},770,800,false,false,null,false]}",
-"14":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.VS\",\"P\":[\"DownloadProgressDialogResultJSVariable\",{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Open\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_89_365\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/12552839\/startdownload\/InitiateModuleDownload?openerId=d2l_1_89_365\"}],\"D\":true}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.If\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.CompareNumber\",\"P\":[5,{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]},0]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.Mvc.RouteLocation.Create\",\"P\":[\"\/d2l\/le\/content\/{orgUnitId}\/downloads\/{downloadType}\/{jobId}\/{action}\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"action\":\"Download\",\"orgUnitId\":846092,\"downloadType\":\"Module\",\"jobId\":{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]}}]}]},true,null],\"D\":true}]}",
-"15":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Charting.ChartPopup.PopupChartTable\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/charts\/popup\/\"},\"d2l_1_97_773\",\"This chart displays the number of completed topics versus the total number of topics within module Labs.\"]}",
-"16":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll.SetSelectionInfo\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.Summary.GetSelectAllIdByDataListId\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_100_55\"}]},{\"_type\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll+SelectionInfo\",\"type\":0,\"values\":\"\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll.SetIsSelectionReadOnly\",\"P\":[{\"_type\":\"D2L.LP.Web.UI.Html.AbsoluteHtmlId\",\"Value\":\"d2l_1_100_55$selection\"},false]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.CheckboxItems.SetIsSelectionReadOnly\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_100_55\"},false]}]}",
-"17":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderId\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderId\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/GetContextMenuHandler?objectId=12724069\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"LoadInfo\":{\"_type\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemandLoadArgs\",\"PlaceholderKey\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderKey\"},\"ContextMenuId\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentId\"}},\"PlaceholderId\":\"d2l_1_104_943\",\"DataListItemId\":\"d2l_1_103_473\",\"ShowCompletionSelector\":true,\"ShowRestrictions\":true,\"PublishReadonly\":true,\"EditMode\":false},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true},0,false,null],\"D\":true}",
-"18":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.LoadMorePager.LoadMore\",\"P\":[\"d2l_1_124_507\"]}",
-"19":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.FloatingContainer.Init\"}",
-"20":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.LoadMorePager.Init\",\"P\":[\"d2l_1_124_507\",{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.Get\"},{\"_type\":\"id\",\"Value\":\"d2l_1_100_55\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.SetIsDisplayed\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_124_507\"},true]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.SetIsDisplayed\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_124_507\"},false]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Button.SetText\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_124_507\"},\"Loading...\"]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Button.SetText\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_124_507\"},\"Load More\"]}]}",
-"21":"{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.Init\",\"P\":[\"201270\",180,5,{\"_type\":\"id\",\"Value\":\"d2l_sessionExpiryWarning\"},\"d2l_sessionExpiryAlert\",\"d2l_sessionExpiryCheck\",{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectObject\",\"P\":[\"POST\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/extend\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=0&isUsernamePasswordLogin=0&userId=201270\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=1&isUsernamePasswordLogin=0&userId=201270\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.ConfirmDialog\",\"P\":[null,{\"_type\":\"id\",\"Value\":\"d2l_1_125_748\"},\"New User Session\",\"\",\"The current user session has changed, so the links and content on this page may not behave as expected.\",\"OK\",\"\",true,false,false,true,false],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Confirm.Abort\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_125_748\"}]}]}",
-"22":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.Authentication.Xsrf.Init\",\"P\":[\"d2l_referrer\",\"PNXYsnCJSkOyUCau7mT4b3JBH7ZQTkf3\",-1703776969]}",
-"23":"{\"_type\":\"func\",\"N\":\"D2L.LP.ActivityBar.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/activityFeed\/checkForNewAlerts\"},120]}",
-"24":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.MessageArea.Init\",\"P\":[\"d2l_messagearea\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/validation\/errors\"}]}",
-"25":"{\"_type\":\"func\",\"N\":\"D2L.LP.Globalization.Locale.Init\",\"P\":[{\"_type\":\"anon\",\"DecimalSeparator\":\".\",\"GroupSeparator\":\",\",\"NumberNegativePattern\":1,\"PercentPositivePattern\":0,\"PercentNegativePattern\":0,\"PercentSymbol\":\"%\",\"NegativeSign\":\"-\",\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"GroupSizes\":[3],\"IntegerRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)?))[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]+[\\\\)-]*)$\",\"DecimalRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)))(\\\\.[01234567890123456789]+)?[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]*\\\\.?[01234567890123456789]+[\\\\)-]*)$\"},{\"_type\":\"anon\",\"InputDateFormat\":\"M\/d\/yyyy\",\"Is24HourClock\":false,\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"TimeFormat\":\"h:mm tt\",\"AmDesignator\":\"AM\",\"PmDesignator\":\"PM\",\"FirstDayOfWeek\":0,\"ShortMonthNames\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\",\"\"],\"LongMonthNames\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\",\"\"],\"ShortDayOfWeekNames\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},{\"_type\":\"anon\",\"TextDirection\":1},{\"_type\":\"anon\",\"Culture\":\"en-ca\"},{\"_type\":\"anon\",\"JustNow\":\"just now\",\"OneMinuteAgo\":\"1 minute ago\",\"TwoMinutesAgo\":\"2 minutes ago\",\"MinutesAgoMany\":\"[0] minutes ago\",\"OneHourAgo\":\"1 hour ago\",\"TwoHoursAgo\":\"2 hours ago\",\"ManyHoursAgo\":\"[0] hours ago\",\"YesterdayTime\":\"yesterday at [0]\",\"DayOfWeekTime\":\"[0] at [1]\",\"MonthDayTime\":\"[0] at [1]\",\"Now\":{\"_type\":\"D2L.LocalDateTime\",\"Year\":2026,\"Month\":1,\"Day\":14,\"Hour\":16,\"Minute\":37,\"Second\":14,\"Millisecond\":295}}]}",
-"26":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.Initialize\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/login?target=%2fd2l%2fle%2fcontent%2f846092%2fHome%3fitemIdentifier%3dD2L.LE.Content.ContentObject.ModuleCO-12552839&sessionExpired=1\"},\"Error: unable to complete your request.\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"flash\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.FlashMessages.RpcReceivePayloadProvider\"},\"session\":{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.RpcReceivePayloadProvider\"},\"messageArea\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.MessageArea.RpcReceivePayloadProvider\"},\"OR\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.ObjectRepository.RpcReceivePayloadProvider\"},\"JS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveJsPayloadProvider\"},\"CSS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveCssPayloadProvider\"},\"BSI\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Bsi.RpcReceiveJsPayloadProvider\"},\"ariaMessages\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Aria.RpcReceivePayloadProvider\"}}]}",
-"27":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.InlineHelp.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/inlineHelp\/846092\/help\"}]}",
-"28":"{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.SelectTreeNodeFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},\"D2L.LE.Content.ContentObject.ModuleCO-12552839\"]}",
-"29":"{\"_type\":\"func\",\"N\":\"D2L.LE.Content.Desktop.CompletionMethod.RegisterHandler\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"ContentTreePlaceholder\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"ContentTreePlaceholder\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/UpdateTreeBrowser\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true},0,false,null],\"D\":true}]}"}
+"10":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.CollapseNodesFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},[\"D2L.LE.Content.ContentObject.ModuleCO-12552836\"]]},null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/PartialMainView?identifier=TOC&moduleTitle=Table+of+Contents\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"11":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.CollapseNodesFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},[\"D2L.LE.Content.ContentObject.ModuleCO-12552836\"]]},null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552843&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"12":"{\"_type\":\"pipe\",\"P\":[null,{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.ExpandNodeFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},\"D2L.LE.Content.ContentObject.ModuleCO-12552836\"]},{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.CollapseNodesFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},[\"D2L.LE.Content.ContentObject.ModuleCO-12552845\"]]},{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552836&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"13":"{\"_type\":\"pipe\",\"P\":[null,null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552845&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"14":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.CollapseNodesFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},[\"D2L.LE.Content.ContentObject.ModuleCO-12552836\"]]},null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552838&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"15":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.CollapseNodesFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},[\"D2L.LE.Content.ContentObject.ModuleCO-12552836\"]]},null,null,{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.ScrollToElementPosition\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_two_panel_selector_main\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/ModuleDetailsPartial?mId=12552839&writeHistoryEntry=1\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Title.RefreshDocumentTitle\",\"P\":[\"26W_CST8508_100_101_102 Machine Vision\"]}]}]}",
+"16":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"print\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/printsyllabus\/PrintSyllabus\"},770,800,false,false,null,false]}",
+"17":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.VS\",\"P\":[\"DownloadProgressDialogResultJSVariable\",{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Open\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_100_73\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/12552839\/startdownload\/InitiateModuleDownload?openerId=d2l_1_100_73\"}],\"D\":true}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.If\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.CompareNumber\",\"P\":[5,{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]},0]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.Mvc.RouteLocation.Create\",\"P\":[\"\/d2l\/le\/content\/{orgUnitId}\/downloads\/{downloadType}\/{jobId}\/{action}\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"action\":\"Download\",\"orgUnitId\":846092,\"downloadType\":\"Module\",\"jobId\":{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]}}]}]},true,null],\"D\":true}]}",
+"18":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Charting.ChartPopup.PopupChartTable\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/charts\/popup\/\"},\"d2l_1_108_129\",\"This chart displays the number of completed topics versus the total number of topics within module Labs.\"]}",
+"19":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll.SetSelectionInfo\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.Summary.GetSelectAllIdByDataListId\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_111_644\"}]},{\"_type\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll+SelectionInfo\",\"type\":0,\"values\":\"\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.SelectAll.SetIsSelectionReadOnly\",\"P\":[{\"_type\":\"D2L.LP.Web.UI.Html.AbsoluteHtmlId\",\"Value\":\"d2l_1_111_644$selection\"},false]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.CheckboxItems.SetIsSelectionReadOnly\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_111_644\"},false]}]}",
+"20":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderId\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderId\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/GetContextMenuHandler?objectId=12724069\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"LoadInfo\":{\"_type\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemandLoadArgs\",\"PlaceholderKey\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentPlaceholderKey\"},\"ContextMenuId\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenuOnDemand.GetCurrentId\"}},\"PlaceholderId\":\"d2l_1_115_83\",\"DataListItemId\":\"d2l_1_114_722\",\"ShowCompletionSelector\":true,\"ShowRestrictions\":true,\"PublishReadonly\":true,\"EditMode\":false},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true},0,false,null],\"D\":true}",
+"21":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.LoadMorePager.LoadMore\",\"P\":[\"d2l_1_135_651\"]}",
+"22":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.FloatingContainer.Init\"}",
+"23":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.LoadMorePager.Init\",\"P\":[\"d2l_1_135_651\",{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.DataList.Get\"},{\"_type\":\"id\",\"Value\":\"d2l_1_111_644\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.SetIsDisplayed\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_135_651\"},true]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.SetIsDisplayed\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_135_651\"},false]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Button.SetText\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_135_651\"},\"Loading...\"]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.Button.SetText\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_135_651\"},\"Load More\"]}]}",
+"24":"{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.Init\",\"P\":[\"201270\",180,5,{\"_type\":\"id\",\"Value\":\"d2l_sessionExpiryWarning\"},\"d2l_sessionExpiryAlert\",\"d2l_sessionExpiryCheck\",{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectObject\",\"P\":[\"POST\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/extend\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=0&isUsernamePasswordLogin=0&userId=201270\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.OpenHelper\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.Dom.GetActiveElement\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/auth\/session\/Expired?isLogout=1&isUsernamePasswordLogin=0&userId=201270\"}],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.ConfirmDialog\",\"P\":[null,{\"_type\":\"id\",\"Value\":\"d2l_1_136_478\"},\"New User Session\",\"\",\"The current user session has changed, so the links and content on this page may not behave as expected.\",\"OK\",\"\",true,false,false,true,false],\"D\":true},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Confirm.Abort\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_136_478\"}]}]}",
+"25":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.Authentication.Xsrf.Init\",\"P\":[\"d2l_referrer\",\"rcCu4xZ1XR48NnYWy6AXdrf00cOFvta9\",-934390986]}",
+"26":"{\"_type\":\"func\",\"N\":\"D2L.LP.ActivityBar.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/activityFeed\/checkForNewAlerts\"},120]}",
+"27":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.MessageArea.Init\",\"P\":[\"d2l_messagearea\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/validation\/errors\"}]}",
+"28":"{\"_type\":\"func\",\"N\":\"D2L.LP.Globalization.Locale.Init\",\"P\":[{\"_type\":\"anon\",\"DecimalSeparator\":\".\",\"GroupSeparator\":\",\",\"NumberNegativePattern\":1,\"PercentPositivePattern\":0,\"PercentNegativePattern\":0,\"PercentSymbol\":\"%\",\"NegativeSign\":\"-\",\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"GroupSizes\":[3],\"IntegerRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)?))[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]+[\\\\)-]*)$\",\"DecimalRegex\":\"^([\\\\(-]*(([01234567890123456789]?[01234567890123456789]?([01234567890123456789](,[01234567890123456789][01234567890123456789][01234567890123456789])*)))(\\\\.[01234567890123456789]+)?[\\\\)-]*)$|^([\\\\(-]*[01234567890123456789]*\\\\.?[01234567890123456789]+[\\\\)-]*)$\"},{\"_type\":\"anon\",\"InputDateFormat\":\"M\/d\/yyyy\",\"Is24HourClock\":false,\"NativeDigits\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\"],\"UseNativeDigits\":false,\"TimeFormat\":\"h:mm tt\",\"AmDesignator\":\"AM\",\"PmDesignator\":\"PM\",\"FirstDayOfWeek\":0,\"ShortMonthNames\":[\"Jan\",\"Feb\",\"Mar\",\"Apr\",\"May\",\"Jun\",\"Jul\",\"Aug\",\"Sep\",\"Oct\",\"Nov\",\"Dec\",\"\"],\"LongMonthNames\":[\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\",\"\"],\"ShortDayOfWeekNames\":[\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thu\",\"Fri\",\"Sat\"]},{\"_type\":\"anon\",\"TextDirection\":1},{\"_type\":\"anon\",\"Culture\":\"en-ca\"},{\"_type\":\"anon\",\"JustNow\":\"just now\",\"OneMinuteAgo\":\"1 minute ago\",\"TwoMinutesAgo\":\"2 minutes ago\",\"MinutesAgoMany\":\"[0] minutes ago\",\"OneHourAgo\":\"1 hour ago\",\"TwoHoursAgo\":\"2 hours ago\",\"ManyHoursAgo\":\"[0] hours ago\",\"YesterdayTime\":\"yesterday at [0]\",\"DayOfWeekTime\":\"[0] at [1]\",\"MonthDayTime\":\"[0] at [1]\",\"Now\":{\"_type\":\"D2L.LocalDateTime\",\"Year\":2026,\"Month\":1,\"Day\":15,\"Hour\":16,\"Minute\":34,\"Second\":21,\"Millisecond\":311}}]}",
+"29":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.Initialize\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/login?target=%2fd2l%2fle%2fcontent%2f846092%2fHome%3fitemIdentifier%3dD2L.LE.Content.ContentObject.ModuleCO-12552839&sessionExpired=1\"},\"Error: unable to complete your request.\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"flash\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.FlashMessages.RpcReceivePayloadProvider\"},\"session\":{\"_type\":\"func\",\"N\":\"D2L.PT.Auth.SessionTimeout.RpcReceivePayloadProvider\"},\"messageArea\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.MessageArea.RpcReceivePayloadProvider\"},\"OR\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.ObjectRepository.RpcReceivePayloadProvider\"},\"JS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveJsPayloadProvider\"},\"CSS\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.RpcReceiveCssPayloadProvider\"},\"BSI\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Bsi.RpcReceiveJsPayloadProvider\"},\"ariaMessages\":{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Aria.RpcReceivePayloadProvider\"}}]}",
+"30":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.InlineHelp.Init\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/inlineHelp\/846092\/help\"}]}",
+"31":"{\"_type\":\"func\",\"N\":\"D2L.LE.Web.UI.Desktop.Controls.AccordionTree.SelectTreeNodeFunction\",\"P\":[{\"_type\":\"id\",\"Value\":\"D2L_LE_Content_TreeBrowser\"},\"D2L.LE.Content.ContentObject.ModuleCO-12552839\"]}",
+"32":"{\"_type\":\"func\",\"N\":\"D2L.LE.Content.Desktop.CompletionMethod.RegisterHandler\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialRender\",\"P\":[{\"_type\":\"id\",\"Value\":\"ContentTreePlaceholder\"},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.ConnectPartial\",\"P\":[{\"_type\":\"id\",\"Value\":\"ContentTreePlaceholder\"},\"GET\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/UpdateTreeBrowser\"},{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Web.UI.Rpc.RpcOptions\",\"keepAlive\":true,\"includeXsrfHeader\":false}],\"D\":true},0,false,null],\"D\":true}]}"}
 ,
-"d2l_1_17_608":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_23_855":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_18_163":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
+"d2l_1_24_510":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_19_389":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_25_696":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_20_580":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
+"d2l_1_26_369":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
 ,
-"d2l_1_21_173":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_27_96":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_22_369":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
+"d2l_1_28_97":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_23_742":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
+"d2l_1_29_474":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_24_174":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_30_5":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_25_972":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
+"d2l_1_31_818":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_26_425":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
+"d2l_1_32_14":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_27_402":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
+"d2l_1_33_863":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_28_843":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
+"d2l_1_34_974":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_29_899":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
+"d2l_1_35_485":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_30_411":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_36_298":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_31_512":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
+"d2l_1_37_762":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_32_592":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_38_489":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_33_520":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
+"d2l_1_39_751":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
 ,
-"d2l_1_34_555":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_40_80":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_35_919":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
+"d2l_1_41_958":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_36_947":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
+"d2l_1_42_645":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_37_868":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_43_468":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_38_551":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
+"d2l_1_44_655":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_39_137":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
+"d2l_1_45_322":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_40_224":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
+"d2l_1_46_674":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_41_63":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
+"d2l_1_47_21":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_42_477":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
+"d2l_1_48_303":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_43_749":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_49_698":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2477272&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_44_90":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
+"d2l_1_50_561":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/liveac.algonquincollege.com\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/liveac.algonquincollege.com\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_45_274":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_51_925":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-2972838&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_46_428":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
+"d2l_1_52_676":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/glossary\/glossary.d2l?ou=846092\"},800,600,false,false,null,true]}"}
 ,
-"d2l_1_47_101":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_53_176":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-5466677&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_48_23":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
+"d2l_1_54_693":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=c6ec0542-2d41-48d6-8387-85df19859b7c\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_49_21":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
+"d2l_1_55_428":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\",{\"_type\":\"url\",\"Url\":\"\/d2l\/lms\/remoteplugins\/lti\/launchLti.d2l?ou=846092&pluginId=5176212c-2d8d-486f-b58e-d928ae01009b\"},800,600,true,true,null,true]}"}
 ,
-"d2l_1_50_292":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
+"d2l_1_56_23":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\",{\"_type\":\"url\",\"Url\":\"\/d2l\/common\/dialogs\/quickLink\/quickLink.d2l?ou=846092&type=lti&rcode=5D0A62E3-9FCD-4186-8FE2-4DAA73394FE0-6715524&srcou=6606\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_51_603":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
+"d2l_1_57_51":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/cal\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/cal\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_52_989":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
+"d2l_1_58_199":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\",{\"_type\":\"url\",\"Url\":\"https:\/\/algonquincollege.libguides.com\/student-survival-guide\/brightspace\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_53_846":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
+"d2l_1_59_744":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/policies\/privacy\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_54_184":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
+"d2l_1_60_431":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/academic-success\/home\/student-success-specialist\/\"},0,0,true,true,null,true]}"}
 ,
-"d2l_1_55_189":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
+"d2l_1_61_816":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"https:\/\/www.algonquincollege.com\/slc\",{\"_type\":\"url\",\"Url\":\"https:\/\/www.algonquincollege.com\/slc\"},0,0,true,true,null,true]}"}
 ,
 "ContentModuleTree":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
@@ -798,38 +859,44 @@ D2L.O("__g1",29)();
 ,
 "TreeItem12552843":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
+"TreeItem12552836":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+,
+"TreeItem12552845":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+,
+"TreeItem12552838":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+,
 "TreeItem12552839":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
 "d2l_two_panel_selector_main":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_83_822":{"select":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.VS\",\"P\":[\"DownloadProgressDialogResultJSVariable\",{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Open\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_6_476\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/12552839\/startdownload\/InitiateModuleDownload?openerId=d2l_1_6_476\"}],\"D\":true}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.If\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.CompareNumber\",\"P\":[5,{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]},0]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.Mvc.RouteLocation.Create\",\"P\":[\"\/d2l\/le\/content\/{orgUnitId}\/downloads\/{downloadType}\/{jobId}\/{action}\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"action\":\"Download\",\"orgUnitId\":846092,\"downloadType\":\"Module\",\"jobId\":{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]}}]}]},true,null],\"D\":true}]}"}
+"d2l_1_94_320":{"select":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.VS\",\"P\":[\"DownloadProgressDialogResultJSVariable\",{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.MasterPages.Dialog.Open\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_1_12_168\"},{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/12552839\/startdownload\/InitiateModuleDownload?openerId=d2l_1_12_168\"}],\"D\":true}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.If\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Html.JavaScript.CompareNumber\",\"P\":[5,{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]},0]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"call\",\"N\":\"D2L.LP.Web.Mvc.RouteLocation.Create\",\"P\":[\"\/d2l\/le\/content\/{orgUnitId}\/downloads\/{downloadType}\/{jobId}\/{action}\",{\"_type\":\"D2L.LP.Util.Dictionary\"},{\"_type\":\"D2L.LP.Util.Dictionary\",\"action\":\"Download\",\"orgUnitId\":846092,\"downloadType\":\"Module\",\"jobId\":{\"_type\":\"call\",\"N\":\"D2L.VG\",\"P\":[\"DownloadProgressDialogResultJSVariable\"]}}]}]},true,null],\"D\":true}]}"}
 ,
-"d2l_1_84_606":{"select":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.ReturnPoints.Set\",\"P\":[\"D2L.Core.Metadata.Web.Navigation.GetViewEditMetadataReturnPointKey\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/Home\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/metadata\/view.d2l?fp=mc&ou=846092&type=3&objectId=12552839\"}]}]}"}
+"d2l_1_95_262":{"select":"{\"_type\":\"pipe\",\"P\":[{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.ReturnPoints.Set\",\"P\":[\"D2L.Core.Metadata.Web.Navigation.GetViewEditMetadataReturnPointKey\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/Home\"}]},{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.Navigate\",\"P\":[{\"_type\":\"url\",\"Url\":\"\/d2l\/lp\/metadata\/view.d2l?fp=mc&ou=846092&type=3&objectId=12552839\"}]}]}"}
 ,
-"d2l_1_81_323":{"onClose":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenu.OnCloseHandler\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_pageTitleActions\"}]}"}
+"d2l_1_92_563":{"onClose":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ContextMenu.OnCloseHandler\",\"P\":[{\"_type\":\"id\",\"Value\":\"d2l_pageTitleActions\"}]}"}
 ,
-"d2l_1_86_521":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"print\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/printsyllabus\/PrintSyllabus\"},770,800,false,false,null,false]}"}
+"d2l_1_97_210":{"select":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Html.Dom.OpenWindow\",\"P\":[\"print\",{\"_type\":\"url\",\"Url\":\"\/d2l\/le\/content\/846092\/printsyllabus\/PrintSyllabus\"},770,800,false,false,null,false]}"}
 ,
 "ContentModuleExpandCollapseGroup":{"ItemStateChanged":"{\"_type\":\"func\",\"N\":\"D2L.LP.Web.UI.Rpc.Connect\",\"P\":[\"POST\",{\"_type\":\"call\",\"N\":\"D2L.LP.Web.Mvc.RouteLocation.Create\",\"P\":[\"\/d2l\/le\/content\/{orgUnitId}\/datalist\/{action}\",{\"_type\":\"D2L.LP.Util.Dictionary\",\"moduleId\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ExpandCollapse.GetChangedKey\"},\"isCollapsed\":{\"_type\":\"call\",\"N\":\"D2L.LP.Web.UI.Desktop.Controls.ExpandCollapse.GetChangedState\"}},{\"_type\":\"D2L.LP.Util.Dictionary\",\"action\":\"ChangeModuleCollapseState\",\"orgUnitId\":846092}]}],\"D\":true}"}
 ,
 "placeholderid12552839":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_7_627":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_13_128":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_101_893":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_112_850":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_104_943":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_115_83":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_106_546_cmodph":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_117_845_cmodph":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 ,
-"d2l_1_106_546":{"LoadHandler":"\"D2L.O(\\\"__g1\\\",17)()\""}
+"d2l_1_117_845":{"LoadHandler":"\"D2L.O(\\\"__g1\\\",20)()\""}
 ,
-"d2l_1_100_55":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
+"d2l_1_111_644":{"0":"{\"_type\":\"D2L.LP.Web.UI.Html.PartialRendering.PartialHtmlRenderContext\",\"HeadingLevel\":2,\"ValidClassNames\":[],\"Scope\":\"\"}"}
 
 };
 
 		</script>
-		<script>D2L.LP.Web.UI.Html.Bsi.Init('prod', 'https://s.brightspace.com/lib/bsi/2025.12.237/', ['unbundled/navigation.js','unbundled/navigation-main-header.js','unbundled/navigation-button-icon.js','unbundled/navigation-link-icon.js','unbundled/navigation-separator.js','unbundled/navigation-link-image.js','unbundled/navigation-dropdown-button-icon.js','unbundled/dropdown-content.js','unbundled/navigation-dropdown-button-custom.js','unbundled/d2l-profile-image-base.js','unbundled/navigation-main-footer.js','unbundled/dropdown.js','unbundled/dropdown-menu.js','unbundled/icon.js','unbundled/menu.js','unbundled/menu-item-link.js','unbundled/menu-item.js','unbundled/navigation-band.js','unbundled/button-icon.js','unbundled/menu-item-separator.js','unbundled/input-search.js','unbundled/dropdown-context-menu.js','unbundled/dropdown-more.js','unbundled/button-subtle.js','unbundled/html-block.js']);</script>
+		<script>D2L.LP.Web.UI.Html.Bsi.Init('prod', 'https://s.brightspace.com/lib/bsi/2025.12.237/', ['unbundled/navigation.js','unbundled/navigation-main-header.js','unbundled/navigation-button-icon.js','unbundled/navigation-link-icon.js','unbundled/navigation-separator.js','unbundled/navigation-link-image.js','unbundled/navigation-dropdown-button-icon.js','unbundled/dropdown-content.js','unbundled/navigation-dropdown-button-custom.js','unbundled/d2l-profile-image-base.js','unbundled/navigation-main-footer.js','unbundled/dropdown.js','unbundled/dropdown-menu.js','unbundled/icon.js','unbundled/menu.js','unbundled/menu-item-link.js','unbundled/menu-item.js','unbundled/navigation-band.js','unbundled/button-icon.js','unbundled/menu-item-separator.js','unbundled/input-search.js','unbundled/count-badge.js','unbundled/dropdown-context-menu.js','unbundled/dropdown-more.js','unbundled/button-subtle.js','unbundled/html-block.js']);</script>
 	
 <iframe style.backgroundcolor="transparent" frameborder="0" allowtransparency="true" id="chatFrame" src="https://s.brightspace.com/lib/eus-widget/3.1.1/forethoughtframe.html" style="
 					bottom: 0px;

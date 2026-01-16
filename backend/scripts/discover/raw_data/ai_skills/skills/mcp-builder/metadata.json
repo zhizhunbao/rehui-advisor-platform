@@ -1,0 +1,13 @@
+{
+  "repo": "anthropics/skills",
+  "skill_name": "mcp-builder",
+  "skill_path": "skills/mcp-builder",
+  "has_skill_md": true,
+  "name": "mcp-builder",
+  "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+  "instructions": "# MCP Server Development Guide\n\n## Overview\n\nCreate MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is measured by how well it enables LLMs to accomplish real-world tasks.\n\n\n### Phase 2: Implementation\n\n#### 2.1 Set Up Project Structure\n\nSee language-specific guides for project setup:\n- [⚡ TypeScript Guide](./reference/node_mcp_server.md) - Project structure, package.json, tsconfig.json\n- [🐍 Python",
+  "keywords": [
+    "skill",
+    "official"
+  ]
+}
