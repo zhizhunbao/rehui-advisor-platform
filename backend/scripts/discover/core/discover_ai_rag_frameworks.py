@@ -40,7 +40,7 @@ class DiscoverRagFrameworksScript(DomainDiscoverScript):
     def CATEGORY_KEYWORDS(self) -> dict[str, list[str]]:
         """资源分类关键词"""
         return {
-            "framework": ["langchain", "llamaindex", "haystack", "dspy", "langgraph"],
+            "framework": ["langchain", "llamaindex", "haystack", "dspy", "langgraph", "pageindex"],
             "parsing": ["document parsing", "pdf parsing", "unstructured", "docling"],
             "chunking": ["chunking", "text splitting", "semantic chunking"],
             "tutorial": ["tutorial", "guide", "example", "getting started"],

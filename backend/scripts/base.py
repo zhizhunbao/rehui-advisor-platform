@@ -34,6 +34,10 @@ class ScriptBase:
         if self.verbose:
             print(f"[ERROR] {msg}")
 
+    def warning(self, msg: str) -> None:
+        if self.verbose:
+            print(f"[WARNING] {msg}")
+
     def run(self) -> ScriptResult:
         """执行脚本，子类需实现"""
         raise NotImplementedError

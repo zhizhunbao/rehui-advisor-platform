@@ -406,15 +406,60 @@ class DomainDiscoverScript(ScriptBase):
         self.info(f"  过滤后保留 {len(filtered_items)}/{len(items)} 个高质量资源")
         return filtered_items
 
+    def validate_quality(self, items: list[DiscoveredItem]) -> tuple[list[DiscoveredItem], list[str]]:
+        """验证发现结果的质量，返回（通过的资源, 问题列表）"""
+        issues = []
+        passed_items = []
+        domain_tags = self._get_domain_tags()
+        domain_tag_codes = {t["code"] for t in domain_tags}
+
+        for item in items:
+            item_issues = []
+
+            if not item.tags:
+                item_issues.append("无标签匹配")
+            elif not any(t in domain_tag_codes for t in item.tags):
+                item_issues.append(f"标签不属于当前领域: {item.tags}")
+
+            if not item.description or len(item.description) < 20:
+                item_issues.append("描述过短或为空")
+
+            # 用匹配标签验证内容相关性，而不是搜索关键词
+            tag_names = [t["name_en"].lower() for t in domain_tags]
+            text = f"{item.title} {item.description}".lower()
+            if not any(tn in text for tn in tag_names):
+                item_issues.append("内容与领域关键词不匹配")
+
+            score = item.metadata.get("quality_score", 0)
+            if score < 70:
+                item_issues.append(f"质量分数偏低: {score}")
+
+            if item_issues:
+                issues.append(f"[{item.title[:30]}] {item.url}\n  - " + "\n  - ".join(item_issues))
+            else:
+                passed_items.append(item)
+
+        return passed_items, issues
+
     def run(self) -> ScriptResult:
         """执行发现任务"""
         self.info(f"开始发现 [{self.DOMAIN_CODE}] 领域资源...")
 
         try:
             items = self.discover()
-            self._save_to_file(items)
-            self.success(f"共发现 {len(items)} 个资源")
-            return ScriptResult(success=True, message=f"Discovered {len(items)}", created=len(items))
+
+            passed_items, issues = self.validate_quality(items)
+            
+            if issues:
+                self.warning(f"过滤掉 {len(issues)} 个低质量资源:")
+                for issue in issues[:10]:
+                    print(f"  ⚠️  {issue}")
+                if len(issues) > 10:
+                    print(f"  ... 还有 {len(issues) - 10} 个被过滤")
+
+            self._save_to_file(passed_items)
+            self.success(f"共保留 {len(passed_items)} 个高质量资源（过滤 {len(issues)} 个）")
+            return ScriptResult(success=True, message=f"Discovered {len(passed_items)}", created=len(passed_items))
         except Exception as e:
             self.error(f"发现失败: {e}")
             return ScriptResult(success=False, message=str(e), errors=[str(e)])

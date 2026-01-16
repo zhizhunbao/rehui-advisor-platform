@@ -11,7 +11,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "stanfordnlp/dspy",
         "platform": "github",
         "tags": ['dspy'],
-        "metadata": {'stars': 31551, 'updated_at': '2026-01-16T00:38:40Z', 'quality_score': 97.0, 'quality_details': {'source': 100.0, 'relevance': 90, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 31578, 'updated_at': '2026-01-16T18:39:24Z', 'quality_score': 97.0, 'quality_details': {'source': 100.0, 'relevance': 90, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -23,7 +23,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "langchain-ai/langchain",
         "platform": "github",
         "tags": ['langchain'],
-        "metadata": {'stars': 124289, 'updated_at': '2026-01-16T00:34:21Z', 'quality_score': 92.5, 'quality_details': {'source': 100.0, 'relevance': 75, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 124349, 'updated_at': '2026-01-16T19:04:44Z', 'quality_score': 92.5, 'quality_details': {'source': 100.0, 'relevance': 75, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -35,7 +35,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "infiniflow/ragflow",
         "platform": "github",
         "tags": ['rag'],
-        "metadata": {'stars': 71518, 'updated_at': '2026-01-16T00:54:12Z', 'quality_score': 92.5, 'quality_details': {'source': 100.0, 'relevance': 75, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 71581, 'updated_at': '2026-01-16T18:22:16Z', 'quality_score': 92.5, 'quality_details': {'source': 100.0, 'relevance': 75, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -58,7 +58,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "source": "hackernews",
         "repo": "langmanus/langmanus",
         "platform": "github",
-        "tags": ['langgraph', 'langchain'],
+        "tags": ['langchain', 'langgraph'],
         "metadata": {'points': 127, 'created_at': '2025-03-21T11:01:00Z', 'quality_score': 89.0, 'quality_details': {'source': 100.0, 'relevance': 100.0, 'freshness': 60.0, 'activity': 85.0}},
         "is_active": True,
     },
@@ -71,7 +71,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "Shubhamsaboo/awesome-llm-apps",
         "platform": "github",
         "tags": ['rag'],
-        "metadata": {'stars': 87943, 'updated_at': '2026-01-15T23:37:52Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 88026, 'updated_at': '2026-01-16T19:04:53Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -83,7 +83,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "fighting41love/funNLP",
         "platform": "github",
         "tags": ['haystack'],
-        "metadata": {'stars': 78465, 'updated_at': '2026-01-15T22:34:01Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 78484, 'updated_at': '2026-01-16T15:40:07Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -95,7 +95,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "pathwaycom/pathway",
         "platform": "github",
         "tags": ['rag'],
-        "metadata": {'stars': 57146, 'updated_at': '2026-01-15T21:32:11Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 57136, 'updated_at': '2026-01-16T18:54:08Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -107,7 +107,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "pathwaycom/llm-app",
         "platform": "github",
         "tags": ['rag'],
-        "metadata": {'stars': 53847, 'updated_at': '2026-01-15T21:08:02Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 53833, 'updated_at': '2026-01-16T18:54:11Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -119,7 +119,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "run-llama/llama_index",
         "platform": "github",
         "tags": ['llamaindex'],
-        "metadata": {'stars': 46347, 'updated_at': '2026-01-16T00:36:05Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 46360, 'updated_at': '2026-01-16T18:18:50Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {
@@ -131,7 +131,7 @@ RAW_RAG_FRAMEWORKS_URLS: list[dict[str, Any]] = [
         "repo": "langfuse/langfuse",
         "platform": "github",
         "tags": ['langchain'],
-        "metadata": {'stars': 20585, 'updated_at': '2026-01-16T00:50:50Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
+        "metadata": {'stars': 20623, 'updated_at': '2026-01-16T18:51:44Z', 'quality_score': 86.5, 'quality_details': {'source': 100.0, 'relevance': 55, 'freshness': 100.0, 'activity': 100.0}},
         "is_active": True,
     },
     {

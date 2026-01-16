@@ -1,4 +1,4 @@
-# 大语言模型（模型本身）发现脚本
+# LLM 本地推理引擎发现脚本
 from typing import Any
 
 from scripts.data.domain.tags import TAGS, AI_EXTRA_TAGS
@@ -7,12 +7,12 @@ from scripts.discover.sources.github import GitHubSource
 from scripts.discover.sources.hackernews import HackerNewsSource
 
 
-class DiscoverLLMModelsScript(DomainDiscoverScript):
-    """LLM 模型本身资源发现（基座模型、开源模型）"""
+class DiscoverLLMInferenceScript(DomainDiscoverScript):
+    """LLM 本地推理引擎资源发现"""
 
-    NAME = "discover_llm_models"
-    DESCRIPTION = "发现 LLM 基座模型和开源模型"
-    DOMAIN_CODE = "llm_models"
+    NAME = "discover_llm_inference"
+    DESCRIPTION = "发现 LLM 本地推理引擎和部署工具"
+    DOMAIN_CODE = "llm_inference"
     MIN_QUALITY_SCORE = 60.0
 
     def _get_domain_tags(self) -> list[dict[str, Any]]:
@@ -33,28 +33,27 @@ class DiscoverLLMModelsScript(DomainDiscoverScript):
                 if code_as_keyword != tag["name_en"].lower():
                     keywords.append(code_as_keyword)
 
-        keywords.extend(["open source LLM", "foundation model", "base model"])
+        keywords.extend(["LLM inference", "local LLM", "model serving", "LLM deployment"])
         return keywords
 
     @property
     def CATEGORY_KEYWORDS(self) -> dict[str, list[str]]:
         """资源分类关键词"""
         return {
-            "general": ["llama", "mistral", "qwen", "yi", "deepseek"],
-            "small": ["phi", "gemma", "tinyllama", "stablelm"],
-            "code": ["codellama", "starcoder", "deepseek-coder", "codeqwen"],
-            "multimodal": ["llava", "qwen-vl", "internvl", "cogvlm"],
-            "chinese": ["chatglm", "baichuan", "internlm", "aquila"],
+            "engine": ["vllm", "tgi", "llama.cpp", "exllama", "mlx"],
+            "runtime": ["ollama", "lmstudio", "jan", "gpt4all"],
+            "format": ["gguf", "awq", "gptq", "bnb"],
+            "serving": ["triton", "ray serve", "bentoml"],
         }
 
     def _init_sources(self) -> None:
         self.SOURCES = [
             GitHubSource(verbose=self.verbose, min_stars=500),
-            HackerNewsSource(verbose=self.verbose, min_points=100),
+            HackerNewsSource(verbose=self.verbose, min_points=50),
         ]
 
 
 if __name__ == "__main__":
-    script = DiscoverLLMModelsScript(verbose=True)
+    script = DiscoverLLMInferenceScript(verbose=True)
     result = script.run()
     print(result)
