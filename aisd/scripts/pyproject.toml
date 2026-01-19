@@ -5,6 +5,7 @@ description = "AISD course scraping scripts"
 requires-python = ">=3.11"
 dependencies = [
     "playwright>=1.40.0",
+    "pypdf>=6.6.0",
 ]
 
 [tool.uv]
