@@ -43,5 +43,6 @@
     "typescriptreact": "html"
   },
   "prisma.showPrismaDataPlatformNotification": false,
-  "typescript.autoClosingTags": false
+  "typescript.autoClosingTags": false,
+  "cSpell.enabled": false
 }

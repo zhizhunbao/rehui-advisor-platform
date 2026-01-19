@@ -4,115 +4,109 @@ inclusion: always
 
 # Skills Manager
 
-根据用户意图匹配 `backend/scripts/data/skills/` 下的 SKILL.md 文档。
+When user queries match keywords below, proactively load the corresponding SKILL.md from `backend/scripts/data/skills/{skill-name}/SKILL.md` to provide specialized guidance.
 
-## 开发相关
+## Keyword Matching Rules
 
-| 关键词                                          | Skill                    |
-| ----------------------------------------------- | ------------------------ |
-| discover, 发现, 资源发现, 评测, benchmark, 选型 | `dev-resource_discovery` |
+- Match keywords in both English and Chinese (中文)
+- Support partial matches and related terms
+- When multiple skills match, prioritize the most specific one
+- If uncertain, ask user to clarify which skill domain they need
 
-## AI 技术
+## Development
 
-| 关键词                             | Skill           |
-| ---------------------------------- | --------------- |
-| agent, 智能体, AI agent, 框架选型  | `ai-agents`     |
-| prompt, 提示词, prompt engineering | `ai-prompts`    |
-| skill, claude skill                | `ai-skills`     |
-| llm, 大模型, 语言模型              | `ai-llm_models` |
+- **discover, 发现, resource discovery, 资源发现, evaluation, 评测, benchmark, selection, 选型** → `dev-resource_discovery`
+- **code standards, 代码规范, naming conventions, 命名规范, directory structure, 目录结构, refactor, 重构, code organization, 代码组织, project structure, 项目结构** → `dev-code_standards`
+- **code style, 代码风格, formatting, 格式化, linter, lint, prettier, eslint, ruff, black, type check, 类型检查, pre-commit** → `dev-code_style`
+- **web scraping, 网页抓取, 爬虫, crawler, playwright, selenium, beautifulsoup, data extraction, 数据提取, anti-bot, 反爬虫, browser automation, 浏览器自动化** → `dev-web_scraping`
+- **pdf, PDF, extract, 提取, convert, 转换, markdown, bilingual, 双语, 中英文, translation, 翻译, academic, 学术, paper, 论文, slides, 课件** → `dev-pdf_processing`
 
-## AI 学习
+## AI Technology
 
-| 关键词                               | Skill                              |
-| ------------------------------------ | ---------------------------------- |
-| 机器学习, ML, machine learning       | `ai_learning-ml`                   |
-| 深度学习, DL, deep learning          | `ai_learning-dl`                   |
-| LLM学习, 大模型学习                  | `ai_learning-llm`                  |
-| NLP, 自然语言处理                    | `ai_learning-nlp`                  |
-| 机器视觉, MV, machine vision, CV     | `ai_learning-mv`, `ai_learning-cv` |
-| RAG, 检索增强                        | `ai_learning-rag`                  |
-| 强化学习, RL, reinforcement learning | `ai_learning-rl`                   |
+- **agent, 智能体, AI agent, framework selection, 框架选型** → `ai-agents`
+- **prompt, 提示词, prompt engineering** → `ai-prompts`
+- **skill, claude skill** → `ai-skills`
+- **llm, 大模型, 语言模型, language model** → `ai-llm_models`
 
-## 职业发展
+## AI Learning
 
-| 关键词                 | Skill                     |
-| ---------------------- | ------------------------- |
-| 简历, resume, CV       | `career-resume`           |
-| 面试, interview        | `career-interview`        |
-| 求职, job search       | `career-job_search`       |
-| 认证, certification    | `career-certification`    |
-| 创业, entrepreneurship | `career-entrepreneurship` |
+- **machine learning, ML, 机器学习** → `ai_learning-ml`
+- **deep learning, DL, 深度学习** → `ai_learning-dl`
+- **LLM learning, 大模型学习** → `ai_learning-llm`
+- **NLP, natural language processing, 自然语言处理** → `ai_learning-nlp`
+- **machine vision, MV, computer vision, CV, 机器视觉** → `ai_learning-mv` or `ai_learning-cv`
+- **RAG, retrieval augmented generation, 检索增强** → `ai_learning-rag`
+- **reinforcement learning, RL, 强化学习** → `ai_learning-rl`
 
-## 移民身份
+## Career Development
 
-| 关键词            | Skill                                                |
-| ----------------- | ---------------------------------------------------- |
-| 签证, visa        | `identity-visa`, `immigration-visa_renewal`          |
-| PR, 永居, 移民    | `immigration-pr_application`                         |
-| 工签, work permit | `immigration-work_permit`                            |
-| 入籍, citizenship | `immigration-citizenship`                            |
-| 家庭团聚, 担保    | `immigration-family_sponsorship`                     |
-| SSN, 社保号       | `identity-ssn`                                       |
-| 驾照              | `identity-driving`, `transportation-driving_license` |
+- **resume, CV, 简历** → `career-resume`
+- **interview, 面试** → `career-interview`
+- **job search, 求职** → `career-job_search`
+- **certification, 认证** → `career-certification`
+- **entrepreneurship, 创业** → `career-entrepreneurship`
 
-## 金融财务
+## Immigration & Identity
 
-| 关键词              | Skill                 |
-| ------------------- | --------------------- |
-| 银行, banking       | `finance-banking`     |
-| 信用卡, credit card | `finance-credit_card` |
-| 保险                | `finance-insurance`   |
-| 投资, investment    | `finance-investment`  |
-| 汇款, remittance    | `finance-remittance`  |
-| 报税, tax           | `finance-tax`         |
+- **visa, 签证** → `identity-visa` or `immigration-visa_renewal`
+- **PR, permanent residence, 永居, immigration, 移民** → `immigration-pr_application`
+- **work permit, 工签** → `immigration-work_permit`
+- **citizenship, 入籍** → `immigration-citizenship`
+- **family sponsorship, 家庭团聚, 担保** → `immigration-family_sponsorship`
+- **SSN, social security number, 社保号** → `identity-ssn`
+- **driver's license, 驾照** → `identity-driving` or `transportation-driving_license`
 
-## 住房
+## Finance
 
-| 关键词            | Skill                 |
-| ----------------- | --------------------- |
-| 租房, rental      | `housing-rental`      |
-| 买房, home buying | `housing-home_buying` |
-| 搬家, moving      | `housing-moving`      |
-| 家具, furniture   | `housing-furniture`   |
-| 水电煤, utilities | `housing-utilities`   |
+- **banking, 银行** → `finance-banking`
+- **credit card, 信用卡** → `finance-credit_card`
+- **insurance, 保险** → `finance-insurance`
+- **investment, 投资** → `finance-investment`
+- **remittance, 汇款** → `finance-remittance`
+- **tax, 报税** → `finance-tax`
 
-## 交通出行
+## Housing
 
-| 关键词               | Skill                           |
-| -------------------- | ------------------------------- |
-| 买车, car buying     | `transportation-car_buying`     |
-| 车险, car insurance  | `transportation-car_insurance`  |
-| 公交, public transit | `transportation-public_transit` |
-| 机票, flight         | `transportation-flight`         |
+- **rental, 租房** → `housing-rental`
+- **home buying, 买房** → `housing-home_buying`
+- **moving, 搬家** → `housing-moving`
+- **furniture, 家具** → `housing-furniture`
+- **utilities, 水电煤** → `housing-utilities`
 
-## 医疗健康
+## Transportation
 
-| 关键词                     | Skill                         |
-| -------------------------- | ----------------------------- |
-| 家庭医生, family doctor    | `healthcare-family_doctor`    |
-| 看病, clinic               | `healthcare-clinic_visit`     |
-| 药房, pharmacy             | `healthcare-pharmacy`         |
-| 医疗保险, health insurance | `healthcare-health_insurance` |
-| 心理健康, mental health    | `healthcare-mental_health`    |
-| 托儿, childcare            | `healthcare-childcare`        |
+- **car buying, 买车** → `transportation-car_buying`
+- **car insurance, 车险** → `transportation-car_insurance`
+- **public transit, 公交** → `transportation-public_transit`
+- **flight, 机票** → `transportation-flight`
 
-## 教育
+## Healthcare
 
-| 关键词                      | Skill                             |
-| --------------------------- | --------------------------------- |
-| 选校, school selection      | `education-school_selection`      |
-| 学历认证, credential        | `education-credential_evaluation` |
-| 语言学习, language learning | `education-language_learning`     |
-| 培训, skill training        | `education-skill_training`        |
-| 补习, tutoring              | `education-tutoring`              |
-| 子女教育, child education   | `education-child_education`       |
+- **family doctor, 家庭医生** → `healthcare-family_doctor`
+- **clinic visit, 看病** → `healthcare-clinic_visit`
+- **pharmacy, 药房** → `healthcare-pharmacy`
+- **health insurance, 医疗保险** → `healthcare-health_insurance`
+- **mental health, 心理健康** → `healthcare-mental_health`
+- **childcare, 托儿** → `healthcare-childcare`
 
-## 使用方式
+## Education
 
-匹配到关键词后，读取对应 SKILL.md：
+- **school selection, 选校** → `education-school_selection`
+- **credential evaluation, 学历认证** → `education-credential_evaluation`
+- **language learning, 语言学习** → `education-language_learning`
+- **skill training, 培训** → `education-skill_training`
+- **tutoring, 补习** → `education-tutoring`
+- **child education, 子女教育** → `education-child_education`
 
-```
-backend/scripts/data/skills/{skill-name}/SKILL.md
-```
+## Usage Workflow
 
-如有 `references/` 子目录，按需读取详细文档。
+1. **Detect keywords** in user query (English or Chinese)
+2. **Identify matching skill(s)** from the mappings above
+3. **Read the SKILL.md file**: `backend/scripts/data/skills/{skill-name}/SKILL.md`
+4. **Validate skill structure** before applying:
+   - Verify SKILL.md has complete structure and format
+   - Check for required sections (objectives, use cases, instructions)
+   - Ensure content is clear and actionable
+   - If non-compliant, fix the skill file first before using
+5. **Load additional references** if available: `backend/scripts/data/skills/{skill-name}/references/`
+6. **Apply skill guidance** to assist the user

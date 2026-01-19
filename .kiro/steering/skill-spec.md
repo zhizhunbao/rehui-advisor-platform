@@ -3,69 +3,149 @@ inclusion: fileMatch
 fileMatchPattern: "**/SKILL.md"
 ---
 
-# Claude Code Skill 规范
+# Skill File Specification
 
-创建或编辑 SKILL.md 时必须遵循此规范。
+Follow this specification when creating or editing SKILL.md files in `backend/scripts/data/skills/`.
 
-## 结构
+## Directory Structure
 
 ```
 skill-name/
-├── SKILL.md (必需)
-└── references/ (可选，详细文档)
+├── SKILL.md          (required - main skill definition)
+└── references/       (optional - detailed documentation)
+    ├── guide.md
+    └── examples.md
 ```
 
-## SKILL.md 格式
+## SKILL.md Format
 
-### Frontmatter (必需)
+### Front Matter (Required)
 
 ```yaml
 ---
 name: skill-name
-description: 描述 skill 功能 + 触发条件。Use when (1) ..., (2) ..., (3) ...
+description: Brief skill purpose + trigger conditions. Use when (1) ..., (2) ..., (3) ...
 ---
 ```
 
-- `name`: skill 名称
-- `description`: 必须包含功能描述和触发条件（when to use）
+**Requirements:**
 
-### Body (必需)
+- `name`: Kebab-case identifier matching directory name
+- `description`: Must include both functionality AND specific trigger conditions (when to use this skill)
+- Keep description under 100 words for efficient metadata loading
 
-给 Claude 的指令，要求：
+### Body Content (Required)
 
-- 简洁，避免冗余解释
-- 使用祈使句
-- 引用 references/ 中的详细文档
+Direct instructions for the AI assistant. Follow these rules:
 
-## 核心原则
+- **Be concise**: Avoid redundant explanations; assume AI competence
+- **Use imperative mood**: "Read the file", "Apply these steps", "Validate before proceeding"
+- **Reference external docs**: Point to `references/` for detailed content
+- **Structure clearly**: Use headings, lists, and code blocks for readability
+- **Stay focused**: Only include information the AI cannot infer from general knowledge
 
-### 简洁优先
+**Typical sections:**
 
-Context window 是公共资源。只添加 Claude 不知道的信息。
+- Objectives (what to accomplish)
+- Key instructions (how to accomplish it)
+- Validation steps (how to verify success)
+- References (where to find more details)
 
-### 渐进式披露
+## Core Principles
 
-1. Metadata (name + description) - 始终加载 (~100 words)
-2. SKILL.md body - 触发后加载 (<5k words)
-3. references/ - 按需加载
+### 1. Context Efficiency
 
-### SKILL.md 保持精简
+Context window is a shared resource. Only include information that:
 
-- 控制在 500 行以内
-- 详细内容放 references/
-- 引用时说明何时读取
+- Is specific to this skill domain
+- Cannot be inferred from general AI knowledge
+- Directly impacts task execution
 
-## 禁止
+### 2. Progressive Disclosure
 
-- 创建 README.md、CHANGELOG.md 等多余文件
-- 在 body 中写 "When to Use"（应放 description）
-- 冗长解释（Claude 已经很聪明）
-- 重复信息（SKILL.md 和 references 不要重复）
+Load information in layers:
 
-## references/ 使用
+1. **Metadata** (name + description) - Always loaded (~100 words)
+2. **SKILL.md body** - Loaded when skill is triggered (<5000 words, ideally <2000)
+3. **references/** - Loaded on-demand when explicitly referenced
+
+### 3. Maintainability
+
+- Keep SKILL.md under 500 lines
+- Move detailed content to `references/`
+- Use clear section headings for navigation
+- Add table of contents if file exceeds 100 lines
+
+## Validation Checklist
+
+Before finalizing a SKILL.md file, verify:
+
+- [ ] Front matter includes both `name` and `description`
+- [ ] Description specifies clear trigger conditions
+- [ ] Body uses imperative instructions
+- [ ] Content is under 500 lines
+- [ ] No redundant explanations of basic concepts
+- [ ] References to external docs are clear and actionable
+- [ ] File structure follows markdown conventions
+
+## Anti-Patterns (Do Not)
+
+- ❌ Create README.md, CHANGELOG.md, or other extraneous files
+- ❌ Include "When to Use" section in body (belongs in description)
+- ❌ Write verbose explanations of concepts AI already understands
+- ❌ Duplicate content between SKILL.md and references/
+- ❌ Use passive voice or vague instructions
+- ❌ Exceed 500 lines without moving content to references/
+
+## Referencing External Documentation
+
+When pointing to detailed guides in `references/`:
 
 ```markdown
-**For detailed guide:** See `references/xxx.md`
+**For detailed implementation guide:** See `references/implementation.md`
+**For code examples:** See `references/examples.md`
 ```
 
-文件超过 100 行时，顶部加目录。
+Specify when the AI should read the reference:
+
+- "Read this before proceeding"
+- "Consult this if validation fails"
+- "Reference this for edge cases"
+
+## Example Structure
+
+```markdown
+---
+name: example-skill
+description: Helps with X task. Use when (1) user asks about X, (2) working with Y files, (3) need to validate Z.
+---
+
+# Example Skill
+
+## Objectives
+
+- Accomplish primary goal A
+- Validate condition B
+- Generate output C
+
+## Instructions
+
+1. Read the input file
+2. Apply transformation X
+3. Validate result meets criteria Y
+4. Output in format Z
+
+**For detailed transformation rules:** See `references/transformation-guide.md`
+
+## Validation
+
+Verify the output:
+
+- Criterion 1: Check that...
+- Criterion 2: Ensure that...
+
+## Common Issues
+
+- Issue A: Solution X
+- Issue B: Solution Y
+```
