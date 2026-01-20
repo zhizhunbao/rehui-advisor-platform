@@ -11,8 +11,7 @@ from playwright.async_api import async_playwright, Page, Browser
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from helpers import sanitize_filename, compute_content_hash
-
-from .config import COURSES, BASE_URL, OUTPUT_DIR, SESSION_FILE
+from config import COURSES, BASE_URL, OUTPUT_DIR, SESSION_FILE
 
 MIN_DELAY = 1.0
 MAX_DELAY = 3.0
@@ -406,6 +405,35 @@ class BrightspaceScraper:
         target_dir = course_dir / module_path
         target_dir.mkdir(parents=True, exist_ok=True)
         
+        # 先尝试获取文件名，检查是否已存在
+        # 方法1: 从页面上的文件名元素获取
+        filename_elem = await self.page.query_selector('.d2l-fileviewer-pdf-name, .d2l-filename, [class*="filename"]')
+        if filename_elem:
+            suggested_filename = await filename_elem.inner_text()
+            suggested_filename = suggested_filename.strip()
+        else:
+            suggested_filename = sanitize_filename(title)
+        
+        # 检查文件是否已存在（支持多种可能的文件名）
+        possible_filenames = [
+            suggested_filename,
+            sanitize_filename(title),
+            f"{sanitize_filename(title)}.pdf",
+            f"{sanitize_filename(title)}.pptx",
+            f"{sanitize_filename(title)}.docx",
+        ]
+        
+        existing_file = None
+        for fname in possible_filenames:
+            fpath = target_dir / fname
+            if fpath.exists():
+                existing_file = fpath
+                break
+        
+        if existing_file:
+            print(f"      Skip (exists): {existing_file.name}")
+            return
+        
         selectors = [
             'button.d2l-button[id^="d2l_content_"]',
             'button.d2l-button[id^="d2l_fileviewer_"]',
@@ -429,14 +457,15 @@ class BrightspaceScraper:
                     await download_btn.click()
                 download = await download_info.value
                 
-                suggested_filename = download.suggested_filename
-                if suggested_filename:
-                    filename = suggested_filename
+                actual_filename = download.suggested_filename
+                if actual_filename:
+                    filename = actual_filename
                 else:
                     filename = sanitize_filename(title)
                 
                 filepath = target_dir / filename
                 
+                # 双重检查（以防文件名不同）
                 if filepath.exists():
                     print(f"      Skip (exists): {filename}")
                     await download.delete()

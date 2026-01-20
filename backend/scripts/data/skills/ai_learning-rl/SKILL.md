@@ -5,11 +5,48 @@ description: Comprehensive RL learning assistant for coursework and self-study. 
 
 # Reinforcement Learning Assistant
 
+## Course Directory Structure
+
+The RL course materials are organized in `aisd/courses/rl/`:
+
+```
+rl/
+├── labs/              # Lab instructions and original files (.docx)
+├── notes/             # Study notes generated from resources (lab1.md, etc.)
+├── resources/         # Source materials (bilingual articles, PDFs, images)
+├── code/              # Implementation code and experiments
+├── assignments/       # Assignment files
+├── quizzes/           # Quiz materials
+├── slides/            # Lecture slides (.pptx)
+├── schedule/          # Course schedule (.docx)
+└── scripts/           # Utility scripts (scrapers, generators)
+```
+
+**Key workflow:**
+
+1. **resources/** contains source materials (articles, textbooks)
+2. **notes/** contains study notes generated from resources
+3. **labs/** contains lab instructions (both .docx and bilingual .md)
+4. **code/** is for student implementations
+
+When generating study materials, use resources as the data source, not labs.
+
 ## Core Workflows
 
 ### Understanding Concepts
 
 Ask for explanations at your level (beginner/intermediate/advanced). Request analogies for intuition, then mathematical formulations when ready.
+
+**Request 5W1H Analysis Table** for any core concept to get structured understanding:
+
+- **Why** (为什么): Purpose and motivation
+- **What** (是什么): Definition and components
+- **How** (怎么做): Implementation and algorithm
+- **When** (何时用): Use cases and scenarios
+- **Where** (在哪用): Application domains
+- **Who** (谁使用): Target users and researchers
+
+Example request: "Create a 5W1H table for Q-Learning" or "Explain the core concepts of Lab 1 in a 5W1H table"
 
 **For detailed concept explanations:** See `references/concepts.md`
 

@@ -20,6 +20,8 @@ When user queries match keywords below, proactively load the corresponding SKILL
 - **code style, 代码风格, formatting, 格式化, linter, lint, prettier, eslint, ruff, black, type check, 类型检查, pre-commit** → `dev-code_style`
 - **web scraping, 网页抓取, 爬虫, crawler, playwright, selenium, beautifulsoup, data extraction, 数据提取, anti-bot, 反爬虫, browser automation, 浏览器自动化** → `dev-web_scraping`
 - **pdf, PDF, extract, 提取, convert, 转换, markdown, bilingual, 双语, 中英文, translation, 翻译, academic, 学术, paper, 论文, slides, 课件** → `dev-pdf_processing`
+- **translation, 翻译, technical translation, 技术翻译, bilingual documentation, 双语文档, terminology, 术语, localization, 本地化, i18n** → `dev-translation`
+- **document review, 文档审查, documentation quality, 文档质量, consistency check, 一致性检查, accuracy, 准确性, readability, 可读性, technical writing, 技术写作, content organization, 内容组织, error detection, 错误检测, check document, 检查文档** → `dev-document_review`
 
 ## AI Technology
 
@@ -97,6 +99,10 @@ When user queries match keywords below, proactively load the corresponding SKILL
 - **skill training, 培训** → `education-skill_training`
 - **tutoring, 补习** → `education-tutoring`
 - **child education, 子女教育** → `education-child_education`
+
+## Learning & Study
+
+- **notes, 笔记, note-taking, 记笔记, study notes, 学习笔记, lecture notes, 课堂笔记, organize notes, 整理笔记, course materials, 课程资料, study guide, 学习指南** → `learning-note_taking`
 
 ## Usage Workflow
 

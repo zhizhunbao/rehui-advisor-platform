@@ -103,7 +103,120 @@ Generate practice materials:
 
 ## Course Materials
 
-Materials location: `aisd/scripts/scrapers/brightspace/data/nlp/`
+Materials location: `aisd/courses/nlp/`
+
+Structure:
+
+- `slides/*.pdf` - Lecture slides (original)
+- `notes/lecture*_notes.md` - Extracted markdown notes
+- `notes/lecture*_notes_images/` - Extracted images
+- `labs/*.pdf` - Lab instructions
+- `code/lab*/*.py` - Lab code
+
+## Note-Taking from Slides
+
+When user asks to take notes or expand slides content:
+
+### 1. Read the Markdown Notes
+
+Notes are in `aisd/courses/nlp/notes/lecture*_notes.md`
+
+### 2. Enhance Each Page
+
+For each page section:
+
+**Add Chinese Translation:**
+
+- Translate key terms and concepts
+- Keep technical terms in English with Chinese explanation
+- Format: `**Term (术语)**: Explanation / 解释`
+
+**Expand Bullet Points:**
+
+- Turn brief points into full explanations
+- Add examples and analogies
+- Connect to previous concepts
+
+**Add Code Examples:**
+
+- Demonstrate concepts with Python code
+- Use NLTK, spaCy, or transformers libraries
+- Keep examples minimal and focused
+
+**Create Practice Questions:**
+
+- Conceptual questions for understanding
+- Code exercises for implementation
+- Format: `**Q:** Question / **A:** Answer`
+
+### 3. Note Structure Template
+
+```markdown
+## Page X
+
+### [Original Title]
+
+**中文标题**: [Chinese translation]
+
+**Key Concepts / 关键概念:**
+
+- Concept 1 (概念1): Explanation / 解释
+- Concept 2 (概念2): Explanation / 解释
+
+**Detailed Notes / 详细笔记:**
+
+[Expanded explanation with examples]
+
+**Code Example / 代码示例:**
+
+\`\`\`python
+
+# Demonstration code
+
+\`\`\`
+
+**Practice / 练习:**
+
+**Q:** Question
+**A:** Answer
+
+**📝 My Notes / 我的笔记:**
+
+> [Personal understanding and connections]
+```
+
+### 4. Focus Areas
+
+- **Definitions**: Clear, concise explanations
+- **Algorithms**: Step-by-step breakdown
+- **Applications**: Real-world use cases
+- **Comparisons**: Differences between methods
+- **Pitfalls**: Common mistakes to avoid
+
+### 5. Review Materials
+
+Generate from notes:
+
+**Flashcards:**
+
+- Front: Question/Term
+- Back: Answer/Definition
+
+**Summary Sheet:**
+
+- One-page overview per lecture
+- Key formulas and algorithms
+- Important diagrams
+
+**Quiz Questions:**
+
+- Multiple choice for concepts
+- Code completion for implementation
+- Short answer for explanations
+
+## Course Materials (Legacy Path)
+
+Old location: `aisd/scripts/scrapers/brightspace/data/nlp/`
 
 Structure:
 
