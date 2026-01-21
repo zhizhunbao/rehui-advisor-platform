@@ -66,9 +66,25 @@ class PDFConverter:
                 image_height = base_image["height"]
                 
                 # Filter small images (icons, logos)
-                if image_width < min_width or image_height < min_height:
+                aspect_ratio = image_width / image_height if image_height > 0 else 0
+                
+                # Skip very wide images (headers, banners)
+                if aspect_ratio > 8:
                     continue
-                if len(image_bytes) < 20000:  # < 20KB
+                # Skip very tall images (sidebars, decorations)
+                if aspect_ratio < 0.15:
+                    continue
+                # Skip small square-ish images (logos, icons) - stricter for page 1
+                if image_width < 400 and image_height < 400 and 0.7 < aspect_ratio < 1.5:
+                    continue
+                # Skip both dimensions are small
+                if image_width < min_width and image_height < min_height:
+                    continue
+                # Skip tiny files (likely icons/logos)
+                if len(image_bytes) < 5000:  # < 5KB
+                    continue
+                # Skip very narrow/short images (headers, footers, decorations)
+                if image_width < 100 or image_height < 100:
                     continue
                 
                 # Save image
@@ -122,8 +138,14 @@ class PDFConverter:
                     markdown_content.append("---\n")
                     continue
                 
-                # Page header
-                markdown_content.append(f"## Page {page_num}\n")
+                # Extract page title (first non-empty line or first heading)
+                page_title = self._extract_page_title(text)
+                
+                # Page header with title
+                if page_title:
+                    markdown_content.append(f"## Page {page_num}: {page_title}\n")
+                else:
+                    markdown_content.append(f"## Page {page_num}\n")
                 
                 # Extract images
                 if self.extract_images and pdf_document:
@@ -135,8 +157,8 @@ class PDFConverter:
                             markdown_content.append(f"![Page {page_num} Image]({rel_path})")
                         markdown_content.append("")
                 
-                # Format text content
-                formatted_text = self._format_text_content(text)
+                # Format text content (skip title if already used in header)
+                formatted_text = self._format_text_content(text, skip_first_title=bool(page_title))
                 markdown_content.append(formatted_text)
                 markdown_content.append("")
                 
@@ -198,8 +220,75 @@ class PDFConverter:
         
         return '\n'.join(fixed_lines)
     
-    def _format_text_content(self, text: str) -> str:
+    def _clean_garbled_math(self, text: str) -> str:
+        """Detect and clean garbled mathematical formulas
+        
+        Note: For accurate math formula extraction, consider using:
+        - Mathpix (commercial API): Converts images to LaTeX
+        - Pix2Text (open source): OCR + formula recognition
+        - Manual transcription: Most reliable for complex formulas
+        
+        Current approach: Replace garbled text with placeholder
+        """
+        lines = text.split('\n')
+        cleaned_lines = []
+        
+        for line in lines:
+            # Check for truly garbled characters (not just math symbols)
+            # These are the problematic Unicode characters from wrong font encoding
+            garbled_chars = len(re.findall(r'[𝒙𝒚𝒛𝒘𝒃𝒄𝒅𝒂𝒏𝒎𝒑𝒒𝒓𝒔𝒕𝒖𝒗𝑥𝑦𝑧𝑤𝑏𝑐𝑑𝑎𝑛𝑚𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑖𝑗𝑘𝑙𝑔𝑡𝑡𝑡𝑙𝑝𝑑ℎ�]', line))
+            total_chars = len(line.strip())
+            
+            # Only replace if there are many garbled characters (>40% of line)
+            # AND the line is mostly unreadable
+            if total_chars > 0 and garbled_chars / total_chars > 0.4:
+                # Check if line has readable English words
+                readable_words = len(re.findall(r'\b[a-zA-Z]{3,}\b', line))
+                if readable_words < 2:  # Less than 2 readable words
+                    cleaned_lines.append("*[Mathematical formula - see image above]*")
+                    continue
+            
+            cleaned_lines.append(line)
+        
+        return '\n'.join(cleaned_lines)
+    
+    def _extract_page_title(self, text: str) -> str:
+        """Extract the main title from page text"""
+        lines = [l.strip() for l in text.split('\n') if l.strip()]
+        
+        if not lines:
+            return ""
+        
+        # First line is usually the title
+        first_line = lines[0]
+        
+        # Skip if it's too long (likely paragraph text)
+        if len(first_line) > 100:
+            return ""
+        
+        # Skip if it's all lowercase (likely body text)
+        if first_line.islower():
+            return ""
+        
+        # Skip common non-title patterns
+        skip_patterns = [
+            r'^\d+$',  # Just a number
+            r'^Page\s+\d+',  # Page number
+            r'^[a-z]+@',  # Email
+            r'^\d{1,2}/\d{1,2}/',  # Date
+        ]
+        
+        for pattern in skip_patterns:
+            if re.match(pattern, first_line):
+                return ""
+        
+        return first_line
+    
+    def _format_text_content(self, text: str, skip_first_title: bool = False) -> str:
         """Format and structure text content with code block detection"""
+        # Clean up garbled math formulas first
+        text = self._clean_garbled_math(text)
+        
         lines = text.split('\n')
         formatted_lines = []
         prev_line = ""
@@ -246,8 +335,14 @@ class PDFConverter:
                 return True, 'python'
             return False, None
         
+        first_line_skipped = False
         for line in lines:
             line = line.strip()
+            
+            # Skip first line if it's used as page title
+            if skip_first_title and not first_line_skipped:
+                first_line_skipped = True
+                continue
             
             if not line:
                 # Empty line might be inside code block

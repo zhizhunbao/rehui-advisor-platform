@@ -19,8 +19,9 @@ HASH_FILE = ".content_hashes.json"
 
 
 class BrightspaceScraper:
-    def __init__(self, headless: bool = False):
+    def __init__(self, headless: bool = False, module_filter: str | None = None):
         self.headless = headless
+        self.module_filter = module_filter  # 模块名称过滤器（支持部分匹配）
         self.playwright = None
         self.browser: Browser | None = None
         self.page: Page | None = None
@@ -279,6 +280,30 @@ class BrightspaceScraper:
         if not module_id:
             print(f"  Skip module (no ID): {module_title}")
             return
+        
+        # 应用模块过滤器
+        if self.module_filter:
+            # 检查当前模块或父路径是否匹配过滤器
+            full_path = f"{parent_path}/{module_title}" if parent_path else module_title
+            filter_lower = self.module_filter.lower()
+            
+            # 如果当前模块不匹配，但可能有子模块匹配，继续递归
+            if filter_lower not in module_title.lower() and filter_lower not in full_path.lower():
+                # 检查是否有子模块可能匹配
+                has_matching_child = any(
+                    filter_lower in child["title"].lower() 
+                    for child in children
+                )
+                if not has_matching_child:
+                    print(f"  Skip module (filtered): {module_title}")
+                    return
+                else:
+                    # 只递归处理子模块，不抓取当前模块内容
+                    print(f"  Entering module (has matching children): {module_title}")
+                    for child in children:
+                        await self._delay()
+                        await self._scrape_module_recursive(course_id, course_dir, child, parent_path)
+                    return
         
         safe_title = sanitize_filename(module_title)
         module_path = f"{parent_path}/{safe_title}" if parent_path else safe_title
@@ -713,9 +738,10 @@ async def main():
     parser.add_argument("--keep-open", "-k", action="store_true", help="Keep browser open")
     parser.add_argument("--dump-html", action="store_true", help="Save page HTML")
     parser.add_argument("--list-courses", "-l", action="store_true", help="List all courses")
+    parser.add_argument("--module", "-m", help="Only scrape modules matching this name (e.g., 'slides', 'labs', 'Week 1')")
     args = parser.parse_args(args_list)
     
-    scraper = BrightspaceScraper(headless=args.headless)
+    scraper = BrightspaceScraper(headless=args.headless, module_filter=args.module)
     
     try:
         await scraper.start()
