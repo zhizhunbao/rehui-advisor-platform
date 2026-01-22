@@ -151,6 +151,7 @@ When user queries match keywords below, proactively load the corresponding SKILL
 | assignment document, 作业文档, Lab.docx, submission document, 提交文档, word document, screenshots, 截图, discussion, 讨论, analysis, 分析                                                             | `learning-assignment_document` |
 | consistency, 一致性, check consistency, 检查一致, verify files, 验证文件, .py .ipynb .md, compare files, 对比文件, validate code, 验证代码                                                             | `learning-code_consistency`    |
 | markdown to word, md转docx, convert to docx, 转换docx, pandoc, word document, 生成word, format document, 格式化文档                                                                                    | `learning-md_to_docx`          |
+| notebook conversion, ipynb转py, py转ipynb, convert notebook, 转换notebook, jupyter convert, nbconvert, jupytext, script to notebook, notebook to script, 笔记本转换                                    | `learning-notebook_conversion` |
 | submit lab, 提交lab, lab submission, 作业提交, prepare submission, 准备提交, zip file, 打包, upload assignment, 上传作业, brightspace                                                                  | `learning-lab_submission`      |
 | brightspace scraper, brightspace抓取, scrape brightspace, 抓取课程, download course, 下载课程, course materials, 课程资料, scrape slides, 抓取slides, scrape labs, 抓取labs, LMS scraper, 学习平台抓取 | `learning-brightspace_scraper` |
 
